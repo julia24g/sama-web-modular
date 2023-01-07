@@ -1,0 +1,25 @@
+{
+  "name": "lcoe-web",
+  "version": "1.0.0",
+  "description": "Web Application for Levelized Cost of Electricity",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eliu72/lcoe-web.git"
+  },
+  "author": "eliu72",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eliu72/lcoe-web/issues"
+  },
+  "homepage": "https://github.com/eliu72/lcoe-web#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.28.0"
+  }
+}
