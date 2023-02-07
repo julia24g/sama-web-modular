@@ -1,0 +1,2 @@
+# Developers
+`npm start` will call `nodemon server.js` to start up the server using nodemon. Nodemon is a package that updates and restarts the server automatically as you make changes. Nodemon is installed as a dev dependency. 
