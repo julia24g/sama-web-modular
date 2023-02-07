@@ -3,7 +3,8 @@ module.exports = {
     USER: "root",
     PASSWORD: "123456",
     DB: "locations",
-    dialect: "mysql",
+    dialect: "sqlite",
+    storage: "LocationDatabase.db",
     pool: {
         max: 5,
         min: 0,

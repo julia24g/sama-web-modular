@@ -4,6 +4,7 @@ const Op = db.Sequelize.Op;
 
 // Create and Save a new row in Locations table
 exports.create = (req, res) => {
+    console.log(req.body);
 
     // Validate request
     if (!req.body.longitude && !req.body.latitude) {
@@ -27,20 +28,21 @@ exports.create = (req, res) => {
         .catch(err => {
             res.status(500).send({
               message:
-                err.message || "Some error occurred while saving the Location."
+                err.message + ". Some error occurred while saving the Location."
             });
         });
 };
 
 // Retrieve all Locations from the database
 exports.findAll = (req, res) => {
+
     Location.findAll()
         .then(data => {
             res.send(data);
         })
         .catch(err => {
             res.status(500).send({
-                message: err.message || "Error retrieving all locations"
+                message: err.message + ". Error retrieving all locations"
             });
         });
 };

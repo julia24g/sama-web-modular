@@ -1,7 +1,7 @@
 const { sequelize, Sequelize } = require(".");
 
 module.exports = (sequelize, Sequelize) => {
-    const Location = sequelize.define("location", {
+    const Location = sequelize.define("Location", {
         longitude: {
             type: Sequelize.DOUBLE
         },
