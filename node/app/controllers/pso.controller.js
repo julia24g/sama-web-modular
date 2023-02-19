@@ -6,5 +6,5 @@ exports.calculate = (req, res) => {
     var spawn = require('child_process').spawn;
 
     // Create process and pass in args
-    const process = spawn('python', ['./test.py']);
+    const process = spawn('python', ['test.py']);
 }
