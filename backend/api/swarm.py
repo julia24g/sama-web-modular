@@ -2,6 +2,8 @@ from copy import copy, deepcopy
 import numpy as np
 # from numba.experimental import jitclass
 import matplotlib.pyplot as plt
+import uuid
+import os
 
 from api.input_data import *
 from api.fitness import fitness as cost_function
@@ -33,7 +35,7 @@ class Swarm:
         self.solution_best_positions = []
         self.solution_cost_curve = []
 
-    def optimize(self):
+    def optimize(self, debug=False):
 
         for tt in range(self.run_time):
 
@@ -98,7 +100,8 @@ class Swarm:
                 self.w *= self.wdamp
 
                 # Print results for current iteration
-                print(f'Run time = {tt}, Iteration = {it}, Best Cost = {round(global_best_cost, 4)}, Mean Cost = {round(mean_cost[-1], 4)}')
+                if debug:
+                    print(f'Run time = {tt}, Iteration = {it}, Best Cost = {round(global_best_cost, 4)}, Mean Cost = {round(mean_cost[-1], 4)}')
 
             self.solution_best_costs.append(global_best_cost)
             self.solution_best_positions.append(global_best_position)
@@ -127,144 +130,149 @@ class Swarm:
             plt.xlabel('Year')
             plt.ylabel('$')
 
+            url = f'images/{str(uuid.uuid4())}.png'
+            plt.savefig(url, format="png")
+
             # Plot Results
-            plt.figure()
-            plt.plot(Pbuy)
-            plt.plot(Psell)
-            plt.legend(['Buy','sell'])
-            plt.ylabel('Pgrid (kWh)')
-            plt.xlabel('t(hour)')
+            # plt.figure()
+            # plt.plot(Pbuy)
+            # plt.plot(Psell)
+            # plt.legend(['Buy','sell'])
+            # plt.ylabel('Pgrid (kWh)')
+            # plt.xlabel('t(hour)')
 
-            plt.figure()
-            plt.plot(Eload-Ens,'b-.')
-            plt.plot(Pdg,'r')
-            plt.plot(Pch-Pdch,'g')
-            plt.plot(Ppv+Pwt,'--')
-            plt.legend(['Load-Ens','Pdg','Pbat','P_{RE}'])
+            # plt.figure()
+            # plt.plot(Eload-Ens,'b-.')
+            # plt.plot(Pdg,'r')
+            # plt.plot(Pch-Pdch,'g')
+            # plt.plot(Ppv+Pwt,'--')
+            # plt.legend(['Load-Ens','Pdg','Pbat','P_{RE}'])
 
-            plt.figure()
-            plt.plot(Eb/Cn_B)
-            plt.title('State of Charge')
-            plt.ylabel('SOC')
-            plt.xlabel('t[hour]')
+            # plt.figure()
+            # plt.plot(Eb/Cn_B)
+            # plt.title('State of Charge')
+            # plt.ylabel('SOC')
+            # plt.xlabel('t[hour]')
 
-            # Plot results for one specific day 
-            Day=180;
-            t1=Day*24+1;
-            t2=Day*24+24;
+            # # Plot results for one specific day 
+            # Day=180;
+            # t1=Day*24+1;
+            # t2=Day*24+24;
 
-            plt.figure(figsize=(10,10))
-            plt.title(['Results for ' ,str(Day), ' -th day']) 
-            plt.subplot(4,4,1)
-            plt.plot(Eload)
-            plt.title('Load Profile')
-            plt.ylabel('E_{load} [kWh]')
-            plt.xlabel('t[hour]')
-            plt.xlim([t1,t2])
+            # plt.figure(figsize=(10,10))
+            # plt.title(['Results for ' ,str(Day), ' -th day']) 
+            # plt.subplot(4,4,1)
+            # plt.plot(Eload)
+            # plt.title('Load Profile')
+            # plt.ylabel('E_{load} [kWh]')
+            # plt.xlabel('t[hour]')
+            # plt.xlim([t1,t2])
 
-            plt.subplot(4,4,5)
-            plt.plot(Eload)
-            plt.title('Load Profile')
-            plt.ylabel('E_{load} [kWh]')
-            plt.xlabel('t[hour]')
-            plt.xlim([t1,t2])
+            # plt.subplot(4,4,5)
+            # plt.plot(Eload)
+            # plt.title('Load Profile')
+            # plt.ylabel('E_{load} [kWh]')
+            # plt.xlabel('t[hour]')
+            # plt.xlim([t1,t2])
 
-            plt.subplot(4,4,2)
-            plt.plot(G)
-            plt.title('Plane of Array Irradiance')
-            plt.ylabel('G[W/m^2]')
-            plt.xlabel('t[hour]')
-            plt.xlim([t1, t2])
+            # plt.subplot(4,4,2)
+            # plt.plot(G)
+            # plt.title('Plane of Array Irradiance')
+            # plt.ylabel('G[W/m^2]')
+            # plt.xlabel('t[hour]')
+            # plt.xlim([t1, t2])
 
-            plt.subplot(4,4,6)
-            plt.plot(T)
-            plt.title('Ambient Temperature')
-            plt.ylabel('T[^o C]')
-            plt.xlabel('t[hour]')
-            plt.xlim([t1 ,t2])
+            # plt.subplot(4,4,6)
+            # plt.plot(T)
+            # plt.title('Ambient Temperature')
+            # plt.ylabel('T[^o C]')
+            # plt.xlabel('t[hour]')
+            # plt.xlim([t1 ,t2])
 
-            plt.subplot(4,4,3)
-            plt.plot(Ppv)
-            plt.title('PV Power')
-            plt.ylabel('P_{pv} [kWh]')
-            plt.xlabel('t[hour]')
-            plt.xlim([t1, t2])
+            # plt.subplot(4,4,3)
+            # plt.plot(Ppv)
+            # plt.title('PV Power')
+            # plt.ylabel('P_{pv} [kWh]')
+            # plt.xlabel('t[hour]')
+            # plt.xlim([t1, t2])
 
-            plt.subplot(4,4,4)
-            plt.plot(Ppv)
-            plt.title('PV Power')
-            plt.ylabel('P_{pv} [kWh]')
-            plt.xlabel('t[hour]')
-            plt.xlim([t1, t2])
+            # plt.subplot(4,4,4)
+            # plt.plot(Ppv)
+            # plt.title('PV Power')
+            # plt.ylabel('P_{pv} [kWh]')
+            # plt.xlabel('t[hour]')
+            # plt.xlim([t1, t2])
 
-            plt.subplot(4,4,7)
-            plt.plot(Pwt)
-            plt.title('WT Energy')
-            plt.ylabel('P_{wt} [kWh]')
-            plt.xlabel('t[hour]')
-            plt.xlim([t1, t2])
-            plt.subplot(4,4,8)
-            plt.plot(Pwt)
-            plt.title('WT Energy')
-            plt.ylabel('P_{wt} [kWh]')
-            plt.xlabel('t[hour]')
-            plt.xlim([t1, t2])
+            # plt.subplot(4,4,7)
+            # plt.plot(Pwt)
+            # plt.title('WT Energy')
+            # plt.ylabel('P_{wt} [kWh]')
+            # plt.xlabel('t[hour]')
+            # plt.xlim([t1, t2])
+            # plt.subplot(4,4,8)
+            # plt.plot(Pwt)
+            # plt.title('WT Energy')
+            # plt.ylabel('P_{wt} [kWh]')
+            # plt.xlabel('t[hour]')
+            # plt.xlim([t1, t2])
 
-            plt.subplot(4,4,9)
-            plt.plot(Pdg)
-            plt.title('Diesel Generator Energy')
-            plt.ylabel('E_{DG} [kWh]')
-            plt.xlabel('t[hour]')
-            plt.xlim([t1,t2])
-            plt.subplot(4,4,10)
-            plt.plot(Pdg)
-            plt.title('Diesel Generator Energy')
-            plt.ylabel('E_{DG} [kWh]')
-            plt.xlabel('t[hour]')
-            plt.xlim([t1,t2])
+            # plt.subplot(4,4,9)
+            # plt.plot(Pdg)
+            # plt.title('Diesel Generator Energy')
+            # plt.ylabel('E_{DG} [kWh]')
+            # plt.xlabel('t[hour]')
+            # plt.xlim([t1,t2])
+            # plt.subplot(4,4,10)
+            # plt.plot(Pdg)
+            # plt.title('Diesel Generator Energy')
+            # plt.ylabel('E_{DG} [kWh]')
+            # plt.xlabel('t[hour]')
+            # plt.xlim([t1,t2])
 
-            plt.subplot(4,4,11)
-            plt.plot(Eb)
-            plt.title('Battery Energy Level')
-            plt.ylabel('E_{b} [kWh]')
-            plt.xlabel('t[hour]')
-            plt.xlim([t1, t2])
+            # plt.subplot(4,4,11)
+            # plt.plot(Eb)
+            # plt.title('Battery Energy Level')
+            # plt.ylabel('E_{b} [kWh]')
+            # plt.xlabel('t[hour]')
+            # plt.xlim([t1, t2])
 
-            plt.subplot(4,4,12)
-            plt.plot(Eb/Cn_B)
-            plt.title('State of Charge')
-            plt.ylabel('SOC')
-            plt.xlabel('t[hour]')
-            plt.xlim([t1,t2])
+            # plt.subplot(4,4,12)
+            # plt.plot(Eb/Cn_B)
+            # plt.title('State of Charge')
+            # plt.ylabel('SOC')
+            # plt.xlabel('t[hour]')
+            # plt.xlim([t1,t2])
 
-            plt.subplot(4,4,13)
-            plt.plot(Ens)
-            plt.title('Loss of Power Suply')
-            plt.ylabel('LPS[kWh]')
-            plt.xlabel('t[hour]')
-            plt.xlim([t1,t2])
+            # plt.subplot(4,4,13)
+            # plt.plot(Ens)
+            # plt.title('Loss of Power Suply')
+            # plt.ylabel('LPS[kWh]')
+            # plt.xlabel('t[hour]')
+            # plt.xlim([t1,t2])
 
-            plt.subplot(4,4,14)
-            plt.plot(Edump)
-            plt.title('Dumped Energy')
-            plt.ylabel('E_{dump} [kWh]')
-            plt.xlabel('t[hour]')
-            plt.xlim([t1,t2])
+            # plt.subplot(4,4,14)
+            # plt.plot(Edump)
+            # plt.title('Dumped Energy')
+            # plt.ylabel('E_{dump} [kWh]')
+            # plt.xlabel('t[hour]')
+            # plt.xlim([t1,t2])
 
-            plt.subplot(4,4,15)
-            plt.bar(range(len(Pdch)),Pdch)
-            plt.title('Battery decharge Energy')
-            plt.ylabel('E_{dch} [kWh]')
-            plt.xlabel('t[hour]')
-            plt.xlim([t1, t2])
+            # plt.subplot(4,4,15)
+            # plt.bar(range(len(Pdch)),Pdch)
+            # plt.title('Battery decharge Energy')
+            # plt.ylabel('E_{dch} [kWh]')
+            # plt.xlabel('t[hour]')
+            # plt.xlim([t1, t2])
 
-            plt.subplot(4,4,16)
-            plt.bar(range(len(Pdch)),Pch)
-            plt.title('Battery charge Energy')
-            plt.ylabel('E_{ch} [kWh]')
-            plt.xlabel('t[hour]')
-            plt.xlim([t1,t2])
+            # plt.subplot(4,4,16)
+            # plt.bar(range(len(Pdch)),Pch)
+            # plt.title('Battery charge Energy')
+            # plt.ylabel('E_{ch} [kWh]')
+            # plt.xlabel('t[hour]')
+            # plt.xlim([t1,t2])
 
-            plt.show()
+            plt.close()
+        
+            return None, url
 
 

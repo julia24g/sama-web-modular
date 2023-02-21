@@ -1,4 +1,4 @@
-from flask import Flask, request, json
+from flask import Flask, request, json, send_file
 from flask_cors import CORS #comment this on deployment
 import sqlite3
 
@@ -14,12 +14,9 @@ def submit():
     # mySum = test.test(request.args["longitude"], request.args["latitude"])
     swarm = Swarm()
     swarm.optimize()
-    swarm.get_final_result(print_result=True, plot_curve=False)
+    result, figure_url = swarm.get_final_result(print_result=True, plot_curve=True)
 
-    return {
-      'resultStatus': 'SUCCESS',
-      'result': 'BOGUS TEMP VALUE'
-    }
+    return send_file(figure_url)
 
 
 @app.route("/locations", methods=["POST", "GET"])
