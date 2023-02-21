@@ -2,7 +2,7 @@ from flask import Flask, request, json
 from flask_cors import CORS #comment this on deployment
 import sqlite3
 
-from api import test
+from api.swarm import Swarm
 
 app = Flask(__name__)
 CORS(app) #comment this on deployment
@@ -11,10 +11,14 @@ CORS(app) #comment this on deployment
 # This endpoint calls the PSO module to perform calculations
 @app.route("/submit", methods=['GET'])
 def submit():
-    mySum = test.test(request.args["longitude"], request.args["latitude"])
+    # mySum = test.test(request.args["longitude"], request.args["latitude"])
+    swarm = Swarm()
+    swarm.optimize()
+    swarm.get_final_result(print_result=True, plot_curve=False)
+
     return {
       'resultStatus': 'SUCCESS',
-      'result': mySum
+      'result': 'BOGUS TEMP VALUE'
     }
 
 
