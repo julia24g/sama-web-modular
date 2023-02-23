@@ -11,12 +11,13 @@ CORS(app) #comment this on deployment
 # This endpoint calls the PSO module to perform calculations
 @app.route("/submit", methods=['GET'])
 def submit():
+    print("Processing request...")
     # mySum = test.test(request.args["longitude"], request.args["latitude"])
     swarm = Swarm()
     swarm.optimize()
-    result, figure_url = swarm.get_final_result(print_result=True, plot_curve=True)
+    result, file_bytes = swarm.get_final_result(print_result=True, plot_curve=True)
 
-    return send_file(figure_url)
+    return send_file(file_bytes, mimetype='image/png')
 
 
 @app.route("/locations", methods=["POST", "GET"])

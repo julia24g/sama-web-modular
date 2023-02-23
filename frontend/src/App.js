@@ -18,7 +18,6 @@ function App() {
   const [batteryCost, setBatteryCost] = useState('');
   const [superchargerCost, setSuperchargerCost] = useState('');
   const [utilityRates, setUtilityRates] = useState('');
-  const [figure, setFigure] = useState('');
 
   async function handleSubmit(event) {
     setLoading(true);
@@ -27,22 +26,33 @@ function App() {
     // Perform PSO calculations
     await axios.get(
       'http://localhost:5000/submit', 
-      { params: { longitude: longitude, latitude: latitude }}
+      { 
+        params: { longitude: longitude, latitude: latitude },
+        responseType: 'arraybuffer' // python flask send_file() returns an array buffer for the png image
+      }
     ).then(response => {
       console.log("SUCCESS", response);
       setMessage('Here is your figure!');
-      setFigure(Buffer.from(response.data, "base64").toString());
+
+       // create URL blob using byte array data blob
+      var blob = new Blob([response.data], {type: 'image/png'}),
+        url = window.URL.createObjectURL(blob);
+      
+      // set image src url
+      window.URL.revokeObjectURL(document.getElementById("figure").src);
+      document.getElementById("figure").src = url;
+
     }).catch(error => {
-      console.log(error)
+      console.log(error);
     });
 
     // Save user's location into database
     axios.post(
       'http://localhost:5000/locations',
       { longitude: longitude, latitude: latitude }
-    ).then(response => {
-      console.log("SUCCESS", response)
-    }).catch(error => {
+    ).then(
+      console.log("Successfully added to database")
+    ).catch(error => {
       console.log(error)
     });
   
@@ -146,9 +156,7 @@ function App() {
       </form>
       <p>It can take up to 1 min to calculate your results.</p>
       <h2>{message}</h2>
-      <p>{figure}</p>
-      <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg=='
-        alt="Figure" height="auto" width="40%"></img>
+      <img id="figure"></img>
     </div>
   );
 }

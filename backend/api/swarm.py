@@ -2,8 +2,7 @@ from copy import copy, deepcopy
 import numpy as np
 # from numba.experimental import jitclass
 import matplotlib.pyplot as plt
-import uuid
-import os
+import io 
 
 from api.input_data import *
 from api.fitness import fitness as cost_function
@@ -130,9 +129,10 @@ class Swarm:
             plt.xlabel('Year')
             plt.ylabel('$')
 
-            url = f'images/{str(uuid.uuid4())}.png'
-            plt.savefig(url, format="png")
-
+            buf = io.BytesIO()
+            plt.savefig(buf, format='png')
+            buf.seek(0)
+            
             # Plot Results
             # plt.figure()
             # plt.plot(Pbuy)
@@ -272,7 +272,7 @@ class Swarm:
             # plt.xlim([t1,t2])
 
             plt.close()
-        
-            return None, url
+            print(type(buf))
+            return None, buf
 
 
