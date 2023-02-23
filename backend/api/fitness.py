@@ -155,38 +155,69 @@ def fitness(X, final_solution=False, print_result=False):
         Cash_Flow[:,4]=-Replacement
 
         if print_result == True:
-            print('\nSystem Size ')
-            print('Cpv  (kW) = ', str(Pn_PV))
-            print('Cwt  (kW) = ' ,str(Pn_WT))
-            print('Cbat (kWh) = ' ,str(Cn_B))
-            print('Cdg  (kW) = ' ,str(Pn_DG))
-            print('Cinverter (kW) = ', str(Cn_I))
+            result = "System Size"
+            result += (f'<br>Cpv  (kW) = {str(Pn_PV)}')
+            result += (f'<br>Cwt  (kW) = {str(Pn_WT)}')
+            result += (f'<br>Cbat (kWh) = {str(Cn_B)}')
+            result += (f'<br>Cdg  (kW) = {str(Pn_DG)}')
+            result += (f'<br>Cinverter (kW) = {str(Cn_I)}')
 
-            print('\nResult: ')
-            print('NPC  = ', str(NPC) ,' $ ')
-            print('LCOE  = ', str(LCOE) ,' $/kWh ')
-            print('Operation Cost  = ', str(Operating_Cost), ' $ ')
-            print('Initial Cost  =, ' , str(I_Cost), ' $ ')
-            print('RE  = ', str(100*RE) ,' % ')
-            print('Total operation and maintainance cost  = ', str(np.sum(MO_Cost)), ' $ ')
+            result += ('<br>Result: ')
+            result += (f'<br>NPC  = {str(NPC)} $')
+            result += (f'<br>LCOE  = {str(LCOE)} $/kWh')
+            result += (f'<br>Operation Cost  = {str(Operating_Cost)} $ ')
+            result += (f'<br>Initial Cost  = {str(I_Cost)} $ ')
+            result += (f'<br>RE  = {str(100*RE)} % ')
+            result += (f'<br>Total operation and maintainance cost  = {str(np.sum(MO_Cost))} $ ')
 
-            print('LPSP  = ', str(100*LPSP) ,' % ')
-            print('excess Elecricity = ', str(np.sum(Edump)))
+            result += (f'<br>LPSP  = {str(100*LPSP)} % ')
+            result += (f'<br>excess Elecricity = {str(np.sum(Edump))}')
 
-            print('Total power bought from Grid= ', str(np.sum(Pbuy)), ' kWh ')
-            print('Total Money paid to the Grid= ', str(np.sum(Grid_Cost)), ' $ ')
-            print('Total Money paid by the user= ', str(np.sum(NPC)), ' $ ')
-            print('Grid Sales = ', str(np.sum(Psell)), ' kWh ')
-            print('LEM  = ', str(LEM), ' kg/kWh ')
-            print('PV Power  = ', str(np.sum(Ppv)),' kWh ')
-            print('WT Power  = ', str(np.sum(Pwt)), ' kWh ')
-            print('DG Power  = ', str(np.sum(Pdg)), ' kWh ')
-            print('total fuel consumed by DG   = ', str(np.sum(q)) ,' (kg/year) ')
+            result += (f'<br>Total power bought from Grid= {str(np.sum(Pbuy))} kWh ')
+            result += (f'<br>Total Money paid to the Grid= {str(np.sum(Grid_Cost))} $ ')
+            result += (f'<br>Total Money paid by the user= {str(np.sum(NPC))} $ ')
+            result += (f'<br>Grid Sales = {str(np.sum(Psell))} kWh ')
+            result += (f'<br>LEM  = {str(LEM)} kg/kWh ')
+            result += (f'<br>PV Power  = {str(np.sum(Ppv))} kWh ')
+            result += (f'<br>WT Power  = {str(np.sum(Pwt))} kWh ')
+            result += (f'<br>DG Power  = {str(np.sum(Pdg))} kWh ')
+            result += (f'<br>total fuel consumed by DG   = {str(np.sum(q))} (kg/year) ')
 
-            print('DG Emissions   = ', str(DG_Emissions),' (kg/year) ')
-            print('Grid Emissions   = ', str(Grid_Emissions), ' (kg/year) ')
+            result += (f'<br>DG Emissions = {str(DG_Emissions)} (kg/year) ')
+            result += (f'<br>Grid Emissions = {str(Grid_Emissions)} (kg/year) ')
 
-        return Cash_Flow, Pbuy, Psell, Eload, Ens, Pdg, Pch, Pdch, Ppv, Pwt, Eb, Cn_B, Edump
+            # print('\nSystem Size ')
+            # print('Cpv  (kW) = ', str(Pn_PV))
+            # print('Cwt  (kW) = ' ,str(Pn_WT))
+            # print('Cbat (kWh) = ' ,str(Cn_B))
+            # print('Cdg  (kW) = ' ,str(Pn_DG))
+            # print('Cinverter (kW) = ', str(Cn_I))            
+
+            # print('\nResult: ')
+            # print('NPC  = ', str(NPC) ,' $ ')
+            # print('LCOE  = ', str(LCOE) ,' $/kWh ')
+            # print('Operation Cost  = ', str(Operating_Cost), ' $ ')
+            # print('Initial Cost  =, ' , str(I_Cost), ' $ ')
+            # print('RE  = ', str(100*RE) ,' % ')
+            # print('Total operation and maintainance cost  = ', str(np.sum(MO_Cost)), ' $ ')
+
+            # print('LPSP  = ', str(100*LPSP) ,' % ')
+            # print('excess Elecricity = ', str(np.sum(Edump)))
+
+            # print('Total power bought from Grid= ', str(np.sum(Pbuy)), ' kWh ')
+            # print('Total Money paid to the Grid= ', str(np.sum(Grid_Cost)), ' $ ')
+            # print('Total Money paid by the user= ', str(np.sum(NPC)), ' $ ')
+            # print('Grid Sales = ', str(np.sum(Psell)), ' kWh ')
+            # print('LEM  = ', str(LEM), ' kg/kWh ')
+            # print('PV Power  = ', str(np.sum(Ppv)),' kWh ')
+            # print('WT Power  = ', str(np.sum(Pwt)), ' kWh ')
+            # print('DG Power  = ', str(np.sum(Pdg)), ' kWh ')
+            # print('total fuel consumed by DG   = ', str(np.sum(q)) ,' (kg/year) ')
+
+            # print('DG Emissions   = ', str(DG_Emissions),' (kg/year) ')
+            # print('Grid Emissions   = ', str(Grid_Emissions), ' (kg/year) ')
+
+        return result, Cash_Flow, Pbuy, Psell, Eload, Ens, Pdg, Pch, Pdch, Ppv, Pwt, Eb, Cn_B, Edump
 
     Z=LCOE+EM*LEM+10*(LPSP>LPSP_max)+10*(RE<RE_min)+100*(I_Cost>Budget)+\
         100*max(0, LPSP-LPSP_max)+100*max(0, RE_min-RE)+100*max(0, I_Cost-Budget)

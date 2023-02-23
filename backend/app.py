@@ -1,6 +1,7 @@
 from flask import Flask, request, json, send_file
 from flask_cors import CORS #comment this on deployment
 import sqlite3
+from base64 import b64encode
 
 from api.swarm import Swarm
 
@@ -17,7 +18,24 @@ def submit():
     swarm.optimize()
     result, file_bytes = swarm.get_final_result(print_result=True, plot_curve=True)
 
-    return send_file(file_bytes, mimetype='image/png')
+    # encode bytes to base64 for json
+    base64_bytes = b64encode(file_bytes)
+    base64_string = base64_bytes.decode('utf-8')
+    
+    print(result)
+
+    # build response
+    data = {
+        "image": base64_string,
+        "text": result
+    }
+    response = app.response_class(
+        response=json.dumps(data),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+    # return send_file(file_bytes, mimetype='image/png')
 
 
 @app.route("/locations", methods=["POST", "GET"])

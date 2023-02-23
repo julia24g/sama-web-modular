@@ -18,6 +18,7 @@ function App() {
   const [batteryCost, setBatteryCost] = useState('');
   const [superchargerCost, setSuperchargerCost] = useState('');
   const [utilityRates, setUtilityRates] = useState('');
+  const [results, setResults] = useState('');
 
   async function handleSubmit(event) {
     setLoading(true);
@@ -28,20 +29,15 @@ function App() {
       'http://localhost:5000/submit', 
       { 
         params: { longitude: longitude, latitude: latitude },
-        responseType: 'arraybuffer' // python flask send_file() returns an array buffer for the png image
+        responseType: 'application/json' // python flask send_file() returns an array buffer for the png image
       }
     ).then(response => {
       console.log("SUCCESS", response);
       setMessage('Here is your figure!');
 
-       // create URL blob using byte array data blob
-      var blob = new Blob([response.data], {type: 'image/png'}),
-        url = window.URL.createObjectURL(blob);
-      
-      // set image src url
-      window.URL.revokeObjectURL(document.getElementById("figure").src);
-      document.getElementById("figure").src = url;
-
+      // set image src with base64 in API response
+      document.getElementById("figure").src = `data:image/png;base64,${JSON.parse(response.data)["image"]}`;
+      setResults(JSON.parse(response.data)["text"]);
     }).catch(error => {
       console.log(error);
     });
@@ -157,6 +153,7 @@ function App() {
       <p>It can take up to 1 min to calculate your results.</p>
       <h2>{message}</h2>
       <img id="figure"></img>
+      <p>{results}</p>
     </div>
   );
 }

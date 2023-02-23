@@ -110,7 +110,7 @@ class Swarm:
         index = np.argmin(np.array(self.solution_best_costs))
         
         X = self.solution_best_positions[index]
-        Cash_Flow, Pbuy, Psell, Eload, Ens, Pdg, Pch, Pdch, Ppv, Pwt, Eb, Cn_B, Edump = cost_function(X, final_solution=True, print_result=print_result)
+        result, Cash_Flow, Pbuy, Psell, Eload, Ens, Pdg, Pch, Pdch, Ppv, Pwt, Eb, Cn_B, Edump = cost_function(X, final_solution=True, print_result=print_result)
 
         if plot_curve:
             # Result 1
@@ -272,7 +272,6 @@ class Swarm:
             # plt.xlim([t1,t2])
 
             plt.close()
-            print(type(buf))
-            return None, buf
+            return result, buf.read()
 
 
