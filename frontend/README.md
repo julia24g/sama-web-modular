@@ -1,3 +1,7 @@
+# Development
+
+Install 'Allow CORS: Access-Control-Allow-origin' chrome extension and toggle on to allow CORS for development purposes.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

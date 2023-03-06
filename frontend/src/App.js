@@ -8,21 +8,61 @@ import './App.css';
 
 function App() {
   const [loading, setLoading] = useState(false);   // Loading state of submit button, default set to false, onClick => set to true
+  const [message, setMessage] = useState('');
+
+  // For getting address
   const [longitude, setLongitude] = useState('');
   const [latitude, setLatitude] = useState('');
-  const [message, setMessage] = useState('');
+  const [streetNumber, setStreetNumber] = useState('');
+  const [streetName, setStreetName] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
   const [zipcode, setZipcode] = useState('');
+
+  // Electrical data
   const [electricalLoad, setElectricalLoad] = useState('');
+
+  // Advanced settings for researchers
+  // TODO: Hide this in basic view
   const [PVCost, setPVCost] = useState('');
   const [dieselGeneratorCost, setDieselGeneratorCost] = useState('');
   const [batteryCost, setBatteryCost] = useState('');
-  const [superchargerCost, setSuperchargerCost] = useState('');
+  const [batteryChargerCost, setBatteryChargerCost] = useState('');
   const [utilityRates, setUtilityRates] = useState('');
   const [results, setResults] = useState('');
 
   async function handleSubmit(event) {
     setLoading(true);
     event.preventDefault();
+
+    // Retrieve long/lat from address
+    const geocoderURL = 'https://geocoding.geo.census.gov/geocoder/locations/address';
+
+    // Clean up params
+
+    // Make get request to Census Geocoder API (official US gov't provided API for address lookup)
+    await axios.get(
+      geocoderURL, 
+      { 
+        params: { 
+          street: `${streetNumber} ${streetName}` ,
+          city: city,
+          state: state,
+          zip: zipcode,
+          benchmark: "Public_AR_Current", // most up to date database
+          format: "json"
+        }
+      }
+    ).then(response => {
+        // Handle successful response
+        console.log(response.data.result); 
+        setLongitude(response.data.result.addressMatches[0].coordinates.x); // Set longitide
+        setLatitude(response.data.result.addressMatches[0].coordinates.y); // Set latitude
+    })
+    .catch(error => {
+      // Handle error
+      console.error(error);
+    });
 
     // Perform PSO calculations
     await axios.get(
@@ -53,8 +93,6 @@ function App() {
     });
   
     // Update input form default values
-    setLongitude('');
-    setLatitude('');
     setLoading(false);
   };
 
@@ -64,26 +102,41 @@ function App() {
       <form>
         <TextField 
           id="outlined-basic" 
-          label="Longitude" 
+          label="Street Number" 
           variant="outlined" 
-          value={longitude}
-          onChange={(event)=>setLongitude(event.target.value)}
+          value={streetNumber}
+          onChange={(event)=>setStreetNumber(event.target.value)}
           style={{margin: '10px'}}
         />
         <TextField 
           id="outlined-basic" 
-          label="Latitude" 
+          label="Street Name" 
           variant="outlined" 
-          value={latitude}
-          onChange={(event)=>setLatitude(event.target.value)}  
+          value={streetName}
+          onChange={(event)=>setStreetName(event.target.value)}  
           style={{margin: '10px'}}
         />
-        <br></br>
+        <TextField 
+          id="outlined-basic" 
+          label="City" 
+          variant="outlined" 
+          value={city}
+          onChange={(event)=>setCity(event.target.value)}  
+          style={{margin: '10px'}}
+        />
+        <TextField 
+          id="outlined-basic" 
+          label="State" 
+          variant="outlined" 
+          value={state}
+          onChange={(event)=>setState(event.target.value)}  
+          style={{margin: '10px'}}
+        />
         <TextField
           id="outlined-basic" 
           label="Zipcode" 
           variant="outlined" 
-          value=''
+          value={zipcode}
           onChange={(event)=>setZipcode(event.target.value)}
           style={{margin: '10px'}}
         />
@@ -123,10 +176,10 @@ function App() {
         />
         <TextField
           id="outlined-basic" 
-          label="Cost of Supercharger per KW" 
+          label="Cost of Battery Charger per KW" 
           variant="outlined" 
           value=''
-          onChange={(event)=>setSuperchargerCost(event.target.value)}
+          onChange={(event)=>setBatteryChargerCost(event.target.value)}
           style={{margin: '10px'}}
         />
         <TextField
