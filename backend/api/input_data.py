@@ -3,10 +3,11 @@ from math import ceil
 
 path='api/Data.csv'
 Data = np.genfromtxt(path, delimiter=",")
-Eload = Data[:,0]
-G = Data[:,1]
-T = Data[:,2]
-Vw = Data[:,3]
+Eload = Data[:,0] # we need the OpenAI data - hourly electrical load
+G = Data[:,1] # hourly plane of array irradiance - PVWatts
+T = Data[:,2] # hourly ambient temperature - PVWatts
+Vw = Data[:,3] # hourly windspeed - PVWatts
+# need 8760 hours of data
 
 def calcTouCbuy(day, month):
     P_peak=0.17
