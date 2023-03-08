@@ -6,7 +6,7 @@ from base64 import b64encode
 from api.swarm import Swarm
 
 app = Flask(__name__)
-CORS(app) #comment this on deployment
+# CORS(app) #comment this on deployment
 
 
 # This endpoint calls the PSO module to perform calculations
