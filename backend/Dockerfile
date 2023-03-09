@@ -20,4 +20,4 @@ ENV PORT=5000
 EXPOSE ${PORT}
 
 # Start the application
-CMD ["python3", "-m" , "flask", "run", "--host=0.0.0.0", "-p", "3000"]
+CMD gunicorn --bind localhost:5000 app:gunicorn_app

@@ -4,8 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import io 
 
-from api.input_data import *
-from api.fitness import fitness as cost_function
+from backend.api.input_data import *
+from backend.api.fitness import fitness as cost_function
 
 # @jitclass # use all keywords
 class Swarm:

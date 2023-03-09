@@ -1,2 +1,9 @@
+# flask app requirements
 flask
 requests
+gunicorn
+
+# api requirements
+numpy
+numba
+matplotlib
