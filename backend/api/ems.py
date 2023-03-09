@@ -1,7 +1,7 @@
 import numpy as np
 from numba import jit
 
-from backend.api.battery_model import battery_model
+from api.battery_model import battery_model
 
 """
 Energy management 

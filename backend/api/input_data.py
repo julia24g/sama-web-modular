@@ -10,7 +10,7 @@ Better practice to use objects - store all variables as class variables.
 
 class Input():
     def __init__(self, hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed):
-        path='backend/api/Data.csv'
+        path='api/Data.csv'
         Data = np.genfromtxt(path, delimiter=",")
         
         # need 8760 hours of data

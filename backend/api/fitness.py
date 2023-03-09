@@ -2,8 +2,8 @@ import numpy as np
 from numba import jit
 from math import ceil
 
-from backend.api.input_data import *
-from backend.api.ems import energy_management
+from api.input_data import *
+from api.ems import energy_management
 
 
 def fitness(X, input_data, final_solution=False, print_result=False):

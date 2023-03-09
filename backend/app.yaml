@@ -1,0 +1,10 @@
+runtime: python39
+runtime_config:
+    operating_system: "ubuntu22"
+    runtime_version: "3.9"
+
+instance_class: F1 
+automatic_scaling:  
+  max_instances: 1
+
+entrypoint: gunicorn app:gunicorn_app --timeout 180
