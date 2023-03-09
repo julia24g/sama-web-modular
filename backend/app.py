@@ -4,17 +4,37 @@ import sqlite3
 from base64 import b64encode
 import os
 import requests
+from google.cloud import secretmanager # For accessing API keys on Google Secret Manager
 
-from backend.api.swarm import Swarm
+from api.swarm import Swarm
 
 def create_app():
 
     app = Flask(__name__)
     # CORS(app) #comment this on deployment
 
+    """
+    Connect to Google Secret Manager and retrieve PVWatts API Key.
+        Locally: User must be authenticated with GCP and have access to the sama-web-app project. Contact project owner to gain access.
+        Deployed on GAE: GAE has access to the same service account as the Secret Manager.
+    """
+    def get_pvwatts_api_key():
+        # Create the Secret Manager client.
+        client = secretmanager.SecretManagerServiceClient()
+
+        # Access the secret version.
+        project_id = "sama-web-app"
+        secret_id = "PVWATTS_API_KEY"
+        version = 1
+        name = client.secret_version_path(project_id, secret_id, version)
+
+        response = client.access_secret_version(name=name)
+        return response.payload.data.decode('UTF-8') # Return decoded payload
+
+
     def retrieve_PVWatts_data(longitude, latitude):
         # get PVWatts API key from environment variables set in App Engine's app.yaml
-        pvwatts_api_key = os.environ.get('PVWATTS_API_KEY')
+        pvwatts_api_key = get_pvwatts_api_key()
 
         # Make GET request to PVWatts V8
         response = requests.get(

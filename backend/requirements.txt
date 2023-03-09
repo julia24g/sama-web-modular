@@ -2,6 +2,7 @@
 flask
 requests
 gunicorn
+google-cloud-secret-manager
 
 # api requirements
 numpy
