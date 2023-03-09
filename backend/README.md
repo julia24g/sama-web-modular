@@ -1,16 +1,9 @@
 # To start the flask app
 `flask run`
 
-# Build docker image
-`docker build --tag <image_name> .`
-
-# List all docker images
-`docker images`
-
-# Run Docker image
-`docker run <image_name>` 
-
 # app.yaml
-Stores the configuration for App Engine. The app.yaml is automatically updated
+Stores the configuration for App Engine
 
-On the Google Cloud Console, the ap
+# Secrets and API Keys
+API keys are stored in the Google Secret Manager under the sama-web-app project.
+The sama-web-app service account has admin access to read/write secrets.
