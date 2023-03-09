@@ -2,19 +2,54 @@ from flask import Flask, request, json, send_file
 from flask_cors import CORS #comment this on deployment
 import sqlite3
 from base64 import b64encode
+import os
+import requests
 
 from api.swarm import Swarm
 
 app = Flask(__name__)
-# CORS(app) #comment this on deployment
+CORS(app) #comment this on deployment
+
+def retrieve_PVWatts_data(longitude, latitude):
+    # get PVWatts API key from environment variables set in App Engine's app.yaml
+    pvwatts_api_key = os.environ.get('PVWATTS_API_KEY')
+
+    # Make GET request to PVWatts V8
+    response = requests.get(
+        'https://developer.nrel.gov/api/pvwatts/v8.json',
+        params={
+            "api_key": pvwatts_api_key,
+            "system_capacity": 1, # random for now
+            "module_type": 1, # random for now
+            "losses": 1, # random for now
+            "array_type": 1, # random for now
+            "tilt": 1, # random for now
+            "azimuth": 1, # random for now
+            "lat": latitude,
+            "lon": longitude,
+            "timeframe": "hourly"
+        }
+    )
+    
+    return response.json()["outputs"].get("poa"), response.json()["outputs"].get("tamb"), response.json()["outputs"].get("wspd")
 
 
 # This endpoint calls the PSO module to perform calculations
 @app.route("/submit", methods=['GET'])
 def submit():
     print("Processing request...")
-    # mySum = test.test(request.args["longitude"], request.args["latitude"])
-    swarm = Swarm()
+
+    longitude = request.args.get("longitude")
+    latitude = request.args.get("latitude")
+
+    if longitude==None or latitude==None:
+        return "Request must include longitude and latitude", 400 
+
+    # Retrieve PVWatts data
+    hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed = retrieve_PVWatts_data(longitude, latitude)
+
+    # Perform PSO calculations
+    swarm = Swarm(hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed)
     swarm.optimize()
     result, file_bytes = swarm.get_final_result(print_result=True, plot_curve=True)
 

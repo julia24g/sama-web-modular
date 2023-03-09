@@ -6,12 +6,12 @@ from api.input_data import *
 from api.ems import energy_management
 
 
-def fitness(X, final_solution=False, print_result=False):
+def fitness(X, input_data, final_solution=False, print_result=False):
 
     if X.size==1:
         X=X[0]
     
-    NT=Eload.size         # time step numbers
+    NT=input_data.Eload.size         # time step numbers
     Npv=round(X[0])       # PV number
     Nwt=round(X[1])       # WT number
     Nbat=round(X[2])      # Battery pack number
@@ -24,11 +24,11 @@ def fitness(X, final_solution=False, print_result=False):
     Pn_DG=N_DG*Cdg_r   # Diesel Total Capacity
     
     # PV Power Calculation
-    Tc   = T+(((Tnoct-20)/800)*G) # Module Temprature
-    Ppv = fpv*Pn_PV*(G/Gref)*(1+Tcof*(Tc-Tref)) # output power(kw)_hourly
+    Tc   = input_data.T+(((Tnoct-20)/800)*input_data.G) # Module Temprature
+    Ppv = fpv*Pn_PV*(input_data.G/Gref)*(1+Tcof*(Tc-Tref)) # output power(kw)_hourly
     
     # Wind turbine Power Calculation
-    v1=Vw     #hourly wind speed
+    v1=input_data.Vw     #hourly wind speed
     v2=((h_hub/h0)**(alfa_wind_turbine))*v1 # v1 is the speed at a reference height;v2 is the speed at a hub height h2
     
     Pwt=np.zeros(8760)
@@ -45,8 +45,8 @@ def fitness(X, final_solution=False, print_result=False):
     #  DG Fix cost
     cc_gen=b*Pn_DG*C_fuel+R_DG*Pn_DG/TL_DG+MO_DG;
 
-    Pdg, Ens, Pbuy, Psell, Edump, Pch, Pdch, Eb = energy_management(Ppv,Pwt,Eload,Cn_B,Nbat,Pn_DG,NT,
-        SOC_max,SOC_min,SOC_initial,n_I,Grid,Cbuy,a,Cn_I,LR_DG,C_fuel,Pbuy_max,Psell_max,cc_gen,Cbw,
+    Pdg, Ens, Pbuy, Psell, Edump, Pch, Pdch, Eb = energy_management(Ppv,Pwt,input_data.Eload,Cn_B,Nbat,Pn_DG,NT,
+        SOC_max,SOC_min,SOC_initial,n_I,Grid,Cbuy,a,Cn_I,LR_DG,C_fuel,input_data.Pbuy_max,input_data.Psell_max,cc_gen,Cbw,
         self_discharge_rate,alfa_battery,c,k,Imax,Vnom,ef_bat)
     
     q=(a*Pdg+b*Pn_DG)*(Pdg>0)   # Fuel consumption of a diesel generator 
@@ -113,16 +113,16 @@ def fitness(X, final_solution=False, print_result=False):
     NPC=I_Cost+temp
     Operating_Cost=CRF*temp
     
-    if np.sum(Eload-Ens)>1:
-        LCOE=CRF*NPC/np.sum(Eload-Ens+Psell)                #Levelized Cost of Energy ($/kWh)
-        LEM=(DG_Emissions+Grid_Emissions)/sum(Eload-Ens)    #Levelized Emissions(kg/kWh)
+    if np.sum(input_data.Eload-Ens)>1:
+        LCOE=CRF*NPC/np.sum(input_data.Eload-Ens+Psell)                #Levelized Cost of Energy ($/kWh)
+        LEM=(DG_Emissions+Grid_Emissions)/sum(input_data.Eload-Ens)    #Levelized Emissions(kg/kWh)
     else:
         LCOE=100
         LEM=100
     
-    LPSP=np.sum(Ens)/np.sum(Eload)
+    LPSP=np.sum(Ens)/np.sum(input_data.Eload)
     
-    RE=1-np.sum(Pdg+Pbuy)/np.sum(Eload+Psell-Ens)
+    RE=1-np.sum(Pdg+Pbuy)/np.sum(input_data.Eload+Psell-Ens)
     if(np.isnan(RE)):
         RE=0
     
@@ -217,7 +217,7 @@ def fitness(X, final_solution=False, print_result=False):
             # print('DG Emissions   = ', str(DG_Emissions),' (kg/year) ')
             # print('Grid Emissions   = ', str(Grid_Emissions), ' (kg/year) ')
 
-        return result, Cash_Flow, Pbuy, Psell, Eload, Ens, Pdg, Pch, Pdch, Ppv, Pwt, Eb, Cn_B, Edump
+        return result, Cash_Flow, Pbuy, Psell, input_data.Eload, Ens, Pdg, Pch, Pdch, Ppv, Pwt, Eb, Cn_B, Edump
 
     Z=LCOE+EM*LEM+10*(LPSP>LPSP_max)+10*(RE<RE_min)+100*(I_Cost>Budget)+\
         100*max(0, LPSP-LPSP_max)+100*max(0, RE_min-RE)+100*max(0, I_Cost-Budget)

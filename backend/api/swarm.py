@@ -9,8 +9,8 @@ from api.fitness import fitness as cost_function
 
 # @jitclass # use all keywords
 class Swarm:
-    def __init__(self, **kwargs):
-        self.nVar = 5                          # number of decision variables
+    def __init__(self, hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed, **kwargs):
+        self.nVar = 5 # number of decision variables
 
         # Variable: PV number, WT number, Battery number, number of DG, Rated Power Inverter
         self.VarMin = np.array([0,0,0,0,0]) * [PV,WT,Bat,DG,1] # Lower bound of variables
@@ -34,6 +34,9 @@ class Swarm:
         self.solution_best_positions = []
         self.solution_cost_curve = []
 
+        # Set input data from PVwatts
+        self.input_data = Input(hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed)
+
     def optimize(self, debug=False):
 
         for tt in range(self.run_time):
@@ -46,7 +49,7 @@ class Swarm:
             particle_velocities = np.zeros((self.nPop, self.nVar))
 
             # Evaluate costs per initial particle
-            particle_costs = np.apply_along_axis(cost_function, 1, particle_positions)
+            particle_costs = np.apply_along_axis(cost_function, 1, particle_positions, self.input_data)
             particle_personal_best_cost = deepcopy(particle_costs)
 
             # Determine global best
@@ -79,7 +82,7 @@ class Swarm:
                     particle_positions[i] = np.minimum(np.maximum(particle_positions[i], self.VarMin), self.VarMax)
 
                     # Evaluation
-                    particle_costs[i] = cost_function(particle_positions[i])
+                    particle_costs[i] = cost_function(particle_positions[i], self.input_data)
 
                     # Update Personal Best
                     if particle_costs[i] < particle_personal_best_cost[i]:
@@ -110,15 +113,15 @@ class Swarm:
         index = np.argmin(np.array(self.solution_best_costs))
         
         X = self.solution_best_positions[index]
-        result, Cash_Flow, Pbuy, Psell, Eload, Ens, Pdg, Pch, Pdch, Ppv, Pwt, Eb, Cn_B, Edump = cost_function(X, final_solution=True, print_result=print_result)
+        result, Cash_Flow, Pbuy, Psell, Eload, Ens, Pdg, Pch, Pdch, Ppv, Pwt, Eb, Cn_B, Edump = cost_function(X, self.input_data, final_solution=True, print_result=print_result)
 
         if plot_curve:
             # Result 1
-            plt.figure()
-            plt.plot(self.solution_cost_curve[index], '-.')
-            plt.xlabel('iteration')
-            plt.ylabel('Cost of Best Solution ')
-            plt.title('Converage Curve')
+            # plt.figure()
+            # plt.plot(self.solution_cost_curve[index], '-.')
+            # plt.xlabel('iteration')
+            # plt.ylabel('Cost of Best Solution ')
+            # plt.title('Converage Curve')
 
             # Result
             plt.figure()

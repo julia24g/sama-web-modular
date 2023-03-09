@@ -1,13 +1,27 @@
 import numpy as np
 from math import ceil
 
-path='api/Data.csv'
-Data = np.genfromtxt(path, delimiter=",")
-Eload = Data[:,0] # we need the OpenAI data - hourly electrical load
-G = Data[:,1] # hourly plane of array irradiance - PVWatts
-T = Data[:,2] # hourly ambient temperature - PVWatts
-Vw = Data[:,3] # hourly windspeed - PVWatts
-# need 8760 hours of data
+"""
+TODO: Get rid of globals!
+This module exports all variables as globals. 
+It is bad practice to use globals because they are module-scoped.
+Better practice to use objects - store all variables as class variables.
+"""
+
+class Input():
+    def __init__(self, hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed):
+        path='api/Data.csv'
+        Data = np.genfromtxt(path, delimiter=",")
+        
+        # need 8760 hours of data
+        self.Eload = Data[:,0] # we need the OpenAI data - hourly electrical load
+        self.G = np.array(hourly_plane_of_irradiance) #Data[:,1] # hourly plane of array irradiance - PVWatts
+        self.T = np.array(hourly_ambient_temperature) #Data[:,2] # hourly ambient temperature - PVWatts
+        self.Vw = np.array(hourly_windspeed) #Data[:,3] # hourly windspeed - PVWatts
+        
+        self.Pbuy_max=ceil(1.2*max(self.Eload)) # kWh
+        self.Psell_max=self.Pbuy_max
+
 
 def calcTouCbuy(day, month):
     P_peak=0.17
@@ -166,9 +180,6 @@ daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 Cbuy = calcTouCbuy(daysInMonth, months)
 Csell = 0.1
-
-Pbuy_max=ceil(1.2*max(Eload)) # kWh
-Psell_max=Pbuy_max
 
 ## Emissions produced by Grid generators (g/kW)
 E_CO2=1.43;
