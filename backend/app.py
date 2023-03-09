@@ -32,10 +32,23 @@ def create_app():
         return response.payload.data.decode('UTF-8') # Return decoded payload
 
 
+    """
+    Make GET request to PVWatts v8 API to retrieve location-specific data.
+    """
     def retrieve_PVWatts_data(longitude, latitude):
         # get PVWatts API key from environment variables set in App Engine's app.yaml
-        pvwatts_api_key = get_pvwatts_api_key()
-
+        try {
+            pvwatts_api_key = get_pvwatts_api_key()
+        } except(Exception e) {
+            print("Error retrieving PVWatts API key from Google Secret Manager")
+            print(e)
+            response = app.response_class(
+                reason="Error retrieving PVWatts API key from Google Secret Manager",
+                status=500,
+            )
+            return response
+        }
+        
         # Make GET request to PVWatts V8
         response = requests.get(
             'https://developer.nrel.gov/api/pvwatts/v8.json',
@@ -52,10 +65,24 @@ def create_app():
                 "timeframe": "hourly"
             }
         )
+
+        # Handle errors from PVWatts API
+        if response.status_code != 200:
+            print("Error retrieving data from PVWatts API")
+            print(response.status_code, response.reason)
+            response = app.response_class(
+                reason="Error retrieving data from PVWatts API",
+                status=500,
+            )
+            return response
+
+        # return json values for plane of irradiance (poa), ambient temperature (tamb), windspeed (wdsp)
         return response.json()["outputs"].get("poa"), response.json()["outputs"].get("tamb"), response.json()["outputs"].get("wspd")
 
 
-    # This endpoint calls the PSO module to perform calculations
+    """
+    This endpoint calls the PSO module to perform calculations
+    """
     @app.route("/submit", methods=['GET'])
     def submit():
         print("Processing request...")
@@ -64,15 +91,34 @@ def create_app():
         latitude = request.args.get("latitude")
 
         if longitude==None or latitude==None:
-            return "Request must include longitude and latitude", 400 
+            print("Request must include longitude and latitude")
+            response = app.response_class(
+                reason="Request must include longitude and latitude",
+                status=400,
+            )
+            return response
 
         # Retrieve PVWatts data
         hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed = retrieve_PVWatts_data(longitude, latitude)
 
-        # Perform PSO calculations
-        swarm = Swarm(hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed)
-        swarm.optimize()
-        result, file_bytes = swarm.get_final_result(print_result=True, plot_curve=True)
+        # verify data is the correct size
+        if len(hourly_plane_of_irradiance) != 8760 or len(hourly_ambient_temperature) != 8760 or len(hourly_windspeed) != 8760:
+            print("Malformed PVWatts data")
+            response = app.response_class(
+                reason="Malformed PVWatts data",
+                status=500,
+            )
+            return response
+
+        try {
+            # Perform PSO calculations
+            swarm = Swarm(hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed)
+            swarm.optimize()
+            result, file_bytes = swarm.get_final_result(print_result=True, plot_curve=True)
+        } except(Exception e) {
+            print(e)
+            return app.response_class(reason=str(e), status=500)
+        }
 
         # encode bytes to base64 for json
         base64_bytes = b64encode(file_bytes)
@@ -89,7 +135,6 @@ def create_app():
             mimetype='application/json'
         )
         return response
-        # return send_file(file_bytes, mimetype='image/png')
 
 
     @app.route("/locations", methods=["POST", "GET"])

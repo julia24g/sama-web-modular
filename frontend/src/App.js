@@ -66,7 +66,7 @@ function App() {
 
     // Perform PSO calculations
     await axios.get(
-      'https://sama-web-app.uc.r.appspot.com/submit', 
+      'https://backend-dot-sama-web-app.uc.r.appspot.com/submit', 
       { 
         params: { longitude: longitude, latitude: latitude },
         responseType: 'application/json' // python flask send_file() returns an array buffer for the png image
@@ -81,7 +81,7 @@ function App() {
 
       // Save user's location into database is successful
       axios.post(
-        'https://sama-web-app.uc.r.appspot.com/locations',
+        'https://backend-dot-sama-web-app.uc.r.appspot.com/locations',
         { longitude: longitude, latitude: latitude }
       ).then(
         console.log("Successfully added to database")
@@ -91,6 +91,7 @@ function App() {
 
     }).catch(error => {
       console.log(error);
+      setMessage(error);
     });
 
     // Update input form default values
