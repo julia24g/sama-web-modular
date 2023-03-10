@@ -1,4 +1,6 @@
 runtime: nodejs14
+
+# Default for free tier of App Engine
 instance_class: F1 
 automatic_scaling:  
   max_instances: 1
