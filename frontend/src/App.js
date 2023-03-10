@@ -58,40 +58,43 @@ function App() {
         console.log(response.data.result); 
         setLongitude(response.data.result.addressMatches[0].coordinates.x); // Set longitide
         setLatitude(response.data.result.addressMatches[0].coordinates.y); // Set latitude
+
+        // Perform PSO calculations
+        axios.get(
+          // 'http://localhost:5000/submit', // Uncomment for local development
+          'https://backend-dot-sama-web-app.uc.r.appspot.com/submit', // Comment out during local development
+          { 
+            params: { longitude: longitude, latitude: latitude },
+            responseType: 'application/json' // python flask send_file() returns an array buffer for the png image
+          }
+        ).then(response => {
+          console.log("SUCCESS", response);
+          setMessage('Here is your figure!');
+
+          // set image src with base64 in API response
+          document.getElementById("figure").src = `data:image/png;base64,${JSON.parse(response.data)["image"]}`;
+          setResults(JSON.parse(response.data)["text"]);
+
+          // Save user's location into database is successful
+          axios.post(
+            // 'http://localhost:5000/locations', // Uncomment for local development
+            'https://backend-dot-sama-web-app.uc.r.appspot.com/locations', // Comment out during local development
+            { longitude: longitude, latitude: latitude }
+          ).then(
+            console.log("Successfully added to database")
+          ).catch(error => {
+            console.log(error)
+          });
+
+        }).catch(error => {
+          console.log(error);
+          setMessage("Error performing calculations. Please try again later.");
+        });
     })
     .catch(error => {
       // Handle error
       console.error(error);
-    });
-
-    // Perform PSO calculations
-    await axios.get(
-      'https://backend-dot-sama-web-app.uc.r.appspot.com/submit', 
-      { 
-        params: { longitude: longitude, latitude: latitude },
-        responseType: 'application/json' // python flask send_file() returns an array buffer for the png image
-      }
-    ).then(response => {
-      console.log("SUCCESS", response);
-      setMessage('Here is your figure!');
-
-      // set image src with base64 in API response
-      document.getElementById("figure").src = `data:image/png;base64,${JSON.parse(response.data)["image"]}`;
-      setResults(JSON.parse(response.data)["text"]);
-
-      // Save user's location into database is successful
-      axios.post(
-        'https://backend-dot-sama-web-app.uc.r.appspot.com/locations',
-        { longitude: longitude, latitude: latitude }
-      ).then(
-        console.log("Successfully added to database")
-      ).catch(error => {
-        console.log(error)
-      });
-
-    }).catch(error => {
-      console.log(error);
-      setMessage(error);
+      setMessage("Error finding address. Please double check your input. Otherwise, the app does not currently support your location.")
     });
 
     // Update input form default values
