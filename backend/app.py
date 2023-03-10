@@ -37,17 +37,15 @@ def create_app():
     """
     def retrieve_PVWatts_data(longitude, latitude):
         # get PVWatts API key from environment variables set in App Engine's app.yaml
-        try {
+        try:
             pvwatts_api_key = get_pvwatts_api_key()
-        } except(Exception e) {
+        except Exception as e:
             print("Error retrieving PVWatts API key from Google Secret Manager")
             print(e)
-            response = app.response_class(
-                reason="Error retrieving PVWatts API key from Google Secret Manager",
-                status=500,
-            )
+            response = requests.Response()
+            response.reason="Error retrieving PVWatts API key from Google Secret Manager"
+            response.status_code=500
             return response
-        }
         
         # Make GET request to PVWatts V8
         response = requests.get(
@@ -70,10 +68,9 @@ def create_app():
         if response.status_code != 200:
             print("Error retrieving data from PVWatts API")
             print(response.status_code, response.reason)
-            response = app.response_class(
-                reason="Error retrieving data from PVWatts API",
-                status=500,
-            )
+            response = requests.Response()
+            response.reason="Error retrieving data from PVWatts API"
+            response.status_code=500
             return response
 
         # return json values for plane of irradiance (poa), ambient temperature (tamb), windspeed (wdsp)
@@ -92,10 +89,9 @@ def create_app():
 
         if longitude==None or latitude==None:
             print("Request must include longitude and latitude")
-            response = app.response_class(
-                reason="Request must include longitude and latitude",
-                status=400,
-            )
+            response = requests.Response()
+            response.reason="Request must include longitude and latitude"
+            response.status_code=400
             return response
 
         # Retrieve PVWatts data
@@ -104,21 +100,22 @@ def create_app():
         # verify data is the correct size
         if len(hourly_plane_of_irradiance) != 8760 or len(hourly_ambient_temperature) != 8760 or len(hourly_windspeed) != 8760:
             print("Malformed PVWatts data")
-            response = app.response_class(
-                reason="Malformed PVWatts data",
-                status=500,
-            )
+            response = requests.Response()
+            response.reason="Malformed PVWatts data"
+            response.status_code=500
             return response
 
-        try {
+        try:
             # Perform PSO calculations
             swarm = Swarm(hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed)
             swarm.optimize()
             result, file_bytes = swarm.get_final_result(print_result=True, plot_curve=True)
-        } except(Exception e) {
+        except Exception as e:
             print(e)
-            return app.response_class(reason=str(e), status=500)
-        }
+            response = requests.Response()
+            response.reason=str(e)
+            response.status_code=500
+            return response
 
         # encode bytes to base64 for json
         base64_bytes = b64encode(file_bytes)
