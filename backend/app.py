@@ -34,6 +34,7 @@ def create_app():
 
     """
     Make GET request to PVWatts v8 API to retrieve location-specific data.
+        Return: 
     """
     def retrieve_PVWatts_data(longitude, latitude):
         # get PVWatts API key from environment variables set in App Engine's app.yaml
@@ -42,10 +43,7 @@ def create_app():
         except Exception as e:
             print("Error retrieving PVWatts API key from Google Secret Manager")
             print(e)
-            response = requests.Response()
-            response.reason="Error retrieving PVWatts API key from Google Secret Manager"
-            response.status_code=500
-            return response
+            raise Exception()
         
         # Make GET request to PVWatts V8
         response = requests.get(
@@ -68,10 +66,7 @@ def create_app():
         if response.status_code != 200:
             print("Error retrieving data from PVWatts API")
             print(response.status_code, response.reason)
-            response = requests.Response()
-            response.reason="Error retrieving data from PVWatts API"
-            response.status_code=500
-            return response
+            raise Exception()
 
         # return json values for plane of irradiance (poa), ambient temperature (tamb), windspeed (wdsp)
         return response.json()["outputs"].get("poa"), response.json()["outputs"].get("tamb"), response.json()["outputs"].get("wspd")
@@ -79,6 +74,7 @@ def create_app():
 
     """
     This endpoint calls the PSO module to perform calculations
+        Return: Response object
     """
     @app.route("/submit", methods=['GET'])
     def submit():
@@ -94,8 +90,15 @@ def create_app():
             response.status_code=400
             return response
 
-        # Retrieve PVWatts data
-        hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed = retrieve_PVWatts_data(longitude, latitude)
+        try:
+            # Retrieve PVWatts data
+            hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed = retrieve_PVWatts_data(longitude, latitude)
+        except Exception as e:
+            response = requests.Response()
+            response.reason="Error retrieving data from PVWatts API"
+            response.status_code=500
+            return response
+        
 
         # verify data is the correct size
         if len(hourly_plane_of_irradiance) != 8760 or len(hourly_ambient_temperature) != 8760 or len(hourly_windspeed) != 8760:
