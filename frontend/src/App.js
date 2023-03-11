@@ -67,7 +67,8 @@ function App() {
             })
             .catch(error => {
                 console.error(error);
-                setMessage("Error finding address. Please double check your input. Otherwise, the app does not currently support your location.")
+                setMessage("Error finding address. Please double check your input. Otherwise, the app does not currently support your location.");
+                setLoading(false);
             })
             .then(coordinates => {
                 // Perform PSO calculations
@@ -85,6 +86,7 @@ function App() {
             .catch(error => {
                 console.log(error);
                 setMessage("Error performing calculations. Please try again later.");
+                setLoading(false);
             })
             .then(response => {
                 setMessage('Here is your figure!');
@@ -93,11 +95,13 @@ function App() {
                 document.getElementById("figure").src = `data:image/png;base64,${JSON.parse(response.data)["image"]}`;
                 setResults(JSON.parse(response.data)["text"]);
                 
+                setLoading(false);
                 return;    
             })
             .catch(error => {
                 console.log(error);
                 setMessage("Error displaying figure");
+                setLoading(false);
             })
             .then(function() {
                 // const url = 'http://localhost:5000/locations'; // Uncomment for local development
@@ -107,10 +111,9 @@ function App() {
                 let config = { longitude: longitude, latitude: latitude };
 
                 return axios.post(url, config);
+            }).catch(error => {
+                setLoading(false);
             });
-
-        // Stop the submit button from spinning
-        setLoading(false);
     };
 
     return (
