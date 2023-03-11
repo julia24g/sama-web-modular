@@ -5,6 +5,7 @@ from base64 import b64encode
 import os
 import requests
 from google.cloud import secretmanager # For accessing API keys on Google Secret Manager
+import numpy as np
 
 from api.swarm import Swarm
 
@@ -51,11 +52,11 @@ def create_app():
             params={
                 "api_key": pvwatts_api_key,
                 "system_capacity": 1, # random for now
-                "module_type": 1, # random for now
-                "losses": 1, # random for now
-                "array_type": 1, # random for now
-                "tilt": 1, # random for now
-                "azimuth": 1, # random for now
+                "module_type": 0, 
+                "losses": 0, 
+                "array_type": 1, 
+                "tilt": float(latitude)-10,
+                "azimuth": 0,
                 "lat": latitude,
                 "lon": longitude,
                 "timeframe": "hourly"
@@ -82,14 +83,19 @@ def create_app():
 
         longitude = request.args.get("longitude")
         latitude = request.args.get("latitude")
+        state = request.args.get("state")
+        region = request.args.get("region")
 
-        if longitude==None or latitude==None:
+        if longitude==None or latitude==None or state==None or region==None:
             print("Request must include longitude and latitude")
             response = requests.Response()
-            response.reason="Request must include longitude and latitude"
+            response.reason="Request must include longitude/latitude and state/region"
             response.status_code=400
             return response
 
+        """
+        TODO: parallelize these two try-except blocks because they are not interdependent
+        """
         try:
             # Retrieve PVWatts data
             hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed = retrieve_PVWatts_data(longitude, latitude)
@@ -98,7 +104,18 @@ def create_app():
             response.reason="Error retrieving data from PVWatts API"
             response.status_code=500
             return response
-        
+
+        # Read residential load data from local files
+        try:
+            region = region.replace(" ", ".")
+            path = f'api/residential_load_data/{state}_{region}.csv'
+            residential_load_data = np.genfromtxt(path, delimiter=",")
+        except Exception as e:
+            print(e)
+            response = requests.Response()
+            response.reason="Error reading residential load data"
+            response.status_code=500
+            return response        
 
         # verify data is the correct size
         if len(hourly_plane_of_irradiance) != 8760 or len(hourly_ambient_temperature) != 8760 or len(hourly_windspeed) != 8760:
@@ -110,7 +127,7 @@ def create_app():
 
         try:
             # Perform PSO calculations
-            swarm = Swarm(hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed)
+            swarm = Swarm(residential_load_data, hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed)
             swarm.optimize()
             result, file_bytes = swarm.get_final_result(print_result=True, plot_curve=True)
         except Exception as e:

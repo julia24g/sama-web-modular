@@ -9,12 +9,12 @@ Better practice to use objects - store all variables as class variables.
 """
 
 class Input():
-    def __init__(self, hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed):
+    def __init__(self, residential_load_data, hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed):
         path='api/Data.csv'
         Data = np.genfromtxt(path, delimiter=",")
         
         # need 8760 hours of data
-        self.Eload = Data[:,0] # we need the OpenAI data - hourly electrical load
+        self.Eload = residential_load_data # we need the OpenAI data - hourly electrical load
         self.G = np.array(hourly_plane_of_irradiance) #Data[:,1] # hourly plane of array irradiance - PVWatts
         self.T = np.array(hourly_ambient_temperature) #Data[:,2] # hourly ambient temperature - PVWatts
         self.Vw = np.array(hourly_windspeed) #Data[:,3] # hourly windspeed - PVWatts

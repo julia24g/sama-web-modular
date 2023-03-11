@@ -2,9 +2,14 @@ import React, { useState } from 'react';
 import { TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import Search from '@mui/icons-material/Search';
+import Autocomplete from '@mui/material/Autocomplete';
+// import Select from '@mui/material/Select';
+
 import axios from 'axios'
 
 import './App.css';
+import stateRegionData from './state-regions.json'
+import states from './states.json'
 
 function App() {
     const [loading, setLoading] = useState(false);   // Loading state of submit button, default set to false, onClick => set to true
@@ -17,10 +22,9 @@ function App() {
     const [streetName, setStreetName] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
+    const [region, setRegion] = useState('');
     const [zipcode, setZipcode] = useState('');
-
-    // Electrical data
-    const [electricalLoad, setElectricalLoad] = useState('');
+    const [regions, displayRegions] = useState([]);
 
     // Advanced settings for researchers
     // TODO: Hide this in basic view
@@ -30,7 +34,6 @@ function App() {
     const [batteryChargerCost, setBatteryChargerCost] = useState('');
     const [utilityRates, setUtilityRates] = useState('');
     const [results, setResults] = useState('');
-
 
     async function handleSubmit(event){
         setLoading(true); // Set the submit button to loading state
@@ -72,14 +75,20 @@ function App() {
             })
             .then(coordinates => {
                 // Perform PSO calculations
-                // const url = 'http://localhost:5000/submit'; // Uncomment for local development
-                const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/submit'; // Comment out during local development
-                
+                const url = 'http://localhost:5000/submit'; // Uncomment for local development
+                // const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/submit'; // Comment out during local development
+
                 // Set up config for GET request
                 let config = { 
-                    params: { longitude: coordinates[0], latitude: coordinates[1] },
+                    params: { 
+                        longitude: coordinates[0], 
+                        latitude: coordinates[1],
+                        state: state,
+                        region: region
+                    },
                     responseType: 'application/json' // python flask send_file() returns an array buffer for the png image
                 };
+
                 
                 return axios.get(url, config);
             })
@@ -104,8 +113,8 @@ function App() {
                 setLoading(false);
             })
             .then(function() {
-                // const url = 'http://localhost:5000/locations'; // Uncomment for local development
-                const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/locations'; // Comment out during local development
+                const url = 'http://localhost:5000/locations'; // Uncomment for local development
+                // const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/locations'; // Comment out during local development
 
                 // Set config for POST request to store user location in database
                 let config = { longitude: longitude, latitude: latitude };
@@ -121,7 +130,7 @@ function App() {
             <h1>SAMA Web Application</h1>
             <form>
                 <TextField 
-                    id="outlined-basic" 
+                    required
                     label="Street Number" 
                     variant="outlined" 
                     value={streetNumber}
@@ -129,7 +138,7 @@ function App() {
                     style={{margin: '10px'}}
                 />
                 <TextField 
-                    id="outlined-basic" 
+                    required
                     label="Street Name" 
                     variant="outlined" 
                     value={streetName}
@@ -137,23 +146,39 @@ function App() {
                     style={{margin: '10px'}}
                 />
                 <TextField 
-                    id="outlined-basic" 
+                    required
                     label="City" 
                     variant="outlined" 
                     value={city}
                     onChange={(event)=>setCity(event.target.value)}  
                     style={{margin: '10px'}}
                 />
-                <TextField 
-                    id="outlined-basic" 
-                    label="State" 
-                    variant="outlined" 
-                    value={state}
-                    onChange={(event)=>setState(event.target.value)}  
+                <Autocomplete
+                    disablePortal
+                    label="State"
+                    options={states}
+                    sx={{ width: 300 }}
+                    renderInput={(params) => <TextField {...params} required label="State"/>}
+                    onChange={
+                        (event, value)=>{
+                            setState(value);
+                            displayRegions(stateRegionData[value].sort());
+                        }
+                    }
+                    style={{margin: '10px'}}
+                />
+                <Autocomplete
+                    id="regions_field"
+                    disablePortal
+                    label="Region"
+                    options={regions}
+                    sx={{ width: 300 }}
+                    renderInput={(params) => <TextField {...params} required label="Region" />}
+                    onChange={(event, value)=>setRegion(value)}
                     style={{margin: '10px'}}
                 />
                 <TextField
-                    id="outlined-basic" 
+                    required
                     label="Zipcode" 
                     variant="outlined" 
                     value={zipcode}
@@ -161,17 +186,8 @@ function App() {
                     style={{margin: '10px'}}
                 />
                 <br></br>
-                <TextField
-                    id="outlined-basic" 
-                    label="Average Electrical Load" 
-                    variant="outlined" 
-                    value=''
-                    onChange={(event)=>setElectricalLoad(event.target.value)}
-                    style={{margin: '10px'}}
-                />
                 <h3>System Specifications</h3>
                 <TextField
-                    id="outlined-basic" 
                     label="Cost of PV modules per KW" 
                     variant="outlined" 
                     value=''
@@ -187,7 +203,6 @@ function App() {
                     style={{margin: '10px'}}
                 />
                 <TextField
-                    id="outlined-basic" 
                     label="Cost of Battery per KWh" 
                     variant="outlined" 
                     value=''
@@ -195,7 +210,6 @@ function App() {
                     style={{margin: '10px'}}
                 />
                 <TextField
-                    id="outlined-basic" 
                     label="Cost of Battery Charger per KW" 
                     variant="outlined" 
                     value=''
@@ -203,7 +217,6 @@ function App() {
                     style={{margin: '10px'}}
                 />
                 <TextField
-                    id="outlined-basic" 
                     label="Utility Rates" 
                     variant="outlined" 
                     value=''
