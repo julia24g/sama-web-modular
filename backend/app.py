@@ -129,7 +129,7 @@ def create_app():
             # Perform PSO calculations
             swarm = Swarm(residential_load_data, hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed)
             swarm.optimize()
-            result, file_bytes = swarm.get_final_result(print_result=True, plot_curve=True)
+            result, file_bytes = swarm.get_final_result(plot_curve=True)
         except Exception as e:
             print(e)
             response = requests.Response()

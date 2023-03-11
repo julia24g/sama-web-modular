@@ -75,8 +75,8 @@ function App() {
             })
             .then(coordinates => {
                 // Perform PSO calculations
-                // const url = 'http://localhost:5000/submit'; // Uncomment for local development
-                const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/submit'; // Comment out during local development
+                const url = 'http://localhost:5000/submit'; // Uncomment for local development
+                // const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/submit'; // Comment out during local development
 
                 // Set up config for GET request
                 let config = { 
@@ -102,8 +102,21 @@ function App() {
                         
                 // set image src with base64 in API response
                 document.getElementById("figure").src = `data:image/png;base64,${JSON.parse(response.data)["image"]}`;
-                setResults(JSON.parse(response.data)["text"]);
                 
+                // format the output text results and display as a list 
+                let data = JSON.parse(response.data)["text"];
+                let arr = [];
+                Object.keys(data).forEach(function(key) {
+                  arr.push([key, data[key][0], data[key][1]]);
+                });
+                console.log(data);
+                setResults(
+                    <p>
+                        {arr.map(item => <li>{item[0] + ": " + item[1] + " " + item[2]}</li>)}
+                    </p>
+                );
+                
+                // stop the loading on submit button
                 setLoading(false);
                 return;    
             })
@@ -113,8 +126,8 @@ function App() {
                 setLoading(false);
             })
             .then(function() {
-                // const url = 'http://localhost:5000/locations'; // Uncomment for local development
-                const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/locations'; // Comment out during local development
+                const url = 'http://localhost:5000/locations'; // Uncomment for local development
+                // const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/locations'; // Comment out during local development
 
                 // Set config for POST request to store user location in database
                 let config = { longitude: longitude, latitude: latitude };
@@ -128,6 +141,12 @@ function App() {
     return (
         <div className="App">
             <h1>SAMA Web Application</h1>
+            <p>
+                Welcome! This tool will help you determine the cost effectiveness of switching to solar PV energy systems.
+            </p>
+            <p>
+                To get started, enter in the address of the property you'd like to look up.      
+            </p>
             <form>
                 <TextField 
                     required
@@ -186,7 +205,9 @@ function App() {
                     style={{margin: '10px'}}
                 />
                 <br></br>
-                <h3>System Specifications</h3>
+                <h2>For researchers and advanced users:</h2>
+                <p>Enter in additional parameters to fine tune your calculations.</p>
+                <h3>System Specifications (Optional)</h3>
                 <TextField
                     label="Cost of PV modules per KW" 
                     variant="outlined" 
