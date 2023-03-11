@@ -20,6 +20,7 @@ You may also see any lint errors in the console.
 1. Ensure the axios requests points to the correct backend service ('https://backend-dot-sama-web-app.uc.r.appspot.com/submit')
 2. The /deploy directory should contain your app.yaml which specifies the config for App Engine
 3. Have the Google Cloud CLI (gcloud) installed on your local device: https://cloud.google.com/sdk/docs/install
+4. Delete ALL old Docker images in the Container Registry: https://console.cloud.google.com/gcr/images/sama-web-app?project=sama-web-app (This step is needed because of the rule to delete old artifacts)
 
 ## Building for Deployment: `npm run build`
 

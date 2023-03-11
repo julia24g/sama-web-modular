@@ -75,8 +75,8 @@ function App() {
             })
             .then(coordinates => {
                 // Perform PSO calculations
-                const url = 'http://localhost:5000/submit'; // Uncomment for local development
-                // const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/submit'; // Comment out during local development
+                // const url = 'http://localhost:5000/submit'; // Uncomment for local development
+                const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/submit'; // Comment out during local development
 
                 // Set up config for GET request
                 let config = { 
@@ -113,8 +113,8 @@ function App() {
                 setLoading(false);
             })
             .then(function() {
-                const url = 'http://localhost:5000/locations'; // Uncomment for local development
-                // const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/locations'; // Comment out during local development
+                // const url = 'http://localhost:5000/locations'; // Uncomment for local development
+                const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/locations'; // Comment out during local development
 
                 // Set config for POST request to store user location in database
                 let config = { longitude: longitude, latitude: latitude };

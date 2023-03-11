@@ -29,6 +29,7 @@ Start your flask server with the following command instead: `python3 app.py`
 1. Have the Google Cloud CLI (gcloud) installed on your local device: https://cloud.google.com/sdk/docs/install
 2. Your app.yaml contains the configs for App Engine. You may change the name of your service url by editing the 'service' field in the app.yaml
 3. Ensure debug mode is set to False.
+4. Delete ALL old Docker images in the Container Registry: https://console.cloud.google.com/gcr/images/sama-web-app?project=sama-web-app (This step is needed because of the rule to delete old artifacts)
 
 ## Deploying Secrets and API Keys
 API keys are stored in the Google Secret Manager under the sama-web-app project.\ 
