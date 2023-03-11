@@ -42,3 +42,10 @@ The sama-web-app service account has admin access to read/write secrets, which i
 1. Ensure you are in the 'backend' folder
 2. Deploy your build to App Engine: `gcloud app deploy`
 
+Note: Built container images are stored in the app-engine folder in Container Registry.\
+Once deployment is complete, App Engine no longer needs the container images.\
+To avoid reaching your storage quota, you can safely delete any images you don't need. 
+
+There is a rule currently set up that deletes artifacts that are 1+ days old.
+
+Reference: https://cloud.google.com/appengine/docs/standard/testing-and-deploying-your-app#managing_build_images
