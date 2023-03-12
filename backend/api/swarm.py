@@ -109,11 +109,11 @@ class Swarm:
             self.solution_best_positions.append(global_best_position)
             self.solution_cost_curve.append(best_cost)
             
-    def get_final_result(self, print_result=False, plot_curve=False):
+    def get_final_result(self, plot_curve=False):
         index = np.argmin(np.array(self.solution_best_costs))
         
         X = self.solution_best_positions[index]
-        result, Cash_Flow, Pbuy, Psell, Eload, Ens, Pdg, Pch, Pdch, Ppv, Pwt, Eb, Cn_B, Edump = cost_function(X, self.input_data, final_solution=True, print_result=print_result)
+        result, Cash_Flow, Pbuy, Psell, Eload, Ens, Pdg, Pch, Pdch, Ppv, Pwt, Eb, Cn_B, Edump = cost_function(X, self.input_data, final_solution=True)
 
         if plot_curve:
             # Result 1
