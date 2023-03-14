@@ -18,9 +18,6 @@ function App() {
     // For getting address
     const [longitude, setLongitude] = useState('');
     const [latitude, setLatitude] = useState('');
-    const [streetNumber, setStreetNumber] = useState('');
-    const [streetName, setStreetName] = useState('');
-    const [city, setCity] = useState('');
     const [state, setState] = useState('');
     const [region, setRegion] = useState('');
     const [zipcode, setZipcode] = useState('');
@@ -39,27 +36,45 @@ function App() {
         setLoading(true); // Set the submit button to loading state
         event.preventDefault();
 
-        // retrieve longitude and latitude from geocoder API is successful
-        const geocoderURL = 'https://geocoding.geo.census.gov/geocoder/locations/address';
+        // Import the Secret Manager client and instantiate it:
+        const {SecretManagerServiceClient} = require('@google-cloud/secret-manager');
+        const client = new SecretManagerServiceClient();
 
-        // Set config for geocoder API
-        let config = {
-          params: { 
-            street: `${streetNumber} ${streetName}` ,
-            city: city,
-            state: state,
-            zip: zipcode,
-            benchmark: "Public_AR_Current", // most up to date database
-            format: "json"
-          }
-        };
-        
-        // Promise chaining: start with making GET request to geocoder API
-        await axios.get(geocoderURL,config)
+        // Build path
+        let project_id = "sama-web-app"
+        let secret_id = "OPENCAGE_DATA_API_KEY"
+        let version = 1
+        let name = client.secretVersionPath(project_id, secret_id, version)
+
+        // Access the API key
+        let accessResponse = await client.accessSecretVersion({name: name});
+        let apiKey = accessResponse.payload.data.toString('utf8');
+
+
+
+
+        // Promise chaining: start with making GET request to Google Secret Manager to retrieve the API key
+        await client.accessSecretVersion({name: name})
+            .then(response => {
+                let apiKey = response.payload.data.toString('utf8');
+
+                // Open Cage Data API to retrieve long/lat from zipcode
+                const geoURL = "https://api.opencagedata.com/geocode/v1/json";
+
+                let config = {
+                    params: {
+                        q: `${zipcode},USA`,
+                        language: 'en',
+                        key: apiKey
+                    }
+                };
+
+                return axios.get(geoURL,config);
+            })
             .then(response => {
                 // Get the longitude and latitude from response
-                let longitude = response.data.result.addressMatches[0].coordinates.x;
-                let latitude = response.data.result.addressMatches[0].coordinates.y;
+                let longitude = response.data.results[0].geometry.lng;
+                let latitude = response.data.results[0].geometry.lat;
 
                 // Set longitude and latitude for later use
                 setLongitude(longitude);
@@ -75,8 +90,8 @@ function App() {
             })
             .then(coordinates => {
                 // Perform PSO calculations
-                // const url = 'http://localhost:5000/submit'; // Uncomment for local development
-                const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/submit'; // Comment out during local development
+                const url = 'http://localhost:5000/submit'; // Uncomment for local development
+                // const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/submit'; // Comment out during local development
 
                 // Set up config for GET request
                 let config = { 
@@ -126,8 +141,8 @@ function App() {
                 setLoading(false);
             })
             .then(function() {
-                // const url = 'http://localhost:5000/locations'; // Uncomment for local development
-                const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/locations'; // Comment out during local development
+                const url = 'http://localhost:5000/locations'; // Uncomment for local development
+                // const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/locations'; // Comment out during local development
 
                 // Set config for POST request to store user location in database
                 let config = { longitude: longitude, latitude: latitude };
@@ -145,57 +160,9 @@ function App() {
                 Welcome! This tool will help you determine the cost effectiveness of switching to solar PV energy systems.
             </p>
             <p>
-                To get started, enter in the address of the property you'd like to look up.      
+                To get started, enter in the zipcode of your location.      
             </p>
             <form>
-                <TextField 
-                    required
-                    label="Street Number" 
-                    variant="outlined" 
-                    value={streetNumber}
-                    onChange={(event)=>setStreetNumber(event.target.value)}
-                    style={{margin: '10px'}}
-                />
-                <TextField 
-                    required
-                    label="Street Name" 
-                    variant="outlined" 
-                    value={streetName}
-                    onChange={(event)=>setStreetName(event.target.value)}  
-                    style={{margin: '10px'}}
-                />
-                <TextField 
-                    required
-                    label="City" 
-                    variant="outlined" 
-                    value={city}
-                    onChange={(event)=>setCity(event.target.value)}  
-                    style={{margin: '10px'}}
-                />
-                <Autocomplete
-                    disablePortal
-                    label="State"
-                    options={states}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => <TextField {...params} required label="State"/>}
-                    onChange={
-                        (event, value)=>{
-                            setState(value);
-                            displayRegions(stateRegionData[value].sort());
-                        }
-                    }
-                    style={{margin: '10px'}}
-                />
-                <Autocomplete
-                    id="regions_field"
-                    disablePortal
-                    label="Region"
-                    options={regions}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => <TextField {...params} required label="Region" />}
-                    onChange={(event, value)=>setRegion(value)}
-                    style={{margin: '10px'}}
-                />
                 <TextField
                     required
                     label="Zipcode" 
@@ -203,6 +170,28 @@ function App() {
                     value={zipcode}
                     onChange={(event)=>setZipcode(event.target.value)}
                     style={{margin: '10px'}}
+                />
+                <Autocomplete
+                    disablePortal
+                    label="State"
+                    options={states}
+                    renderInput={(params) => <TextField {...params} required label="State"/>}
+                    onChange={
+                        (event, value)=>{
+                            setState(value);
+                            displayRegions(stateRegionData[value].sort());
+                        }
+                    }
+                    style={{width: "210px", margin: 'auto', padding: "10px"}}
+                />
+                <Autocomplete
+                    id="regions_field"
+                    disablePortal
+                    label="Region"
+                    options={regions}
+                    renderInput={(params) => <TextField {...params} required label="Region" />}
+                    onChange={(event, value)=>setRegion(value)}
+                    style={{width: "210px",margin: 'auto', padding: "10px"}}
                 />
                 <br></br>
                 <h2>For researchers and advanced users:</h2>
