@@ -3,7 +3,6 @@ import { TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import Search from '@mui/icons-material/Search';
 import Autocomplete from '@mui/material/Autocomplete';
-// import Select from '@mui/material/Select';
 
 import axios from 'axios'
 
@@ -32,86 +31,26 @@ function App() {
     const [utilityRates, setUtilityRates] = useState('');
     const [results, setResults] = useState('');
 
+    
     async function handleSubmit(event){
         setLoading(true); // Set the submit button to loading state
         event.preventDefault();
 
-        // Import the Secret Manager client and instantiate it:
-        const {SecretManagerServiceClient} = require('@google-cloud/secret-manager');
-        const client = new SecretManagerServiceClient();
+        // PSO API configs
+        const url = 'http://localhost:5000/submit'; // Uncomment for local development
+        // const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/submit'; // Comment out during local development
 
-        // Build path
-        let project_id = "sama-web-app"
-        let secret_id = "OPENCAGE_DATA_API_KEY"
-        let version = 1
-        let name = client.secretVersionPath(project_id, secret_id, version)
+        // Set up config for GET request
+        let config = { 
+            params: { 
+                zipcode: zipcode,
+                state: state,
+                region: region
+            },
+            responseType: 'application/json' // python flask send_file() returns an array buffer for the png image
+        };
 
-        // Access the API key
-        let accessResponse = await client.accessSecretVersion({name: name});
-        let apiKey = accessResponse.payload.data.toString('utf8');
-
-
-
-
-        // Promise chaining: start with making GET request to Google Secret Manager to retrieve the API key
-        await client.accessSecretVersion({name: name})
-            .then(response => {
-                let apiKey = response.payload.data.toString('utf8');
-
-                // Open Cage Data API to retrieve long/lat from zipcode
-                const geoURL = "https://api.opencagedata.com/geocode/v1/json";
-
-                let config = {
-                    params: {
-                        q: `${zipcode},USA`,
-                        language: 'en',
-                        key: apiKey
-                    }
-                };
-
-                return axios.get(geoURL,config);
-            })
-            .then(response => {
-                // Get the longitude and latitude from response
-                let longitude = response.data.results[0].geometry.lng;
-                let latitude = response.data.results[0].geometry.lat;
-
-                // Set longitude and latitude for later use
-                setLongitude(longitude);
-                setLatitude(latitude);
-                
-                // Return coordinates for use in next Promise
-                return [longitude, latitude];
-            })
-            .catch(error => {
-                console.error(error);
-                setMessage("Error finding address. Please double check your input. Otherwise, the app does not currently support your location.");
-                setLoading(false);
-            })
-            .then(coordinates => {
-                // Perform PSO calculations
-                const url = 'http://localhost:5000/submit'; // Uncomment for local development
-                // const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/submit'; // Comment out during local development
-
-                // Set up config for GET request
-                let config = { 
-                    params: { 
-                        longitude: coordinates[0], 
-                        latitude: coordinates[1],
-                        state: state,
-                        region: region
-                    },
-                    responseType: 'application/json' // python flask send_file() returns an array buffer for the png image
-                };
-
-                
-                return axios.get(url, config);
-            })
-            .catch(error => {
-                console.log(error);
-                setMessage("Error performing calculations. Please try again later.");
-                setLoading(false);
-            })
+        await axios.get(url, config)
             .then(response => {
                 setMessage('Here is your figure!');
                         
@@ -136,9 +75,12 @@ function App() {
                 return;    
             })
             .catch(error => {
-                console.log(error);
-                setMessage("Error displaying figure");
-                setLoading(false);
+                if (error.response) {
+                    setMessage(error.response.data);
+                } else {    
+                    setMessage("Error accessing backend. Please try again later.");
+                }
+                throw error;
             })
             .then(function() {
                 const url = 'http://localhost:5000/locations'; // Uncomment for local development
