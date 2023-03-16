@@ -30,8 +30,8 @@ h1 {
 #about {
   background: #F1EAF9;
   width: 100%;
-  margin: auto;
-  padding: 50px;
+  margin: 0;
+  padding: 50px 0;
   display: table;
   overflow: hidden;
 }
@@ -39,8 +39,8 @@ h1 {
 #contact {
   background: white;
   width: 100%;
-  margin: auto;
-  padding: 50px;
+  margin: 0;
+  padding: 50px 0;
   display: table;
   overflow: hidden;
 }
@@ -57,7 +57,7 @@ h1 {
   display: table-cell; 
   vertical-align: middle;
   text-align: center;
-  padding: 100px;
+  padding: 50px 100px;
 }
 
 .form {
@@ -103,5 +103,11 @@ h1 {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media (min-width: 1000px) {
+  img {
+    padding: 20px 20%;
   }
 }

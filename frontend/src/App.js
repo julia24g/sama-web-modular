@@ -256,15 +256,15 @@ function App() {
                 </form>
                 <br></br>
                 <h2>{message}</h2>
-                <img id="figure"></img>
+                <img id="figure" style={{ width: "100%" }}></img>
                 <p>{results}</p>
             </Box>
 
             <Box id="about">
                 <div className="aboutText">
-                    <h1 style={{ color: "#4F2683", fontWeight: "800" }}>ABOUT</h1>
+                    <h1>ABOUT</h1>
                     <br></br>
-                    <p>SAMA is the world’s first-ever publicly available web tool to help homeowners calculate the cost of building and maintaining a solar PV system.</p>
+                    <p>SAMA is the world's first-ever publicly available web tool to help homeowners calculate the cost of building and maintaining a solar PV system.</p>
                     <br></br>
                     <br></br>
                     <p>Our goal is to make information about solar PV systems more accessible to the general public. 
@@ -280,7 +280,7 @@ function App() {
 
             <Box id="contact">
                 <div className="contactText">
-                    <h1 style={{ color: "#4F2683", fontWeight: "800" }}>CONTACT</h1>
+                    <h1>CONTACT</h1>
                     <br></br>
                     <h2>Dr. Joshua Pearce</h2>
                     <p>John M. Thompson Chair in Information Technology and Innovation,</p>
