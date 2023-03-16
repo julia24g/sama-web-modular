@@ -45,3 +45,12 @@ There is a rule currently set up that deletes artifacts that are 1+ days old.
 
 Reference: https://cloud.google.com/appengine/docs/standard/testing-and-deploying-your-app#managing_build_images
 
+# Troubleshooting on Production Environment
+
+Visit Google Cloud Logging to see all logs: https://console.cloud.google.com/logs/query?project=sama-web-app
+
+Can add filters to search for specify errors:
+- Filter for sama-web-app project applications
+- Filter for GAE applications
+- Filter for log type (INFO, ERROR, etc)
+- Filter for time  period

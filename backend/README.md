@@ -1,3 +1,39 @@
+# Using the Backend API
+
+This API is publicly available for all users. The following endpoints are available:
+
+`URL = 'https://backend-dot-sama-web-app.uc.r.appspot.com/submit'`
+
+Perfom PSO calculation for a specific location:
+`GET /submit?zipcode={your-zipcode}&state={your-state}&region={your-region}`
+Note: Users must select from a pre-defined list of regions. See frontend/src/state-regions.json for the list of state to region mappings.
+
+Parameters:
+- zipcode (required)
+- state (required)
+- region (required)
+- system_capacity (required)
+- pv_cost
+- diesel_generator_cost
+- battery_cost
+- battery_charger_cost
+
+Non-required parameters will use default values if not specificied. Default values used by the code can be found in input_data.py.
+
+
+## For developers/researchers only
+The backend API also stores a database of the locations that users are querying about. The POST endpoint is used to insert a new location. Researchers can also make a GET request to list out all the locations in the database. Locations in the database are not unique.
+
+Get a list of locations that all users are querying about:
+`GET /locations`
+
+Insert a location into the database:
+`POST /locations?longitude={your-longitude}&latitude={your-latitude}`
+
+## Request Limits
+
+Under construction
+
 # Development 
 
 ## Requirements
@@ -50,3 +86,13 @@ To avoid reaching your storage quota, you can safely delete any images you don't
 There is a rule currently set up that deletes artifacts that are 1+ days old.
 
 Reference: https://cloud.google.com/appengine/docs/standard/testing-and-deploying-your-app#managing_build_images
+
+# Troubleshooting on Production Environment
+
+Visit Google Cloud Logging to see all logs: https://console.cloud.google.com/logs/query?project=sama-web-app
+
+Can add filters to search for specify errors:
+- Filter for sama-web-app project applications
+- Filter for GAE applications
+- Filter for log type (INFO, ERROR, etc)
+- Filter for time  period
