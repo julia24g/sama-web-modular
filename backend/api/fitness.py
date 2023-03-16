@@ -156,15 +156,15 @@ def fitness(X, input_data, final_solution=False):
         result = {}
         
         # System size
-        result["Cpv"] = (Pn_PV, "kW")
-        result["Cwt"] = (Pn_WT, "kW")
-        result["Cbat"] = (Cn_B, "kWh")
-        result["Cdg"] = (Pn_DG, "kW")
-        result["Cinverter"] = (Cn_I, "kW")
+        result["PV Capacity"] = (Pn_PV, "kW")
+        result["WT Capacity"] = (Pn_WT, "kW")
+        result["Battery Capacity"] = (Cn_B, "kWh")
+        result["Diesel Capacity"] = (Pn_DG, "kW")
+        result["Inverter Capacity"] = (Cn_I, "kW")
 
         # Result
         result["NPC"] = (NPC, "$")
-        result["LCOE"] = (LCOE, "$/kWh")
+        result["Levelized Cost of Electricity"] = (LCOE, "$/kWh")
         result["Operation Cost"] = (Operating_Cost, "$")
         result["Initial Cost"] = (I_Cost, "$")
         result["RE"] = (RE*100, "%")
@@ -180,7 +180,7 @@ def fitness(X, input_data, final_solution=False):
         result["LEM"] = (LEM, "kg/kWh")
         result["PV Power"] = (np.sum(Ppv), "kWh")
         result["WT Power"] = (np.sum(Pwt), "kWh")
-        result["DG Power"] = (np.sum(Pdg), "kWh")
+        result["Diesel Generator Power"] = (np.sum(Pdg), "kWh")
         result["Total fuel consumed by DG"] = (np.sum(q), "kg/year")
 
         result["DG Emissions"] = (DG_Emissions, "kg/year")

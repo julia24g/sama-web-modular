@@ -101,7 +101,7 @@ def create_app():
             raise Exception()
 
         # return values for longitude and latitude
-        return response.json()["results"][0]["geometry"]["lng"], response.json()["resultss"][0]["geometry"]["lat"]
+        return response.json()["results"][0]["geometry"]["lng"], response.json()["results"][0]["geometry"]["lat"]
 
 
     """
@@ -205,6 +205,18 @@ def create_app():
             status=200,
             mimetype='application/json'
         )
+
+        # Store location in database
+        con = sqlite3.connect("Locations.db")
+        cur = con.cursor()
+        cur.execute("CREATE TABLE IF NOT EXISTS Locations (Longitude double, Latitude double)") # Create table if it doesnt exist yet
+        cur.execute(f"INSERT INTO Locations VALUES ({longitude}, {latitude})") # Insert new row with long/lat into db
+
+        # Commit to db and close it
+        con.commit()
+        con.close()
+
+        # Return json response
         return response
 
 
