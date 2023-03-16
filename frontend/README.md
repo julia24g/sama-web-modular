@@ -36,14 +36,18 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 1. Go to the deploy folder: `cd deploy`
 2. Deploy your build to App Engine: `gcloud app deploy`
+3. Delete all gcloud storage artifacts to avoid charges: `gcloud storage rm --recursive gs://staging.sama-web-app.appspot.com/ ; gcloud storage rm --recursive gs://sama-web-app.appspot.com/ ;  gcloud storage rm --recursive gs://us.artifacts.sama-web-app.appspot.com`
 
 Note: Built container images are stored in the app-engine folder in Container Registry.\
 Once deployment is complete, App Engine no longer needs the container images.\
 To avoid reaching your storage quota, you can safely delete any images you don't need. 
 
-There is a rule currently set up that deletes artifacts that are 1+ days old.
-
 Reference: https://cloud.google.com/appengine/docs/standard/testing-and-deploying-your-app#managing_build_images
+
+Google automatically creates multi-region US buckets when artifacts are deployed despite GAE being set up with a single region.\
+There is no current solution around this issue besides deleting all artifacts after deployment.
+
+Reference: https://stackoverflow.com/questions/62582129/multi-region-cloud-storage-charges
 
 # Troubleshooting on Production Environment
 
