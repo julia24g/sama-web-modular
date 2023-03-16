@@ -246,7 +246,7 @@ function App() {
                         loading={loading}
                         loadingPosition="start"
                         startIcon={<Search />}
-                        variant="outlined"
+                        variant="contained"
                         type="submit"
                         style={{margin: '10px'}}
                         sx={{ backgroundColor:"#4F2683", color: "white", fontWeight: "600" }}
@@ -254,6 +254,7 @@ function App() {
                     Submit
                     </LoadingButton>
                 </form>
+                <br></br>
                 <h2>{message}</h2>
                 <img id="figure"></img>
                 <p>{results}</p>
