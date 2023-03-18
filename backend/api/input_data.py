@@ -9,10 +9,17 @@ Better practice to use objects - store all variables as class variables.
 """
 
 class Input():
-    def __init__(self, residential_load_data, hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed):
-        path='api/Data.csv'
-        Data = np.genfromtxt(path, delimiter=",")
-        
+    def __init__(
+        self, 
+        residential_load_data, 
+        hourly_plane_of_irradiance, 
+        hourly_ambient_temperature, 
+        hourly_windspeed,
+        pv_cost,
+        diesel_generator_cost,
+        battery_cost,
+        battery_charger_cost
+    ):
         # need 8760 hours of data
         self.Eload = residential_load_data # we need the OpenAI data - hourly electrical load
         self.G = np.array(hourly_plane_of_irradiance) #Data[:,1] # hourly plane of array irradiance - PVWatts
@@ -21,6 +28,12 @@ class Input():
         
         self.Pbuy_max=ceil(1.2*max(self.Eload)) # kWh
         self.Psell_max=self.Pbuy_max
+
+        # Use default values if input params from request are None
+        self.pv_cost = float(pv_cost) or 896
+        self.diesel_generator_cost = float(diesel_generator_cost) or 352
+        self.battery_cost = float(battery_cost) or 360
+        self.battery_charger_cost = float(battery_charger_cost) or 150
 
 
 def calcTouCbuy(day, month):

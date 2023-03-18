@@ -31,6 +31,7 @@ def create_app():
 
         response = client.access_secret_version(name=name)
         return response.payload.data.decode('UTF-8') # Return decoded payload
+        # return os.environ[key]
 
 
     """
@@ -137,7 +138,6 @@ def create_app():
             )
             return response
         
-
         """
         TODO: parallelize these two try-except blocks because they are independent
         """
@@ -152,7 +152,7 @@ def create_app():
                 mimetype='application/json'
             )
             return response
-
+        
         # Read residential load data from local files
         try:
             region = region.replace(" ", ".")
@@ -165,7 +165,7 @@ def create_app():
                 status=500,
                 mimetype='application/json'
             )
-            return response        
+            return response      
 
         # verify data is the correct size
         if len(hourly_plane_of_irradiance) != 8760 or len(hourly_ambient_temperature) != 8760 or len(hourly_windspeed) != 8760:
@@ -176,10 +176,16 @@ def create_app():
                 mimetype='application/json'
             )
             return response
-
+        
         try:
+            # Retrieve args from request
+            pv_cost = request.args.get("pv_cost")
+            diesel_generator_cost = request.args.get("diesel_generator_cost")
+            battery_cost = request.args.get("battery_cost")
+            battery_charger_cost = request.args.get("battery_charger_cost")
+
             # Perform PSO calculations
-            swarm = Swarm(residential_load_data, hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed)
+            swarm = Swarm(residential_load_data, hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed, pv_cost, diesel_generator_cost, battery_cost, battery_charger_cost)
             swarm.optimize()
             result, file_bytes = swarm.get_final_result(plot_curve=True)
         except Exception as e:
@@ -206,41 +212,49 @@ def create_app():
             mimetype='application/json'
         )
 
-        # Store location in database
-        con = sqlite3.connect("Locations.db")
-        cur = con.cursor()
-        cur.execute("CREATE TABLE IF NOT EXISTS Locations (Longitude double, Latitude double)") # Create table if it doesnt exist yet
-        cur.execute(f"INSERT INTO Locations VALUES ({longitude}, {latitude})") # Insert new row with long/lat into db
 
-        # Commit to db and close it
-        con.commit()
-        con.close()
+        """
+        TODO: Storing the user's location in the Database. App Engine files are read-only so we only want to 
+        uncomment this code when we deploy to an actual server. Additionally, redeployment to App Engine would 
+        overwrite the database each time, losing any saved data. 
+        """
+        # # Store location in database
+        # con = sqlite3.connect("Locations.db")
+        # cur = con.cursor()
+        # cur.execute("CREATE TABLE IF NOT EXISTS Locations (Longitude double, Latitude double)") # Create table if it doesnt exist yet
+        # cur.execute(f"INSERT INTO Locations VALUES ({longitude}, {latitude})") # Insert new row with long/lat into db
+
+        # # Commit to db and close it
+        # con.commit()
+        # con.close()
 
         # Return json response
         return response
 
+    """
+    TODO: Expose this endpoint when we have data in the Locations.db to access.
+    """
+    # @app.route("/locations", methods=["POST", "GET"])
+    # def locations():
+    #     # Connect to database
+    #     con = sqlite3.connect("Locations.db")
+    #     cur = con.cursor()
+    #     cur.execute("CREATE TABLE IF NOT EXISTS Locations (Longitude double, Latitude double)")
 
-    @app.route("/locations", methods=["POST", "GET"])
-    def locations():
-        # Connect to database
-        con = sqlite3.connect("Locations.db")
-        cur = con.cursor()
-        cur.execute("CREATE TABLE IF NOT EXISTS Locations (Longitude double, Latitude double)")
+    #     if request.method == 'POST':
+    #         cur.execute(f"INSERT INTO Locations VALUES ({request.json['longitude']}, {request.json['latitude']})")
+    #         data = request.json
 
-        if request.method == 'POST':
-            cur.execute(f"INSERT INTO Locations VALUES ({request.json['longitude']}, {request.json['latitude']})")
-            data = request.json
-
-        if request.method == 'GET':
-            res = cur.execute("SELECT * FROM Locations")
-            data = res.fetchall()
+    #     if request.method == 'GET':
+    #         res = cur.execute("SELECT * FROM Locations")
+    #         data = res.fetchall()
         
-        con.commit()
-        con.close()
-        return {
-            'resultStatus': 'SUCCESS',
-            'result': data
-        }
+    #     con.commit()
+    #     con.close()
+    #     return {
+    #         'resultStatus': 'SUCCESS',
+    #         'result': data
+    #     }
     
     return app
 

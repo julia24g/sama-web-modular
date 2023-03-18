@@ -3,11 +3,10 @@ runtime_config:
     operating_system: "ubuntu22"
     runtime_version: "3.9"
 
-# Default for free tier of App Engine
-instance_class: F1 
+instance_class: F2
 automatic_scaling:  
   max_instances: 1
 
-entrypoint: gunicorn app:gunicorn_app --timeout 180
+entrypoint: gunicorn app:gunicorn_app --timeout 180 
 
 service: "backend"

@@ -101,3 +101,11 @@ Can add filters to search for specify errors:
 - Filter for GAE applications
 - Filter for log type (INFO, ERROR, etc)
 - Filter for time  period
+
+
+Gunicorn
+gunicorn app:gunicorn_app --timeout 180 
+
+# Google Compute Engine
+To upload files to the sama-backend VM:
+gcloud compute scp --recurse <local directory full path> sama-backend:app

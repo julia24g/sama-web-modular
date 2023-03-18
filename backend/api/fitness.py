@@ -53,7 +53,7 @@ def fitness(X, input_data, final_solution=False):
     ## Installation and operation cost
     
     # Total Investment cost ($)
-    I_Cost=C_PV*Pn_PV + C_WT*Pn_WT+ C_DG*Pn_DG+C_B*Cn_B+C_I*Cn_I +C_CH
+    I_Cost=input_data.pv_cost*Pn_PV + C_WT*Pn_WT+ input_data.diesel_generator_cost*Pn_DG+input_data.battery_cost*Cn_B+input_data.battery_charger_cost*Cn_I +C_CH
     
     Top_DG=np.sum(Pdg>0)+1
     L_DG=TL_DG/Top_DG

@@ -9,7 +9,17 @@ from api.fitness import fitness as cost_function
 
 # @jitclass # use all keywords
 class Swarm:
-    def __init__(self, residential_load_data, hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed, **kwargs):
+    def __init__(self, 
+        residential_load_data, 
+        hourly_plane_of_irradiance, 
+        hourly_ambient_temperature, 
+        hourly_windspeed, 
+        pv_cost,
+        diesel_generator_cost,
+        battery_cost,
+        battery_charger_cost,
+        **kwargs
+    ):
         self.nVar = 5 # number of decision variables
 
         # Variable: PV number, WT number, Battery number, number of DG, Rated Power Inverter
@@ -35,7 +45,7 @@ class Swarm:
         self.solution_cost_curve = []
 
         # Set input data from PVwatts
-        self.input_data = Input(residential_load_data, hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed)
+        self.input_data = Input(residential_load_data, hourly_plane_of_irradiance, hourly_ambient_temperature, hourly_windspeed, pv_cost, diesel_generator_cost, battery_cost, battery_charger_cost)
 
     def optimize(self, debug=False):
 
