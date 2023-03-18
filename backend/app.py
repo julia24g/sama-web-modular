@@ -31,7 +31,6 @@ def create_app():
 
         response = client.access_secret_version(name=name)
         return response.payload.data.decode('UTF-8') # Return decoded payload
-        # return os.environ[key]
 
 
     """
