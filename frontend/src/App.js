@@ -141,7 +141,7 @@ function App() {
                 <div className="landingText">
                     <h1>WELCOME TO SAMA!</h1>
                     <br></br>
-                    <p>Sama is the first-ever publicly available tool to help you calculate the cost of switching to solar photvoltaic systems.</p>
+                    <p>Sama is the first-ever publicly available tool to help you calculate the cost of switching to off-grid solar photvoltaic (PV) systems.</p>
                     <p>Learn how you can go green today.</p>
                     <br></br>
                     <Link href="#calculator" underline="none" color="inherit    ">
@@ -264,7 +264,7 @@ function App() {
                 <div className="aboutText">
                     <h1>ABOUT</h1>
                     <br></br>
-                    <p>SAMA is the world's first-ever publicly available web tool to help homeowners calculate the cost of building and maintaining a solar PV system.</p>
+                    <p>SAMA is the world's first-ever publicly available web tool to help homeowners calculate the cost of building and maintaining an off-grid solar PV system.</p>
                     <br></br>
                     <br></br>
                     <p>Our goal is to make information about solar PV systems more accessible to the general public. 
