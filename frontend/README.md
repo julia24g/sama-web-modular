@@ -1,11 +1,17 @@
-# Development
+# 💻 Using the Website
+
+URL: https://sama-web-app.uc.r.appspot.com/
+
+# 🛠️ Development
 
 ## Requirements
 
 - Install 'Allow CORS: Access-Control-Allow-origin' chrome extension and toggle on to allow CORS for development purposes.
 - If testing the backend locally as well, replace 'https://backend-dot-sama-web-app.uc.r.appspot.com/submit' with 'http://localhost:5000/submit' in App.js
 
-## Starting the Local Server: `npm start`
+## Starting the Local Server: 
+
+Run the command: `npm start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
@@ -13,7 +19,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
 
-# Deployment
+# 📤 Deployment
 
 ## Prepare for Deployment
 
@@ -22,7 +28,9 @@ You may also see any lint errors in the console.
 3. Have the Google Cloud CLI (gcloud) installed on your local device: https://cloud.google.com/sdk/docs/install
 4. Delete ALL old Docker images in the Container Registry: https://console.cloud.google.com/gcr/images/sama-web-app?project=sama-web-app (This step is needed because of the rule to delete old artifacts)
 
-## Building for Deployment: `npm run build`
+## Building the Application
+
+Run the command: `npm run build`
 
 Builds the app for production to the `deploy/build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
@@ -49,7 +57,7 @@ There is no current solution around this issue besides deleting all artifacts af
 
 Reference: https://stackoverflow.com/questions/62582129/multi-region-cloud-storage-charges
 
-# Troubleshooting on Production Environment
+# ⚙️ Troubleshooting on Production Environment
 
 Visit Google Cloud Logging to see all logs: https://console.cloud.google.com/logs/query?project=sama-web-app
 
