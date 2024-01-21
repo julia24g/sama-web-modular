@@ -2,25 +2,15 @@ import React, { useState } from 'react';
 import { TextField, accordionActionsClasses } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import Search from '@mui/icons-material/Search';
-import Autocomplete from '@mui/material/Autocomplete';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-// Nav bar
-import NavBar from './NavBar';
-// Landing Page
-import LandingPage from './LandingPage';
-
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Link from '@mui/material/Link';
 
-// Calculator tabs
+// Tabs
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
