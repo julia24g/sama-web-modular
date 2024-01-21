@@ -29,10 +29,10 @@ function App() {
     const [results, setResults] = useState('');
 
     // For getting address
-    const [state, setState] = useState('');
-    const [region, setRegion] = useState('');
+    // const [state, setState] = useState('');
+    // const [region, setRegion] = useState('');
     const [zipcode, setZipcode] = useState('');
-    const [regions, displayRegions] = useState([]);
+    // const [regions, displayRegions] = useState([]);
 
     // Advanced settings 
     // TODO: Hide this in basic view
@@ -55,8 +55,8 @@ function App() {
         let config = { 
             params: { 
                 zipcode: zipcode,
-                state: state,
-                region: region,
+                // state: state,
+                // region: region,
                 pv_cost: PVCost,
                 diesel_generator_cost: dieselGeneratorCost,
                 battery_cost: batteryCost,
@@ -72,17 +72,17 @@ function App() {
             return;
         }
 
-        if (state === '') {
-            setMessage('Please select your state.');
-            setLoading(false);
-            return;
-        }
+        // if (state === '') {
+        //     setMessage('Please select your state.');
+        //     setLoading(false);
+        //     return;
+        // }
 
-        if (region === ''){
-            setMessage('Please select your region.');
-            setLoading(false);
-            return;
-        }
+        // if (region === ''){
+        //     setMessage('Please select your region.');
+        //     setLoading(false);
+        //     return;
+        // }
 
         await axios.get(url, config)
             .then(response => {
@@ -152,7 +152,7 @@ function App() {
 
             <Box id="calculator" sx={{ padding: "100px" }}>
                 <h1>SAMA CALCULATOR</h1>
-                <p>Get started by entering your zipcode, state, and region.</p>
+                <p>Get started by entering your zipcode.</p>
                 <p>This application currently only supports US locations.</p>
                 <br></br>
                 <form className="form">
@@ -164,7 +164,7 @@ function App() {
                         onChange={(event)=>setZipcode(event.target.value)}
                         style={{width: "210px", margin: '10px auto'}}
                     />
-                    <Autocomplete
+                    {/* <Autocomplete
                         disablePortal
                         label="State"
                         options={states}
@@ -185,7 +185,7 @@ function App() {
                         renderInput={(params) => <TextField {...params} required label="Region" />}
                         onChange={(event, value)=>setRegion(value)}
                         style={{width: "210px", margin: '10px auto'}}
-                    />
+                    /> */}
                     <br></br>
                     <Accordion sx={{ marginInline: "10%" }}>
                         <AccordionSummary
@@ -198,7 +198,7 @@ function App() {
                         <AccordionDetails>
                             <Typography sx={{textAlign:"left", textStyle: "italic"}}>
                                 Default values are specified. 
-                                Advanced users and researchers may use custom values to fine-tune the parameters for a more accurate result.
+                                Advanced users may use custom values to fine-tune the parameters for a more accurate result.
                             </Typography>
                             <br></br>
                             <TextField
