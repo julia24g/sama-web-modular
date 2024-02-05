@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 // Import all pages
 import NavBar from './NavBar';
 import LandingPage from './LandingPage';
@@ -19,14 +19,14 @@ function App() {
             <Contact />
 
             <div id="footer">
-                    <h3>Western University</h3>
-                    <p>1151 Richmond St.</p>
-                    <p>London, Ontario, Canada</p>
-                    <p>N6A 3K7</p>
-            </div>                
-            
+                <h3>Western University</h3>
+                <p>1151 Richmond St.</p>
+                <p>London, Ontario, Canada</p>
+                <p>N6A 3K7</p>
+            </div>
+
         </div>
-      );
+    );
 }
 
 export default App;

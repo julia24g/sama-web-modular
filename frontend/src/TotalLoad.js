@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
 import { TextField, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import { useForm } from './FormDataContext'; // Import the useForm hook
 
-const TimeInput = () => {
-  const [termType, setTimeInput] = useState('Monthly');
-  const [value, setValue] = useState('');
+const TotalLoad = () => {
+  const { formData, dispatch } = useForm(); // Use the useForm hook
+  const [termType, setTimeInput] = useState('Annual');
+  const [values, setValues] = useState(Array.from({ length: 12 }, () => ''));
+  const [yearlyValue, setYearlyValue] = useState('');
+
+  const monthLabels = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
 
   const handleTimeInputChange = (event, newTime) => {
     if (newTime !== null) {
@@ -11,8 +19,32 @@ const TimeInput = () => {
     }
   };
 
-  const handleValueChange = (event) => {
-    setValue(event.target.value);
+  const handleMonthlyValueChange = (index, newValue) => {
+    const newValues = [...values];
+    newValues[index] = newValue;
+    setValues(newValues);
+    // Dispatch the updated monthly values to the central form data
+    dispatch({
+      type: 'UPDATE_FORM_DATA',
+      payload: {
+        ...formData,
+        [`monthlyLoad${index + 1}`]: newValue,
+      },
+    });
+  };
+
+  const handleYearlyValueChange = (event) => {
+    const newValue = event.target.value;
+    setYearlyValue(newValue);
+
+    // Dispatch the updated yearly value to the central form data
+    dispatch({
+      type: 'UPDATE_FORM_DATA',
+      payload: {
+        ...formData,
+        yearlyValueField: newValue,
+      },
+    });
   };
 
   return (
@@ -33,14 +65,29 @@ const TimeInput = () => {
         </ToggleButton>
       </ToggleButtonGroup>
       <br />
-      <TextField
-        label={`Enter ${termType} Amount`}
-        variant="outlined"
-        value={value}
-        onChange={handleValueChange}
-      />
+      {termType === 'Monthly' ? (
+        <div>
+          {values.map((value, index) => (
+            <TextField
+              key={index}
+              label={`${monthLabels[index]} Load`}
+              variant="outlined"
+              value={value}
+              onChange={(event) => handleMonthlyValueChange(index, event.target.value)}
+              style={{ margin: '5px'}}
+            />
+          ))}
+        </div>
+      ) : (
+        <TextField
+          label="Annual Load"
+          variant="outlined"
+          value={formData.annualTotalLoad}
+          onChange={handleYearlyValueChange}
+        />
+      )}
     </div>
   );
 };
 
-export default TimeInput;
+export default TotalLoad;

@@ -19,79 +19,23 @@ import './App.css';
 import stateRegionData from './state-regions.json'
 import states from './states.json'
 
+import { useForm } from './FormDataContext'; // Import the useForm hook
+
+
 
 const Calculator = () => {
+    const { formData, dispatch } = useForm(); // Use the useForm hook
     const [loading, setLoading] = useState(false);   // Loading state of submit button, default set to false, onClick => set to true
     const [message, setMessage] = useState('');
     const [results, setResults] = useState('');
-
-    const [formData, setFormData] = useState({
-        // General Data
-        zipcode: ' ', 
-        systemType: ' ',
-        typicalElectricalLoad: ' ',
-        projectLifetime: '25',
-        maxPowerSupplyLoss: '0.01%',
-        minRenewableEnergy: '0.3',
-        inflationRate: ' ',
-        nominalDiscountRate: ' ',
-        realDiscountRate: ' ',
-        systemCapacity: '1269',
-        // PV
-        PVCost: '896',
-        PVReplacementCost: ' ',
-        PVOandM: '0',
-        fuelCostPerLiter: ' ',
-        PVLifetime: '25',
-        PVEfficiency: ' ',
-        // WT
-        WTCost: '',
-        WTReplacementCost: '',
-        WTOandM: '',
-        WTLifetime: '',
-        WTHubHeight: '17',
-        WTAnemometerHeight: '43.6',
-        WTElectricalEfficiency: '1',
-        cutInSpeed: '2.5',
-        cutOutSpeed: '25',
-        ratedSpeed: '9.5',
-        frictionCoefficient: '0.14',
-        // Diesel Generator
-        dieselGeneratorCost: '352',
-        dieselGeneratorReplacementCost: '',
-        dieselGeneratorOandM: '',
-        dieselGeneratorLifetime: '',
-        // Battery Bank
-        batteryCost: '360',
-        batteryChargerCost: '150',
-        batteryReplacementConst: '',
-        batteryOandM: '',
-        batteryLifetime: '',
-        batteryYearlyDegradation: '',
-        minSOC: '0.2',
-        maxSOC: '1',
-        batteryVoltage: '',
-        // Inverter
-        inverterCost: '',
-        inverterReplacementCost: '',
-        inverterOandM: '',
-        inverterLifetime: '25',
-        inverterEfficiency: '',
-        // Charge Controller
-        chargeControllerCost: '',
-        chargeControllerReplacementCost: '',
-        chargeControllerOandM: '',
-        superchargerLifetime: '',
-        // Grid
-    });
 
     // State for managing tabs in the calculator section
     const [calculatorTabValue, setCalculatorTabValue] = React.useState('1');
     const handleCalculatorTabChange = (event, newValue) => {
         setCalculatorTabValue(newValue);
-      };
+    };
 
-    async function handleSubmit(event){
+    async function handleSubmit(event) {
         setLoading(true); // Set the submit button to loading state
         event.preventDefault();
 
@@ -100,13 +44,13 @@ const Calculator = () => {
         const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/submit'; // Comment out during local development
 
         // Set up config for GET request
-        let config = { 
-            params: { 
-                zipcode: formData.zipcode,
-                pv_cost: formData.PVCost,
-                diesel_generator_cost: formData.dieselGeneratorCost,
-                battery_cost: formData.batteryCost,
-                battery_charger_cost: formData.batteryChargerCost
+        let config = {
+            params: {
+                // zipcode: formData.zipcode,
+                // pv_cost: formData.PVCost,
+                // diesel_generator_cost: formData.dieselGeneratorCost,
+                // battery_cost: formData.batteryCost,
+                // battery_charger_cost: formData.batteryChargerCost
             },
             responseType: 'application/json' // python flask send_file() returns an array buffer for the png image
         };
@@ -121,15 +65,15 @@ const Calculator = () => {
         await axios.get(url, config)
             .then(response => {
                 setMessage('Here is your figure!');
-                        
+
                 // set image src with base64 in API response
                 document.getElementById("figure").src = `data:image/png;base64,${JSON.parse(response.data)["image"]}`;
-                
+
                 // format the output text results and display as a list 
                 let data = JSON.parse(response.data)["text"];
                 let arr = [];
-                Object.keys(data).forEach(function(key) {
-                  arr.push([key, data[key][0], data[key][1]]);
+                Object.keys(data).forEach(function (key) {
+                    arr.push([key, data[key][0], data[key][1]]);
                 });
                 console.log(data);
                 setResults(
@@ -137,16 +81,16 @@ const Calculator = () => {
                         {arr.map(item => <li>{item[0] + ": " + item[1] + " " + item[2]}</li>)}
                     </p>
                 );
-                
+
                 // stop the loading on submit button
                 setLoading(false);
-                return;    
+                return;
             })
             .catch(error => {
                 // Display error message
                 if (error.response) {
                     setMessage(error.response.data);
-                } else {    
+                } else {
                     setMessage("Error accessing backend. Please try again later.");
                 }
                 // Set results to empty
@@ -176,7 +120,7 @@ const Calculator = () => {
                         }
                     </TabPanel>
                     <TabPanel value="2">
-                        {   
+                        {
                             <AdvancedCalculator />
                         }
                     </TabPanel>
@@ -188,10 +132,10 @@ const Calculator = () => {
                         startIcon={<Search />}
                         variant="contained"
                         type="submit"
-                        style={{margin: '10px'}}
-                        sx={{ backgroundColor:"#4F2683", color: "white", fontWeight: "600" }}
+                        style={{ margin: '10px' }}
+                        sx={{ backgroundColor: "#4F2683", color: "white", fontWeight: "600" }}
                     >
-                    Submit
+                        Submit
                     </LoadingButton>
                 </TabContext>
             </Box>
@@ -201,8 +145,8 @@ const Calculator = () => {
             <img id="figure" style={{ width: "100%" }}></img>
             <p>{results}</p>
         </Box>
-            
-      );
+
+    );
 }
 
 export default Calculator;
