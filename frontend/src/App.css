@@ -5,6 +5,10 @@ h1 {
   color: #4F2683;
   font-weight: 800;
 }
+h3 {
+  color: #4F2683;
+  font-weight: 600;
+}
 
 .App {
   text-align: center;
@@ -103,11 +107,5 @@ h1 {
   }
   to {
     transform: rotate(360deg);
-  }
-}
-
-@media (min-width: 1000px) {
-  img {
-    padding: 20px 20%;
   }
 }

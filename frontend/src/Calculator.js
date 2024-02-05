@@ -158,7 +158,7 @@ const Calculator = () => {
 
     return (
         <Box id="calculator" sx={{ padding: "100px" }}>
-            <h1>SAMA CALCULATOR</h1>
+            <h1>SAMA Grid Defection</h1>
             <p>This application currently only supports US locations.</p>
             <br></br>
 
