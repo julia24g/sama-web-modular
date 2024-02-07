@@ -28,6 +28,10 @@ const initialState = {
     monthlyLoad10: '',
     monthlyLoad11: '',
     monthlyLoad12: '',
+    PV: false,
+    WT: false,
+    dieselGenerator: false,
+    batteryBank: false,
     // PV
     PVCost: '896',
     PVReplacementCost: ' ',
@@ -74,6 +78,8 @@ const initialState = {
     chargeControllerOandM: '',
     superchargerLifetime: '',
     // Grid
+    gridConnected: true,
+    netMetered: false
 };
 
 const reducer = (state, action) => {

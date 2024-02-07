@@ -16,8 +16,6 @@ import TabPanel from '@mui/lab/TabPanel';
 import axios from 'axios'
 
 import './App.css';
-import stateRegionData from './state-regions.json'
-import states from './states.json'
 
 import { useForm } from './FormDataContext'; // Import the useForm hook
 
