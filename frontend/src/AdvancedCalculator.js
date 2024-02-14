@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
-import { TextField, accordionActionsClasses } from '@mui/material';
-import Typography from '@mui/material/Typography';
+import React from 'react';
+import { TextField } from '@mui/material';
 import UtilityRateStructure from './UtilityRateStructure';
 import SystemType from './SystemType';
 import YesNo from './YesNo';
 import PhotovoltaicPage from './Photovoltaic';
-import WindTurbinePage from './WindTurbine';
 import DieselGeneratorPage from './DieselGenerator';
 import BatteryBankPage from './BatteryBank';
 import TotalLoad from './TotalLoad';
 import { useForm } from './FormDataContext'; // Import the useForm hook
 import './App.css';
+import Zipcode from './Zipcode';
 
 const AdvancedCalculator = () => {
     const { formData, dispatch } = useForm();
@@ -28,7 +27,6 @@ const AdvancedCalculator = () => {
     // Mapping system keys to their respective component pages
     const systemPages = {
         photovoltaic: PhotovoltaicPage,
-        windTurbine: WindTurbinePage,
         dieselGenerator: DieselGeneratorPage,
         batteryBank: BatteryBankPage,
     };
@@ -41,26 +39,18 @@ const AdvancedCalculator = () => {
         <div>
             <div>
                 <p>Get started by entering your zipcode.</p>
-                <TextField
-                    required
-                    label="Zipcode"
-                    variant="outlined"
-                    value={formData.zipcode}
-                    onChange={handleCalculatorInputChange}
-                    style={{ width: "210px", margin: '10px auto' }}
-                />
+                <Zipcode />
                 <br></br>
                 <p>Select your utility rate structure.</p>
                 <UtilityRateStructure />
                 <br></br>
-                <p>Input annual or monthly load data in kWh.</p>
+                <p>Input annual or monthly load data in kW.</p>
                 <TotalLoad />
                 <br></br>
                 <p>Select the components of your system.</p>
                 <SystemType />
                 <br></br>
                 {formData.photovoltaic && <PhotovoltaicPage />}
-                {formData.windTurbine && <WindTurbinePage />}
                 {formData.dieselGenerator && <DieselGeneratorPage />}
                 {formData.batteryBank && <BatteryBankPage />}
                 <p>Is your system connected to the grid?</p>
@@ -75,7 +65,7 @@ const AdvancedCalculator = () => {
                     required
                     label="Project Lifetime"
                     variant="outlined"
-                    value={formData.projectLifetime}
+                    value={formData.n}
                     onChange={handleCalculatorInputChange}
                     style={{ width: "210px", margin: '10px auto' }}
                 />
@@ -85,7 +75,7 @@ const AdvancedCalculator = () => {
                     required
                     label="Power Supply Probability"
                     variant="outlined"
-                    value={formData.maxPowerSupplyLoss}
+                    value={formData.LPSP_max_rate}
                     onChange={handleCalculatorInputChange}
                     style={{ width: "210px", margin: '10px auto' }}
                 />
@@ -95,7 +85,7 @@ const AdvancedCalculator = () => {
                     required
                     label="Minimum Renewable Energy"
                     variant="outlined"
-                    value={formData.minRenewableEnergy}
+                    value={formData.RE_min_rate}
                     onChange={handleCalculatorInputChange}
                     style={{ width: "210px", margin: '10px auto' }}
                 />
@@ -105,7 +95,7 @@ const AdvancedCalculator = () => {
                     required
                     label="Inflation Rate"
                     variant="outlined"
-                    value={formData.inflationRate}
+                    value={formData.e_ir_rate}
                     onChange={handleCalculatorInputChange}
                     style={{ width: "210px", margin: '10px auto' }}
                 />
@@ -115,7 +105,7 @@ const AdvancedCalculator = () => {
                     required
                     label="Nominal Discount Rate"
                     variant="outlined"
-                    value={formData.nominalDiscountRate}
+                    value={formData.n_ir_rate}
                     onChange={handleCalculatorInputChange}
                     style={{ width: "210px", margin: '10px auto' }}
                 />
@@ -125,7 +115,7 @@ const AdvancedCalculator = () => {
                     required
                     label="Real Discount Rate"
                     variant="outlined"
-                    value={formData.realDiscountRate}
+                    value={formData.ir}
                     onChange={handleCalculatorInputChange}
                     style={{ width: "210px", margin: '10px auto' }}
                 />

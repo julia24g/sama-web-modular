@@ -16,6 +16,14 @@ const TotalLoad = () => {
   const handleTimeInputChange = (event, newTime) => {
     if (newTime !== null) {
       setTimeInput(newTime);
+
+      dispatch({
+        type: 'UPDATE_FORM_DATA',
+        payload: {
+          ...formData,
+          isAnnual: newTime === 'Annual'
+        },
+      });
     }
   };
 

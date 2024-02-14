@@ -38,18 +38,12 @@ const Calculator = () => {
         event.preventDefault();
 
         // PSO API configs
-        // const url = 'http://localhost:5000/submit'; // Uncomment for local development
-        const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/submit'; // Comment out during local development
+        const url = 'http://localhost:5000/submit'; // Uncomment for local development
+        // const url = 'https://backend-dot-sama-web-app.uc.r.appspot.com/submit'; // Comment out during local development
 
         // Set up config for GET request
         let config = {
-            params: {
-                // zipcode: formData.zipcode,
-                // pv_cost: formData.PVCost,
-                // diesel_generator_cost: formData.dieselGeneratorCost,
-                // battery_cost: formData.batteryCost,
-                // battery_charger_cost: formData.batteryChargerCost
-            },
+            params: { ...formData },
             responseType: 'application/json' // python flask send_file() returns an array buffer for the png image
         };
 

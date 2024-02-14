@@ -20,39 +20,39 @@ const DieselGenerator = () => {
 
   return (
     <form className="form">
-    <p>What is the capital cost of the diesel generator per KW installed (all costs in)?</p>
+    <p>What is the capital cost of the diesel generator per kW installed (USD)?</p>
     <TextField
         required
         label="Capital Cost of DG" 
         variant="outlined" 
-        value={formData.dieselGeneratorCost}
+        value={formData.C_DG}
         onChange={handleAnswerChange}
         style={{width: "210px", margin: '10px auto'}}
     />
-    <p>What is the replacement cost of the diesel generator per KW?</p>
+    <p>What is the replacement cost of the diesel generator per kW (USD)?</p>
     <TextField
         required
         label="Replacement Cost of DG" 
         variant="outlined" 
-        value={formData.dieselGeneratorReplacementCost}
+        value={formData.R_DG}
         onChange={handleAnswerChange}
         style={{width: "250px", margin: '10px auto'}}
     />
-    <p>What is the operations and maintenance cost of the diesel generator per KW per year?</p>
+    <p>What is the operations and maintenance cost of the diesel generator per kW per year (USD)?</p>
     <TextField
         required
         label="O&M Cost of DG" 
         variant="outlined" 
-        value={formData.dieselGeneratorOandM}
+        value={formData.MO_DG}
         onChange={handleAnswerChange}
         style={{width: "210px", margin: '10px auto'}}
     />
-    <p>What is the lifetime of the diesel generator?</p>
+    <p>What is the lifetime of the diesel generator (hours)?</p>
     <TextField
         required
         label="DG Lifetime" 
         variant="outlined" 
-        value={formData.dieselGeneratorLifetime}
+        value={formData.TL_DG}
         onChange={handleAnswerChange}
         style={{width: "210px", margin: '10px auto'}}
     />

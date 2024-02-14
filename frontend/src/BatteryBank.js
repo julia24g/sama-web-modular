@@ -20,25 +20,25 @@ const BatteryBank = () => {
 
     return (
         <form className="form">
-            <p>What is the capital cost of the battery bank per KW installed (all costs in)?</p>
+            <p>What is the capital cost of the battery bank per kW installed (USD)?</p>
             <TextField
                 required
                 label="Capital Cost of Battery"
                 variant="outlined"
-                value={formData.batteryCost}
+                value={formData.C_B}
                 onChange={handleAnswerChange}
                 style={{ width: "210px", margin: '10px auto' }}
             />
-            <p>What is the replacement cost of the battery bank per KW?</p>
+            <p>What is the replacement cost of the battery bank per kW (USD)?</p>
             <TextField
                 required
                 label="Replacement Cost of Battery"
                 variant="outlined"
-                value={formData.batteryReplacementCost}
+                value={formData.R_B}
                 onChange={handleAnswerChange}
                 style={{ width: "250px", margin: '10px auto' }}
             />
-            <p>What is the operations and maintenance cost of the battery bank per KW per year?</p>
+            <p>What is the operations and maintenance cost of the battery bank per kW per year?</p>
             <TextField
                 required
                 label="O&M Cost of Battery"
@@ -47,12 +47,12 @@ const BatteryBank = () => {
                 onChange={handleAnswerChange}
                 style={{ width: "210px", margin: '10px auto' }}
             />
-            <p>What is the lifetime of the battery bank?</p>
+            <p>What is the lifetime of the battery bank (years)?</p>
             <TextField
                 required
                 label="Battery Lifetime"
                 variant="outlined"
-                value={formData.batteryLifetime}
+                value={formData.L_B}
                 onChange={handleAnswerChange}
                 style={{ width: "210px", margin: '10px auto' }}
             />
@@ -70,7 +70,7 @@ const BatteryBank = () => {
                 required
                 label="Minimum SOC"
                 variant="outlined"
-                value={formData.minSOC}
+                value={formData.SOC_min}
                 onChange={handleAnswerChange}
                 style={{ width: "210px", margin: '10px auto' }}
             />
@@ -79,7 +79,7 @@ const BatteryBank = () => {
                 required
                 label="Maximum SOC"
                 variant="outlined"
-                value={formData.maxSOC}
+                value={formData.SOC_max}
                 onChange={handleAnswerChange}
                 style={{ width: "210px", margin: '10px auto' }}
             />

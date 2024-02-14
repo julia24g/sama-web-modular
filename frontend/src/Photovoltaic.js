@@ -20,7 +20,7 @@ const PVQuestions = () => {
 
   return (
     <form className="form">
-    <p>What is the capital cost of PV modules per KW installed (all costs in)?</p>
+    <p>What is the capital cost of PV modules per kW installed (all costs in)?</p>
     <TextField
         required
         label="Capital Cost of PV" 
@@ -29,7 +29,7 @@ const PVQuestions = () => {
         onChange={handleAnswerChange}
         style={{width: "210px", margin: '10px auto'}}
     />
-    <p>What is the replacement cost of PV modules per KW?</p>
+    <p>What is the replacement cost of PV modules per kW?</p>
     <TextField
         required
         label="Replacement Cost of PV" 
@@ -38,7 +38,7 @@ const PVQuestions = () => {
         onChange={handleAnswerChange}
         style={{width: "210px", margin: '10px auto'}}
     />
-    <p>What are the operations and maintenance cost of PV modules per KW per year?</p>
+    <p>What are the operations and maintenance cost of PV modules per kW per year?</p>
     <TextField
         required
         label="O&M Cost of PV" 

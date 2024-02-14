@@ -21,7 +21,6 @@ const SystemSelectionForm = ({ onSystemsSelected }) => {
 
   const systemOptions = [
     { label: "Photovoltaic", value: "photovoltaic" },
-    { label: "Wind Turbine", value: "windTurbine" },
     { label: "Diesel Generator", value: "dieselGenerator" },
     { label: "Battery Bank", value: "batteryBank" }
   ];
