@@ -1,24 +1,19 @@
+// YesNo.js
 import React, { useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import RadioGroup from '@mui/material/RadioGroup';
 import Radio from '@mui/material/Radio';
-import { useForm } from './FormDataContext'; // Import the useForm hook
+import { useFormContext } from 'react-hook-form'; // Import the useFormContext hook
 
-const YesNoQuestion = () => {
-  const { formData, dispatch } = useForm(); // Use the useForm hook
+const YesNo = ({ name }) => {
+  const { register, setValue } = useFormContext(); // Use the useFormContext hook
   const [answer, setAnswer] = useState('');
 
   const handleAnswerChange = (event) => {
-    const { name, value } = event.target;
-    dispatch({
-      type: 'UPDATE_FORM_DATA',
-      payload: {
-        ...formData, // Preserve existing form data
-        [name]: value, // Update the field with the new value
-      },
-    });
-    setAnswer(event.target.value);
+    const value = event.target.value;
+    setValue(name, value); // Update the field with the new value
+    setAnswer(value);
   };
 
   return (
@@ -26,10 +21,11 @@ const YesNoQuestion = () => {
       <FormControl component="fieldset">
         <RadioGroup
           aria-label="answer"
-          name="answer"
+          name={name}
           value={answer}
           onChange={handleAnswerChange}
           row
+          {...register(name)} // Register the field with react-hook-form
         >
           <FormControlLabel
             value="Yes"
@@ -49,4 +45,4 @@ const YesNoQuestion = () => {
   );
 };
 
-export default YesNoQuestion;
+export default YesNo;

@@ -1,23 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useFormContext, Controller } from 'react-hook-form';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { IconButton } from '@mui/material';
-import { useForm } from './FormDataContext'; // Import the useForm hook
 
 const SystemSelectionForm = ({ onSystemsSelected }) => {
-  const { formData, dispatch } = useForm(); // Use the useForm hook
-
-  const handleSystemChange = (event) => {
-    const { name, checked } = event.target;
-
-    dispatch({
-      type: 'UPDATE_FORM_DATA',
-      payload: {
-        ...formData, // Preserve existing form data
-        [name]: checked, // Update the field with the new value
-      },
-    });
-  };
+  const { control } = useFormContext();
 
   const systemOptions = [
     { label: "Photovoltaic", value: "photovoltaic" },
@@ -27,22 +14,26 @@ const SystemSelectionForm = ({ onSystemsSelected }) => {
 
   return (
     <div>
-      <form style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
-        {systemOptions.map((option) => (
-          <div key={option.value} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+      {systemOptions.map((option) => (
+        <Controller
+          key={option.value}
+          name={option.value}
+          control={control}
+          defaultValue={false}
+          render={({ field }) => (
             <FormControlLabel
               control={
                 <Checkbox
-                  name={option.value} // Use `name` to identify the system
-                  checked={!!formData[option.value]} // Use form data to determine if checked
-                  onChange={handleSystemChange}
-                />
+                  {...field}
+                  checked={field.value}
+                  onChange={(e) => field.onChange(e.target.checked)}
+                />  
               }
               label={option.label}
             />
-          </div>
-        ))}
-      </form>
+          )}
+          />
+      ))}
     </div>
   );
 };
