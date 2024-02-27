@@ -7,14 +7,17 @@ import TieredRated from './TieredRate';
 import SeasonalTieredRate from './SeasonalTieredRate';
 import MonthlyTieredRate from './MonthlyTieredRate';
 import TimeOfUse from './TOURate';
+import { useFormContext } from 'react-hook-form';
 
 const UtilityRateStructure = () => {
   const [selectedRateStructure, setSelectedRateStructure] = useState('');
+  const { setValue } = useFormContext(); // Use the useFormContext hook
 
   const rateStructures = ["Flat Rate", "Seasonal Rate", "Monthly Rate", "Tiered Rate", "Seasonal Tiered Rate", "Monthly Tiered Rate", "Time of Use"]; // Add other rate structures as needed
 
   const handleRateStructureChange = (event) => {
     setSelectedRateStructure(event.target.value);
+    setValue('rateStructure', event.target.value);
   };
 
   const renderRateStructureComponent = () => {

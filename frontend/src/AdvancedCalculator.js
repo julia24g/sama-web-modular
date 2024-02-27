@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TextField } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import Search from '@mui/icons-material/Search'; // Ensure Search icon is imported
 import UtilityRateStructure from './rate_structures/UtilityRateStructure';
 import SystemType from './SystemType';
 import YesNo from './YesNo';
@@ -7,20 +9,55 @@ import PhotovoltaicPage from './Photovoltaic';
 import DieselGeneratorPage from './DieselGenerator';
 import BatteryBankPage from './BatteryBank';
 import TotalLoad from './TotalLoad';
-import { Controller, useFormContext } from 'react-hook-form'; import './App.css';
+import { useForm, Controller, FormProvider } from 'react-hook-form';
 import Zipcode from './Zipcode';
+import axios from 'axios';
+import * as yup from 'yup';
+import './App.css';
+
+// Validation schema
+const advancedValidationSchema = yup.object({
+    zipcode: yup.string()
+      .required('Zipcode is required')
+      .matches(/^[0-9]{5}$/, 'Zipcode must be 5 digits'), // Adjust regex as needed
+    ratestructure: yup.string()
+        .required('Selecting a rate structure is required'),
+    
+  });
 
 const AdvancedCalculator = () => {
-    const { control, watch } = useFormContext(); // Use useFormContext to access the form control
+    const methods = useForm(); // Initialize useForm
+    const { control, watch, handleSubmit } = methods;
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState('');
 
     const isPhotovoltaic = watch('photovoltaic');
     const isDieselGenerator = watch('dieselGenerator');
     const isBatteryBank = watch('batteryBank');
 
+    const onSubmit = async (data) => {
+        setLoading(true);
+        const url = 'http://localhost:5000/submit/advanced';
+        let config = {
+            params: data,
+            responseType: 'json'
+        };
+
+        try {
+            const response = await axios.get(url, config);
+            setMessage(response.data.message);
+            // Process response data here as needed
+            setLoading(false);
+        } catch (error) {
+            setMessage('Error accessing backend. Please try again later.');
+            console.error('Error', error);
+            setLoading(false);
+        }
+    };
 
     return (
-        <div>
-            <div>
+        <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <p>Get started by entering your zipcode.</p>
                 <Zipcode />
                 <br></br>
@@ -40,7 +77,7 @@ const AdvancedCalculator = () => {
                 <YesNo name="connectedToGrid" />
                 <br></br>
                 <p>Is your system net metered?</p>
-                <YesNo name="netMetered"/>
+                <YesNo name="netMetered" />
                 <br></br>
 
                 <p>What is your project's lifetime?</p>
@@ -140,9 +177,21 @@ const AdvancedCalculator = () => {
                         />
                     )}
                 />
-                
-            </div>
-        </div>
+                <p style={{ fontStyle: "italic" }}>It can take up to 1 min to calculate your results.</p>
+                <LoadingButton
+                    onClick={onSubmit}
+                    loading={loading}
+                    loadingPosition="start"
+                    startIcon={<Search />}
+                    variant="contained"
+                    type="submit"
+                    style={{ margin: '10px' }}
+                    sx={{ backgroundColor: "#4F2683", color: "white", fontWeight: "600" }}
+                >
+                    Submit
+                </LoadingButton>
+            </form>
+        </FormProvider>
     );
 };
 export default AdvancedCalculator;

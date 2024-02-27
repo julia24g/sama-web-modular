@@ -41,6 +41,20 @@ def get_utility_rates():
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
     return response
 
+@app.route('/submit/general', methods=['GET'])
+def submit_general():
+    # Process the general calculator request
+    data = request.args  # or request.json if you're sending data as JSON
+    # Process the data...
+    return jsonify({'message': 'General calculator processing complete'})
+
+@app.route('/submit/advanced', methods=['GET'])
+def submit_advanced():
+    # Process the advanced calculator request
+    data = request.args  # or request.json if you're sending data as JSON
+    # Process the data...
+    return jsonify({'message': 'Advanced calculator processing complete'})
+
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)

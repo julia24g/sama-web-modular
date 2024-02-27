@@ -2,14 +2,6 @@ import React, { useEffect } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { TextField } from '@mui/material';
 import './App.css';
-import * as yup from 'yup';
-
-const schema = yup.object().shape({
-  zipcode: yup
-    .string()
-    .required('Zipcode is required')
-    .matches(/^\d{5}$/, 'Zipcode must be a 5-digit number'),
-});
 
 const Zipcode = () => {
   const { control, watch, setValue, formState: { errors } } = useFormContext(); // Use the useFormContext hook
@@ -34,7 +26,7 @@ const Zipcode = () => {
           if (data.outputs) {
             const residentialRate = data.outputs.residential;
             if (residentialRate != "no data") {
-              setValue('flatRateField1', residentialRate !== "no data" ? residentialRate : '');
+              setValue('flatRate', residentialRate !== "no data" ? residentialRate : '');
             }
           } else {
             console.log('No results found');
@@ -46,7 +38,7 @@ const Zipcode = () => {
 
       handleCheckZipcode();
     } else {
-      setValue('flatRateField1', '');
+      setValue('flatRate', '');
     }
   }, [watchedZipcode, setValue]); // useEffect will run when watchedZipcode changes
 

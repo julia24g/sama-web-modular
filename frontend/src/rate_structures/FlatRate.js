@@ -7,7 +7,7 @@ const FlatRate = () => {
 
   return (
     <Controller
-      name="flatRateField1"
+      name="flatRate"
       control={control}
       defaultValue=""
       render={({ field }) => (
