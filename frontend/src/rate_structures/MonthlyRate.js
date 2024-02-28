@@ -17,12 +17,14 @@ const MonthlyRate = () => {
           name={`monthlyRate${index + 1}`} // Naming fields as monthlyRate1, monthlyRate2, etc.
           control={control}
           defaultValue=""
-          render={({ field }) => (
+          render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
               label={`${month} Price`}
               variant="outlined"
               style={{ width: '18%'}}
+              error={!!error} // Check if there's an error specific to this field
+              helperText={error ? error.message : null} // Show the error message if it exists
             />
           )}
         />

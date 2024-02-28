@@ -50,10 +50,11 @@ def submit_general():
 
 @app.route('/submit/advanced', methods=['GET'])
 def submit_advanced():
-    # Process the advanced calculator request
-    data = request.args  # or request.json if you're sending data as JSON
-    # Process the data...
-    return jsonify({'message': 'Advanced calculator processing complete'})
+    return '', 204
+    # # Process the advanced calculator request
+    # data = request.args  # or request.json if you're sending data as JSON
+    # # Process the data...
+    # return jsonify({'message': 'Advanced calculator processing complete'})
 
 
 if __name__ == "__main__":

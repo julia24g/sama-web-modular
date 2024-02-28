@@ -3,7 +3,7 @@ import { TextField, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { useFormContext, Controller } from 'react-hook-form'; // Import useFormContext and Controller from react-hook-form
 
 const TotalLoad = () => {
-  const { control, setValue } = useFormContext();
+  const { control, setValue, formState: { errors } } = useFormContext(); // Use the useFormContext hook
   const [termType, setTermType] = useState('Annual');
 
   const monthLabels = [
@@ -43,12 +43,14 @@ const TotalLoad = () => {
             name={`monthlyLoad${index + 1}`}
             control={control}
             defaultValue=""
-            render={({ field }) => (
+            render={({ field, fieldState: { error } }) => (
               <TextField
                 {...field}
                 label={`${label} Load`}
                 variant="outlined"
                 style={{ margin: '5px' }}
+                error={!!error} // Check if there's an error specific to this field
+                helperText={error ? error.message : null} // Show the error message if it exists
               />
             )}
           />
@@ -64,6 +66,8 @@ const TotalLoad = () => {
               label="Annual Load"
               variant="outlined"
               style={{ margin: '5px' }}
+              error={!!errors.annualTotalLoad}
+              helperText={errors.annualTotalLoad ? errors.annualTotalLoad.message : null}
             />
           )}
         />

@@ -24,12 +24,14 @@ const TieredRate = () => {
                             name={field.name}
                             control={control}
                             defaultValue=""
-                            render={({ field: controllerField }) => (
+                            render={({ field: controllerField, fieldState: { error } }) => (
                                 <TextField
                                     {...controllerField}
                                     label={field.label}
                                     variant="outlined"
                                     fullWidth
+                                    error={!!error} // Check if there's an error specific to this field
+                                    helperText={error ? error.message : null} // Show the error message if it exists
                                 />
                             )}
                         />

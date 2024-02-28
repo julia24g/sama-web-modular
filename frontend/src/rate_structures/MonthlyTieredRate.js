@@ -11,12 +11,12 @@ const MonthlyTieredRate = () => {
   ];
 
   const tierLabels = [
-    { label: 'Low Tier Price', suffix: 'Price' },
-    { label: 'Low Tier Max Load', suffix: 'MaxLoad' },
-    { label: 'Medium Tier Price', suffix: 'Price' },
-    { label: 'Medium Tier Max Load', suffix: 'MaxLoad' },
-    { label: 'High Tier Price', suffix: 'Price' },
-    { label: 'High Tier Max Load', suffix: 'MaxLoad' }
+    { label: 'Low Tier Price', suffix: 'LowPrice' },
+    { label: 'Low Tier Max Load', suffix: 'LowMaxLoad' },
+    { label: 'Medium Tier Price', suffix: 'MedPrice' },
+    { label: 'Medium Tier Max Load', suffix: 'MedMaxLoad' },
+    { label: 'High Tier Price', suffix: 'HighPrice' },
+    { label: 'High Tier Max Load', suffix: 'HighMaxLoad' }
   ];
 
   return (
@@ -33,12 +33,14 @@ const MonthlyTieredRate = () => {
                   name={`${month.toLowerCase()}${tier.suffix}`}
                   control={control}
                   defaultValue=""
-                  render={({ field: controllerField }) => (
+                  render={({ field: controllerField, fieldState: { error } }) => (
                     <TextField
                       {...controllerField}
                       label={`${tier.label}`}
                       variant="outlined"
                       fullWidth
+                      error={!!error} // Check if there's an error specific to this field
+                      helperText={error ? error.message : null} // Show the error message if it exists
                     />
                   )}
                 />

@@ -11,12 +11,14 @@ const SeasonalRate = () => {
         name="seasonalRateField1"
         control={control}
         defaultValue=""
-        render={({ field }) => (
+        render={({ field, fieldState: { error } }) => (
           <TextField
             {...field}
             label="Summer Price"
             variant="outlined"
             style={{ width: '18%' }}
+            error={!!error} // Check if there's an error specific to this field
+            helperText={error ? error.message : null} // Show the error message if it exists
           />
         )}
       />
@@ -24,12 +26,14 @@ const SeasonalRate = () => {
         name="seasonalRateField2"
         control={control}
         defaultValue=""
-        render={({ field }) => (
+        render={({ field, fieldState: { error } }) => (
           <TextField
             {...field}
             label="Winter Price"
             variant="outlined"
             style={{ width: '18%' }}
+            error={!!error} // Check if there's an error specific to this field
+            helperText={error ? error.message : null} // Show the error message if it exists
           />
         )}
       />
