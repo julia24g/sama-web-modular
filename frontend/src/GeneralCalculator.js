@@ -9,52 +9,24 @@ import './App.css';
 import Search from '@mui/icons-material/Search';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup'; // Import yupResolver
-
-// Reusable function to create validation schema for rate fields
-const createRateValidation = (rateStructureName) => {
-    return yup.number()
-        .typeError('Must be a number')
-        .when('rateStructure', (rateStructure, schema) => {
-            return rateStructure === rateStructureName
-                ? schema.required(`This field is required`)
-                : schema;
-        });
-};
-
-const createLoadValidation = () => {
-    return yup.number()
-        .typeError('Must be a number')
-        .when('isAnnual', {
-            is: false, // Check if isAnnual is false
-            then: schema => schema.required('This field is required'), // Only make monthlyLoad required if isAnnual is false
-            otherwise: schema => schema,
-        })
-};
+import { createZipcodeValidation, createMonthlyLoadValidation, createRateValidation, createAnnualLoadValidation } from './ValidationUtils'; // Import validation functions from validationUtils.js
 
 // Validation schema
 const generalValidationSchema = yup.object({
-    zipcode: yup.string()
-        .required('This field is required')
-        .matches(/^[0-9]{5}$/, 'Zipcode must be 5 digits'),
-    annualTotalLoad: yup.number()
-        .typeError('Must be a number')
-        .when('isAnnual', (isAnnual, schema) => {
-            return isAnnual
-                ? schema.required('This field is required')
-                : schema;
-        }),
-    monthlyLoad1: createLoadValidation(),
-    monthlyLoad2: createLoadValidation(),
-    monthlyLoad3: createLoadValidation(),
-    monthlyLoad4: createLoadValidation(),
-    monthlyLoad5: createLoadValidation(),
-    monthlyLoad6: createLoadValidation(),
-    monthlyLoad7: createLoadValidation(),
-    monthlyLoad8: createLoadValidation(),
-    monthlyLoad9: createLoadValidation(),
-    monthlyLoad10: createLoadValidation(),
-    monthlyLoad11: createLoadValidation(),
-    monthlyLoad12: createLoadValidation(),
+    zipcode: createZipcodeValidation(),
+    annualTotalLoad: createAnnualLoadValidation(),
+    monthlyLoad1: createMonthlyLoadValidation(),
+    monthlyLoad2: createMonthlyLoadValidation(),
+    monthlyLoad3: createMonthlyLoadValidation(),
+    monthlyLoad4: createMonthlyLoadValidation(),
+    monthlyLoad5: createMonthlyLoadValidation(),
+    monthlyLoad6: createMonthlyLoadValidation(),
+    monthlyLoad7: createMonthlyLoadValidation(),
+    monthlyLoad8: createMonthlyLoadValidation(),
+    monthlyLoad9: createMonthlyLoadValidation(),
+    monthlyLoad10: createMonthlyLoadValidation(),
+    monthlyLoad11: createMonthlyLoadValidation(),
+    monthlyLoad12: createMonthlyLoadValidation(),
     rateStructure: yup.string()
         .required('Selecting a rate structure is required'),
     flatRate: createRateValidation('Flat Rate'),
@@ -204,7 +176,7 @@ const GeneralCalculator = () => {
                 <p>Input annual or monthly load data in kW.</p>
                 <TotalLoad />
                 <br></br>
-                <p>Select your utility rate structure and input values in dollars per hour (USD).</p>
+                <p>Select your utility rate structure and input values in dollars per kWh (USD).</p>
                 <UtilityRateStructure />
                 <p style={{ fontStyle: "italic" }}>It can take up to 1 min to calculate your results.</p>
                 <LoadingButton
