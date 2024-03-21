@@ -14,8 +14,7 @@ import { createZipcodeValidation, createMonthlyLoadValidation, createRateValidat
 // Validation schema
 const generalValidationSchema = yup.object({
     zipcode: createZipcodeValidation(),
-    isAnnual: yup.boolean()
-        .required('Selecting a term type is required'),
+    isAnnual: yup.boolean(),
     annualTotalLoad: createAnnualLoadValidation(),
     monthlyLoad1: createMonthlyLoadValidation(),
     monthlyLoad2: createMonthlyLoadValidation(),
@@ -142,8 +141,8 @@ const GeneralCalculator = () => {
     const methods = useForm({
         resolver: yupResolver(generalValidationSchema),
         mode: 'onChange'
-    }); // Initialize useForm
-    const { formState: { isValid } } = methods; // Correctly extract isValid
+    });
+    const { formState: { isValid } } = methods;
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
     

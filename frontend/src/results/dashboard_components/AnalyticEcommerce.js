@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Grid, Stack, Typography } from '@mui/material';
 
 // project import
-import MainCard from '../../MainCard';
+import MainCard from './MainCard';
 
 // ==============================|| STATISTICS - ECOMMERCE CARD  ||============================== //
 
@@ -29,8 +29,6 @@ AnalyticEcommerce.propTypes = {
   color: PropTypes.string,
   title: PropTypes.string,
   count: PropTypes.string,
-  percentage: PropTypes.number,
-  isLoss: PropTypes.bool,
   extra: PropTypes.oneOfType([PropTypes.node, PropTypes.string])
 };
 

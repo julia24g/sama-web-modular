@@ -8,7 +8,7 @@ const Typography = (fontFamily) => ({
   fontWeightMedium: 500,
   fontWeightBold: 600,
   h1: {
-    fontWeight: 600,
+    fontWeight: 800,
     fontSize: '2.375rem',
     lineHeight: 1.21
   },

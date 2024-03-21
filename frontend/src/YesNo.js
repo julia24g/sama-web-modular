@@ -1,19 +1,17 @@
 // YesNo.js
-import React, { useState } from 'react';
+import React from 'react';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import RadioGroup from '@mui/material/RadioGroup';
 import Radio from '@mui/material/Radio';
-import { useFormContext } from 'react-hook-form'; // Import the useFormContext hook
-
+import { useFormContext } from 'react-hook-form';
 const YesNo = ({ name }) => {
-  const { register, setValue } = useFormContext(); // Use the useFormContext hook
-  const [answer, setAnswer] = useState('');
+  const { register, setValue, watch } = useFormContext();
+  const answer = watch(name);
 
   const handleAnswerChange = (event) => {
     const value = event.target.value;
     setValue(name, value); // Update the field with the new value
-    setAnswer(value);
   };
 
   return (
@@ -25,7 +23,7 @@ const YesNo = ({ name }) => {
           value={answer}
           onChange={handleAnswerChange}
           row
-          {...register(name)} // Register the field with react-hook-form
+          {...register(name)}
         >
           <FormControlLabel
             value="Yes"

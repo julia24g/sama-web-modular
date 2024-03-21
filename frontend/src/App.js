@@ -7,16 +7,18 @@ import Results from './results/Results';
 import About from './About';
 import Contact from './Contact';
 import './style/App.css';
+import ThemeCustomization from './style/themes';
 
 function App() {
 
     return (
-        // This app was designed modularly for researchers to add pages if necessary
         <div className="App">
             <NavBar />
             <LandingPage />
             <Calculator />
-            <Results />
+            <ThemeCustomization>
+                <Results />
+            </ThemeCustomization>
             <About />
             <Contact />
 
@@ -26,7 +28,6 @@ function App() {
                 <p>London, Ontario, Canada</p>
                 <p>N6A 3K7</p>
             </div>
-
         </div>
     );
 }

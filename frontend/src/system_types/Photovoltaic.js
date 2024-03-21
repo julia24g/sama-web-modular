@@ -11,7 +11,6 @@ const PVQuestions = () => {
     { question: 'What is the replacement cost of PV modules per kW?', label: 'Replacement Cost of PV', name: 'PVReplacementCost', defaultValue: '540' },
     { question: 'What are the operations and maintenance cost of PV modules per kW per year?', label: 'O&M Cost of PV', name: 'PVOandM', defaultValue: '29.49' },
     { question: 'What is the lifetime of the PV modules?', label: 'PV Lifetime', name: 'PVLifetime', defaultValue: '25' },
-    { question: 'What is the efficiency of the PV modules?', label: 'PV Efficiency', name: 'PVEfficiency', defaultValue: ' ' }
   ];
 
   return (

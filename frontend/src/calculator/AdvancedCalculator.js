@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import Search from '@mui/icons-material/Search'; // Ensure Search icon is imported
@@ -20,6 +20,7 @@ import { createZipcodeValidation, createMonthlyLoadValidation, createRateValidat
 // Validation schema
 const advancedValidationSchema = yup.object({
     zipcode: createZipcodeValidation(),
+    isAnnual: yup.boolean(),
     annualTotalLoad: createAnnualLoadValidation(),
     monthlyLoad1: createMonthlyLoadValidation(),
     monthlyLoad2: createMonthlyLoadValidation(),
@@ -139,7 +140,22 @@ const advancedValidationSchema = yup.object({
     decemberMediumPrice: createRateValidation('Monthly Tiered Rate'),
     decemberMediumMaxLoad: createRateValidation('Monthly Tiered Rate'),
     decemberHighPrice: createRateValidation('Monthly Tiered Rate'),
-    decemberHighMaxLoad: createRateValidation('Monthly Tiered Rate')
+    decemberHighMaxLoad: createRateValidation('Monthly Tiered Rate'),
+    photovoltaic: yup.boolean(),
+    dieselGenerator: yup.boolean(),
+    batteryBank: yup.boolean(),
+    n: yup.number()
+        .required('This field is required'),
+    LSPS_max_rate: yup.number()
+        .required('This field is required'),
+    RE_min_rate: yup.number()
+        .required('This field is required'),
+    e_ir_rate: yup.number()
+        .required('This field is required'),
+    n_ir_rate: yup.number()
+        .required('This field is required'),
+    ir: yup.number()
+        .required('This field is required'),
 });
 
 const AdvancedCalculator = () => {
@@ -150,10 +166,18 @@ const AdvancedCalculator = () => {
     const { control, watch, handleSubmit } = methods;
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
+    const { formState: { isValid } } = methods;
 
     const isPhotovoltaic = watch('photovoltaic');
     const isDieselGenerator = watch('dieselGenerator');
     const isBatteryBank = watch('batteryBank');
+    const n_ir_rate = watch('n_ir_rate');
+    const e_ir_rate = watch('e_ir_rate');
+
+    useEffect(() => {
+        const realInterestRate = ((n_ir_rate - e_ir_rate) / (1 + e_ir_rate)).toFixed(2);
+        methods.setValue('ir', realInterestRate);
+    }, [n_ir_rate, e_ir_rate, methods]);
 
     const onSubmit = async (data) => {
         setLoading(true);
@@ -285,7 +309,7 @@ const AdvancedCalculator = () => {
                 <Controller
                     name="ir"
                     control={control}
-                    defaultValue="0"
+                    defaultValue="0.034"
                     render={({ field }) => (
                         <TextField
                             {...field}
@@ -307,6 +331,7 @@ const AdvancedCalculator = () => {
                     type="submit"
                     style={{ margin: '10px' }}
                     sx={{ backgroundColor: "#4F2683", color: "white", fontWeight: "600" }}
+                    disabled={!isValid || loading}
                 >
                     Submit
                 </LoadingButton>

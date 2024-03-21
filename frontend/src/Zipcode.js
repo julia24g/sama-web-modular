@@ -4,13 +4,12 @@ import { TextField } from '@mui/material';
 import './style/App.css';
 
 const Zipcode = () => {
-  const { control, watch, setValue, formState: { errors } } = useFormContext(); // Use the useFormContext hook
-  const watchedZipcode = watch("zipcode"); // This will watch the zipcode field in real-time
+  const { control, watch, setValue, formState: { errors } } = useFormContext();
+  const watchedZipcode = watch("zipcode");
 
   useEffect(() => {
     if (watchedZipcode && watchedZipcode.length === 5) {
       const handleCheckZipcode = async () => {
-        // Perform geocoding operation
         try {
           const response = await fetch(`http://127.0.0.1:5000/getUtilityRates`, {
             method: 'POST',
@@ -40,7 +39,7 @@ const Zipcode = () => {
     } else {
       setValue('flatRate', '');
     }
-  }, [watchedZipcode, setValue]); // useEffect will run when watchedZipcode changes
+  }, [watchedZipcode, setValue]);
 
   return (
     <div className="form">

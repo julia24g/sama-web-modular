@@ -19,7 +19,7 @@ class InData:
 
         # Calendar
         self.n = 25  # Lifetime of system in simulations (years)
-        self.year = 2023  # Specify the desired year
+        self.year = 2024  # Specify the desired year
         # Days in each month
         self.daysInMonth = daysInMonth(self.year)
 
@@ -249,14 +249,14 @@ class InData:
         # Other inputs
         # Technical data
         # Type of system (1: included, 0=not included)
-        self.PV = 1
+        self.PV = 0
         self.WT = 0
-        self.DG = 1
-        self.Bat = 1
+        self.DG = 0
+        self.Bat = 0
         self.Grid = 0
         # Net metering scheme
         # If compensation is towrds credits in Net metering, not monetary comenstation, by choosing the below option (putting NEM equals to 1), the yearly credits will be reconciled after 12 months
-        self.NEM = 1
+        self.NEM = 0
 
         if self.Grid == 0:
             self.NEM = 0
@@ -598,3 +598,95 @@ class InData:
 
         from sama_python.calcTouRate import calcTouRate
         self.Cbuy = calcTouRate(self.year, self.onPrice, self.midPrice, self.offPrice, self.onHours, self.midHours, self.season, self.daysInMonth, self.holidays)
+
+    def isPV(self):
+        self.PV = 1
+    
+    def isDG(self):
+        self.DG = 1
+    
+    def isBat(self):
+        self.Bat = 1
+    
+    def isGrid(self):
+        self.Grid = 1
+    
+    def isNEM(self):
+        self.NEM = 1
+    
+    def projectLifetime(self, years):
+        self.n = years
+    
+    def setLPSP_max_rate(self, rate):
+        self.LPSP_max_rate = rate
+        self.LPSP_max = self.LPSP_max_rate / 100
+    
+    def setRE_min_rate(self, rate):
+        self.RE_min_rate = rate
+        self.RE_min = self.RE_min_rate / 100
+    
+    def sete_ir_rate(self, rate):
+        self.e_ir_rate = rate
+        self.e_ir = self.e_ir_rate / 100
+        self.ir = (self.n_ir - self.e_ir) / (1 + self.e_ir)
+    
+    def setn_ir_rate(self, rate):
+        self.n_ir_rate = rate
+        self.n_ir = self.n_ir_rate / 100
+        self.ir = (self.n_ir - self.e_ir) / (1 + self.e_ir)
+    
+    def setir(self, rate):
+        self.ir = rate
+
+    def setPVCost(self, cost):
+        if cost != 0:
+            self.C_PV = cost
+    
+    def setReplacementCost(self, cost):
+        if cost != 0:
+            self.R_PV = cost
+    
+    def setPVOandM(self, cost):
+        if cost != 0:
+            self.MO_PV = cost
+    
+    def setPVLifetime(self, years):
+        self.L_PV = years
+        self.RT_PV = ceil(self.n/self.L_PV) - 1
+    
+    def setBatteryCost(self, cost):
+        if cost != 0:
+            self.C_B = cost
+    
+    def setBatteryReplacementCost(self, cost):
+        if cost != 0:
+            self.R_B = cost
+    
+    def setBatteryOandM(self, cost):
+        if cost != 0:
+            self.MO_B = cost
+    
+    def setSOC_min(self, rate):
+        self.SOC_min = rate
+    
+    def setSOC_max(self, rate):
+        self.SOC_max = rate
+
+    def setBatteryVoltage(self, voltage):
+        self.Vnom = voltage
+    
+    def setDGCost(self, cost):
+        if cost != 0:
+            self.C_DG = cost
+    
+    def setDGReplacementCost(self, cost):
+        if cost != 0:
+            self.R_DG = cost
+    
+    def setDGOandM(self, cost):
+        if cost != 0:
+            self.MO_DG = cost
+    
+    def setDGLifetime(self, years):
+        if years != 0:
+            self.TL_DG = years

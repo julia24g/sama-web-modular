@@ -35,5 +35,5 @@ export const createAnnualLoadValidation = () => {
             then: schema => schema.required('This field is required'), // Only make annualLoad required if isAnnual is true
             otherwise: schema => schema,
         })
-}
+};
 

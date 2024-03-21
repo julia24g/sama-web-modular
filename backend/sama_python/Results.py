@@ -529,6 +529,8 @@ def Gen_Results(X):
         plt.tight_layout()
         plt.savefig('sama_python/output/figs/Battery_State_of_Charge.png', dpi=300)
 
+        return answer
+
     # Plot results for one specific day
     # Function to filter out data series with sum less than 0.1 in the specified range
     def non_zero_data_series(data_series, t1, t2):
@@ -894,5 +896,3 @@ def Gen_Results(X):
         cbar_total.ax.set_title('Monthly average Sell earning to the Grid [$]', fontsize=32, rotation=270, x=3.5, y=0.225)
         fig.subplots_adjust(left=0.075, top=0.98, bottom=0.075)
         plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly_average_earning_Sell_to_the_Grid.png', dpi=300)
-
-        return answer

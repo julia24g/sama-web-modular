@@ -7,6 +7,7 @@ def run():
 
     swarm = Swarm()
     answer = swarm.optimize()
+    print(answer)
 
     print(process_time()-start, "Total execution time [Sec]")
     return answer
