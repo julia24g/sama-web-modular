@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 // Import all pages
 import NavBar from './NavBar';
 import LandingPage from './LandingPage';
-import Calculator from './Calculator';
+import Calculator from './calculator/Calculator';
+import Results from './results/Results';
 import About from './About';
 import Contact from './Contact';
-import './App.css';
+import './style/App.css';
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
             <NavBar />
             <LandingPage />
             <Calculator />
+            <Results />
             <About />
             <Contact />
 

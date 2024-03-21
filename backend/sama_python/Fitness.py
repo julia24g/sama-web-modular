@@ -1,10 +1,10 @@
-from Input_Data import InData
+from sama_python.Input_Data import InData
 import numpy as np
 from numba import jit
 from math import ceil
-from EMS import EMS
+from sama_python.EMS import EMS
 
-
+InData = InData()
 Eload = InData.Eload
 Ppv_r = InData.Ppv_r
 Pwt_r = InData.Pwt_r

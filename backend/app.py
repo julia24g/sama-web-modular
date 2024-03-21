@@ -1,15 +1,17 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, send_from_directory
 import requests
 from dotenv import load_dotenv
 import os
 from flask_cors import CORS
-import sama_python.Input_Data as Input_Data
+from sama_python.Input_Data import InData
 import sama_python.pso as pso
 import numpy as np
 
 load_dotenv()
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
+
+global_answer = None  # Define a global variable at the top of your app
 
 @app.route("/getUtilityRates", methods=['POST'])
 def get_utility_rates():
@@ -43,12 +45,15 @@ def get_utility_rates():
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
     return response
 
-@app.route('/submit/general', methods=['POST'])
+@app.route("/submit/general", methods=['POST'])
 def submit_general():
+    global global_answer  # Declare it as global within your function
     data = request.json
-    zipcode = data['zipcode']
+    zipcode = data['zipcode'] # store in database later
     loadType = data['isAnnual']
     rateStructureType = data['rateStructure']
+
+    Input_Data = InData()
 
     if loadType == True: # it is annual
         Input_Data.setAnnualLoad(data['annualTotalLoad'])
@@ -107,7 +112,8 @@ def submit_general():
     else:
         return jsonify({'error': 'Not implemented yet'})
     
-    pso.run()
+    answer = pso.run()
+    global_answer = answer
 
     return jsonify({'message': 'General calculator processing complete'})
 
@@ -116,7 +122,26 @@ def submit_advanced():
     data = request.args  # or request.json if you're sending data as JSON
     # # Process the data...
     # return jsonify({'message': 'Advanced calculator processing complete'})
+    response = jsonify({'message': 'Advanced calculator processing complete'})
 
+    # Add CORS headers
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Methods', 'GET')  # Adjust as per your allowed methods
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')  # Adjust as per your allowed headers
+
+    return response
+
+@app.route("/results", methods=['GET'])
+def display_results():
+    global global_answer  # Declare it as global within your function
+    if global_answer is not None:
+        return jsonify(global_answer)  # Return the stored answer
+    else:
+        return jsonify({'error': 'No results available yet'})
+
+@app.route("/images/<filename>")
+def send_image(filename):
+    return send_from_directory("sama_python/output/figs", filename)
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)

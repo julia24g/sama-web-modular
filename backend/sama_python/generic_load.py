@@ -4,7 +4,7 @@ import numpy as np
 def generic_load(load_type, load_previous_year_type, peakmonth, daysInMonth, user_defined_load):
     if load_type == 8 or load_previous_year_type == 9:
         if peakmonth == 'July':
-            path_generic_load = 'content/Generic_load_JulyP.csv'
+            path_generic_load = 'sama_python/content/Generic_load_JulyP.csv'
         else:
             path_generic_load = 'content/Generic_load_JanuaryP.csv'
 

@@ -1,13 +1,13 @@
 import * as yup from 'yup';
 
-const createZipcodeValidation = () => {
+export const createZipcodeValidation = () => {
     return yup.string()
         .matches(/(^\d{5}$)|(^\d{5}-\d{4}$)/, 'Must be a 5-digit zipcode')
         .required('This field is required');
 }
 
 // Reusable function to create validation schema for rate fields
-const createRateValidation = (rateStructureName) => {
+export const createRateValidation = (rateStructureName) => {
     return yup.number()
         .typeError('Must be a number')
         .when('rateStructure', (rateStructure, schema) => {
@@ -17,7 +17,7 @@ const createRateValidation = (rateStructureName) => {
         });
 };
 
-const createMonthlyLoadValidation = () => {
+export const createMonthlyLoadValidation = () => {
     return yup.number()
         .typeError('Must be a number')
         .when('isAnnual', {
@@ -27,7 +27,7 @@ const createMonthlyLoadValidation = () => {
         })
 };
 
-const createAnnualLoadValidation = () => {
+export const createAnnualLoadValidation = () => {
     return yup.number()
         .typeError('Must be a number')
         .when('isAnnual', {

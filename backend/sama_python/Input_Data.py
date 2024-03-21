@@ -1,11 +1,11 @@
 import numpy as np
 import pandas as pd
 from math import ceil
-from daysInMonth import daysInMonth
+from sama_python.daysInMonth import daysInMonth
 
 # Optimization
 # PSO Parameters
-class Input_Data:
+class InData:
     def __init__(self):
         self.MaxIt = 200  # Maximum Number of Iterations
         self.nPop = 50  # Population Size (Swarm Size)
@@ -40,28 +40,28 @@ class Input_Data:
         self.peak_month = 'July'
 
         if self.load_type == 1:
-            self.path_Eload = 'content/Eload.csv'
+            self.path_Eload = 'sama_python/content/Eload.csv'
             self.EloadData = pd.read_csv(self.path_Eload, header=None).values
             self.Eload = np.array(self.EloadData[:, 0])
 
         elif self.load_type == 2:
             self.Monthly_haverage_load = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])  # Define the monthly hourly averages for load here
 
-            from dataextender import dataextender
+            from sama_python.dataextender import dataextender
             self.Eload = dataextender(self.daysInMonth, self.Monthly_haverage_load)
 
         elif self.load_type == 3:
             self.Monthly_daverage_load = np.array([10, 20, 31, 14, 15, 16, 17, 18, 19, 10, 11, 12])  # Define the monthly daily averages for load here
 
             self.Monthly_haverage_load = self.Monthly_daverage_load / 24
-            from dataextender import dataextender
+            from sama_python.dataextender import dataextender
             self.Eload = dataextender(self.daysInMonth, self.Monthly_haverage_load)
 
         elif self.load_type == 4:
             self.Monthly_total_load = np.array([321, 223, 343, 423, 544, 623, 237, 843, 239, 140, 121, 312])  # Define the monthly total load here
 
             self.Monthly_haverage_load = self.Monthly_total_load / (self.daysInMonth * 24)
-            from dataextender import dataextender
+            from sama_python.dataextender import dataextender
             self.Eload = dataextender(self.daysInMonth, self.Monthly_haverage_load)
 
         elif self.load_type == 6:
@@ -78,7 +78,7 @@ class Input_Data:
         else:
             peak_month = 'July'
 
-            from generic_load import generic_load
+            from sama_python.generic_load import generic_load
             self.Eload = generic_load(self.load_type, 1, peak_month, self.daysInMonth, 1)
 
         # Previous year Electrical load definitions
@@ -100,11 +100,11 @@ class Input_Data:
 
             self.Eload_Previous = self.Eload
 
-        elif load_previous_year_type == 2:
+        # elif load_previous_year_type == 2:
 
-            self.path_Eload_Previous = 'content/Eload_previousyear.csv'
-            self.Eload_PreviousData = pd.read_csv(self.path_Eload_Previous, header=None).values
-            self.Eload_Previous = np.array(self.EloadData[:, 0])
+        #     self.path_Eload_Previous = 'content/Eload_previousyear.csv'
+        #     self.Eload_PreviousData = pd.read_csv(self.path_Eload_Previous, header=None).values
+        #     self.Eload_Previous = np.array(self.EloadData[:, 0])
 
         elif load_previous_year_type == 3:
             self.Monthly_haverage_load_previous = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])  # Define the monthly hourly averages for load here
@@ -157,7 +157,7 @@ class Input_Data:
         # Irradiance definitions
         # 1=Hourly irradiance based on POA calculator
         # 2=Hourly irradiance based on the user CSV file
-        weather_url = 'content/METEO.csv'
+        weather_url = 'sama_python/content/METEO.csv'
         azimuth = 180
         tilt = 34  # Tilt angle of PV modules
         soiling = 5  # Soiling losses in percentage
@@ -166,7 +166,7 @@ class Input_Data:
 
         if G_type == 1:
 
-            from sam_monofacial_poa import runSimulation
+            from sama_python.sam_monofacial_poa import runSimulation
             temp_result = runSimulation(weather_url, tilt, azimuth, soiling)
             G_pd_to_numpy = temp_result[0]
             self.G = G_pd_to_numpy.values
@@ -187,7 +187,7 @@ class Input_Data:
 
         if T_type == 1:
 
-            from sam_monofacial_poa import runSimulation
+            from sama_python.sam_monofacial_poa import runSimulation
             temp_result = runSimulation(weather_url, tilt, azimuth, soiling)
             T_pd_to_numpy = temp_result[1]
             self.T = T_pd_to_numpy.values
@@ -244,7 +244,7 @@ class Input_Data:
 
         data = {'Eload': self.Eload, 'G': self.G, 'T': self.T, 'Vw': self.Vw}
         df = pd.DataFrame(data)
-        df.to_csv('output/data/Inputs.csv', index=False)
+        df.to_csv('sama_python/output/data/Inputs.csv', index=False)
 
         # Other inputs
         # Technical data
@@ -363,7 +363,7 @@ class Input_Data:
         if self.Pricing_method == 1:
             Total_PV_price = 2950
 
-            from top_down import top_down_pricing
+            from sama_python.top_down import top_down_pricing
             self.Engineering_Costs, self.C_PV, self.R_PV, self.C_I, self.R_I, self.r_Sales_tax = top_down_pricing(Total_PV_price)
 
             # PV
@@ -496,7 +496,7 @@ class Input_Data:
             self.Limit_SC_3 = 1501  # limit for tier 3
             self.SC_4 = 22.70  # tier 4 service charge
 
-            from service_charge import service_charge
+            from sama_python.service_charge import service_charge
             self.Service_charge = service_charge(self.daysInMonth, self.Eload_Previous, self.Limit_SC_1, self.SC_1, self.Limit_SC_2, self.SC_2, self.Limit_SC_3, self.SC_3, self.SC_4)
 
         # Sell to the Grid
@@ -508,7 +508,7 @@ class Input_Data:
         elif self.sellStructure == 2:
             self.monthlysellprices = np.array([0.07054, 0.08169, 0.08452, 0.08748, 0.08788, 0.08510, 0.08158, 0.07903, 0.07683, 0.07203, 0.05783, 0.05878])
 
-            from calcMonthlyRate import calcMonthlyRate
+            from sama_python.calcMonthlyRate import calcMonthlyRate
             self.Csell = calcMonthlyRate(self.monthlysellprices, self.daysInMonth)
 
         elif self.sellStructure == 3:
@@ -528,14 +528,14 @@ class Input_Data:
         self.load_type = 5
         self.user_defined_load = monthly_load_array
 
-        from generic_load import generic_load
+        from sama_python.generic_load import generic_load
         self.Eload = generic_load(self.load_type, 1, self.peak_month, self.daysInMonth, self.user_defined_load)
 
     def setAnnualLoad(self, annual_load):
         self.load_type = 8
         self.Annual_total_load = annual_load
 
-        from generic_load import generic_load
+        from sama_python.generic_load import generic_load
         self.Eload = generic_load(self.load_type, 1, self.peak_month, self.daysInMonth, self.Annual_total_load)
 
     
@@ -546,21 +546,21 @@ class Input_Data:
         self.rateStructure = 1
         self.flatPrice = flat_rate
 
-        from calcFlatRate import calcFlatRate
+        from sama_python.calcFlatRate import calcFlatRate
         self.Cbuy = calcFlatRate(self.flatPrice)
 
     def setSeasonalRate(self, seasonal_rate_array):
         self.rateStructure = 2  # Seasonal rate
         self.seasonalPrices = seasonal_rate_array  # [summer, winter]
 
-        from calcSeasonalRate import calcSeasonalRate
+        from sama_python.calcSeasonalRate import calcSeasonalRate
         self.Cbuy = calcSeasonalRate(self.seasonalPrices, self.season, self.daysInMonth)
 
     def setMonthlyRate(self, monthly_rate_array):
         self.rateStructure = 3  # Monthly rate
         self.monthlyPrices = monthly_rate_array
 
-        from calcMonthlyRate import calcMonthlyRate
+        from sama_python.calcMonthlyRate import calcMonthlyRate
         self.Cbuy = calcMonthlyRate(self.monthlyPrices, self.daysInMonth)
 
     def setTieredRate(self, tiered_rate_array, tier_max_array):
@@ -568,7 +568,7 @@ class Input_Data:
         self.tieredPrices = tiered_rate_array
         self.tierMax = tier_max_array
 
-        from calcTieredRate import calcTieredRate
+        from sama_python.calcTieredRate import calcTieredRate
         self.Cbuy = calcTieredRate(self.tieredPrices, self.tierMax, self.Eload, self.daysInMonth)
 
     def setSeasonalTieredRate(self, seasonal_tiered_rate_array, seasonal_tier_max_array):
@@ -577,7 +577,7 @@ class Input_Data:
         self.seasonalTierMax = seasonal_tier_max_array
         self.season = np.array([0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0])  # define summer season 1= Summer
 
-        from calcSeasonalTieredRate import calcSeasonalTieredRate
+        from sama_python.calcSeasonalTieredRate import calcSeasonalTieredRate
         self.Cbuy = calcSeasonalTieredRate(self.seasonalTieredPrices, self.seasonalTierMax, self.Eload, self.season)
 
     def setMonthlyTieredRate(self, monthly_tiered_rate_array, monthly_tier_max_array):
@@ -585,7 +585,7 @@ class Input_Data:
         self.monthlyTieredPrices = monthly_tiered_rate_array
         self.monthlyTierLimits = monthly_tier_max_array
 
-        from calcMonthlyTieredRate import calcMonthlyTieredRate
+        from sama_python.calcMonthlyTieredRate import calcMonthlyTieredRate
         self.Cbuy = calcMonthlyTieredRate(self.monthlyTieredPrices, self.monthlyTierLimits, self.Eload)
 
     def setTimeOfUseRate(self, on_price_array, mid_price_array, off_price_array, on_hours_array, mid_hours_array, season_array, holidays_array):
@@ -596,9 +596,5 @@ class Input_Data:
         self.onHours = on_hours_array
         self.midHours = mid_hours_array
 
-        from calcTouRate import calcTouRate
+        from sama_python.calcTouRate import calcTouRate
         self.Cbuy = calcTouRate(self.year, self.onPrice, self.midPrice, self.offPrice, self.onHours, self.midHours, self.season, self.daysInMonth, self.holidays)
-
-
-
-InData = Input_Data()

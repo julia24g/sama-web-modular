@@ -1,12 +1,16 @@
-from Input_Data import InData
+from sama_python.Input_Data import InData
 import seaborn as sns
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import numpy as np
 from numba import jit
 import pandas as pd
 from math import ceil
-from EMS import EMS
+from sama_python.EMS import EMS
+
+InData = InData()
 
 # Loading all inputs
 daysInMonth = InData.daysInMonth
@@ -319,43 +323,58 @@ def Gen_Results(X):
     # Extracting data for plotting
     data = {'Ppv': Ppv, 'Pdg': Pdg, 'Pch': Pch, 'Pdch': Pdch, 'SOC': Eb / Cn_B if (Cn_B != 0 and not np.isnan(Cn_B)) else 0, 'Pbuy':Pbuy, 'Psell':Psell, 'Eload':Eload , 'P_RE_served':P_RE_served, 'Csell':Csell, 'Cbuy':Cbuy, 'Pserved':P_served_other_than_grid, 'POA':G, 'Temperature':T, "Wind Speed":Vw}
     df = pd.DataFrame(data)
-    df.to_csv('output/data/Outputforplotting.csv', index=False)
+    df.to_csv('sama_python/output/data/Outputforplotting.csv', index=False)
 
+    answer = dict()
 
     print(' ')
     print('System Size ')
     print('Cpv  (kW) =', round(Pn_PV, 2))
+    answer['Cpv'] = round(Pn_PV, 2)
     if WT == 1:
         print('Cwt  (kW) =', round(Pn_WT, 1))
     print('Cbat (kWh) =', round(Cn_B))
+    answer['Cbat'] = round(Cn_B)
     print('Cdg  (kW) =', round(Pn_DG, 2))
+    answer['Cdg'] = round(Pn_DG, 2)
     print('Cinverter (kW) =', round(Cn_I, 2))
+    answer['Cinverter'] = round(Cn_I, 2)
 
     print(' ')
     print('Result: ')
     print('NPC  = $', round(NPC, 2))
+    answer['NPC'] = round(NPC, 2)
     print('NPC without incentives = $', round(NPC_without_incentives, 2))
+    answer['NPC_without_incentives'] = round(NPC_without_incentives, 2)
     print('Total Solar Cost = $', round(Solar_Cost, 2))
     print('NPC for only Grid connected system = $', round(NPC_Grid, 2))
+    answer['NPC_Grid'] = round(NPC_Grid, 2)
     print('Total Grid avoidable cost = $', round(np.sum(Grid_avoidable_cost), 2))
     print('Total Grid unavoidable cost = $', round(np.sum(Grid_unavoidable_cost), 2))
     print('Total avoided costs by hybrid energy system = $', round(np.sum(avoided_costs), 2))
     print('Total grid earning = $', round(np.sum(Sold_electricity), 2))
     print('LCOE  =', round(LCOE, 2), '$/kWh')
+    answer['LCOE'] = round(LCOE, 2)
     print('LCOE without incentives =', round(LCOE_without_incentives, 2), '$/kWh')
+    answer['LCOE_without_incentives'] = round(LCOE_without_incentives, 2)
     print('LCOE for only Grid connected system =', round(LCOE_Grid, 2), '$/kWh')
+    answer['LCOE_Grid'] = round(LCOE_Grid, 2)
     print('Grid avoidable cost per kWh =', round(Grid_avoidable_cost_perkWh, 2), '$/kWh')
     print('Grid unavoidable cost per kWh =', round(Grid_unavoidable_cost_perkWh, 2), '$/kWh')
     print('Solar Cost per kWh =', round(Solar_Cost_perkWh, 2), '$/kWh')
     print('Operating Cost  = $', round(Operating_Cost, 2))
     print('Initial Cost  = $', round(I_Cost, 2))
+    answer['I_Cost'] = round(I_Cost, 2)
     print('Initial Cost without incentives= $', round(I_Cost_without_incentives, 2))
+    answer['I_Cost_without_incentives'] = round(I_Cost_without_incentives, 2)
     print('Total incentives received= $', round(Total_incentives_received, 2))
     print('Total operation and maintenance cost  = $', round(np.sum(MO_Cost), 2))
+    answer['MO_Cost'] = round(np.sum(MO_Cost), 2)
     if Grid == 1:
         print('Total Money paid to the Grid= $', round(np.sum(Grid_Cost), 2))
 
     print('Total Money paid by the user= $', round(np.sum(NPC), 2))
+    answer['NPC'] = round(np.sum(NPC), 2)
 
     print(' ')
     print('PV Power  =', np.sum(Ppv), 'kWh')
@@ -435,7 +454,7 @@ def Gen_Results(X):
     # Make x-axis visible
     plt.axhline(0, color='black', linewidth=0.8)
     plt.tight_layout()
-    plt.savefig('output/figs/Cash Flow.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Cash_Flow.png', dpi=300)
 
     #Grid purchase and sale figure
     if Grid == 0:
@@ -461,7 +480,7 @@ def Gen_Results(X):
         # Adjust the margins and space between subplots
         plt.subplots_adjust(left=0.05, right=0.85, top=0.95, bottom=0.08)
         plt.tight_layout()
-        plt.savefig('output/figs/Grid Interconnection.png', dpi=300)
+        plt.savefig('sama_python/output/figs/Grid_Interconnection.png', dpi=300)
 
     # Energy/Power Distribution figure
     fig, ax = plt.subplots(figsize=(30, 10))  # Increased figure size and resolution
@@ -486,7 +505,7 @@ def Gen_Results(X):
     # Adjust the margins and space between subplots
     plt.subplots_adjust(left=0.08, right=0.78, top=0.95, bottom=0.08)
     plt.tight_layout()
-    plt.savefig('output/figs/Energy Distribution.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Energy_Distribution.png', dpi=300)
 
     # State of charge figure
     if Nbat > 0:
@@ -508,7 +527,7 @@ def Gen_Results(X):
         # Adjust the margins and space between subplots
         plt.subplots_adjust(left=0.08, right=0.95, top=0.95, bottom=0.08)
         plt.tight_layout()
-        plt.savefig('output/figs/Battery State of Charge.png', dpi=300)
+        plt.savefig('sama_python/output/figs/Battery_State_of_Charge.png', dpi=300)
 
     # Plot results for one specific day
     # Function to filter out data series with sum less than 0.1 in the specified range
@@ -556,7 +575,7 @@ def Gen_Results(X):
         axs[j].axis('off')
 
     plt.tight_layout(rect=[0, 0, 1, 0.96])  # Adjust the layout to make space for the title
-    plt.savefig('output/figs/Specific day results.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Specific_day_results.png', dpi=300)
 
     # Utility figures
 
@@ -643,7 +662,7 @@ def Gen_Results(X):
     cbar_total.ax.tick_params(labelsize=22)
     cbar_total.ax.set_title('Monthly average cost of energy system [$]', fontsize=32, rotation=270, x=3.5, y=0.16)
     fig.subplots_adjust(left=0.075, top=0.98, bottom=0.075)
-    plt.savefig('output/figs/Daily-Monthly-Yearly average cost of energy system.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly_average_cost_of_energy_system.png', dpi=300)
 
     # Calculate average hourly grid cost for each day in each month
     Gh_c = np.zeros((12, 31))
@@ -711,7 +730,7 @@ def Gen_Results(X):
     cbar_total.ax.tick_params(labelsize=22)
     cbar_total.ax.set_title('Monthly average hourly cost of connecting to the grid [$/kWh]', fontsize=32, rotation=270, x=3.85, y=0.04)
     fig.subplots_adjust(left=0.075, right=0.9, top=0.98, bottom=0.075)
-    plt.savefig('output/figs/Daily-Monthly-Yearly average hourly cost of connecting to the grid.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly_average_hourly_cost_of_connecting_to_the_grid.png', dpi=300)
 
     # Calculate average only grid connected system cost for each day/month/year
     AG_c = np.round(LCOE_Grid * A_l, 2)
@@ -771,7 +790,7 @@ def Gen_Results(X):
     cbar_total.ax.tick_params(labelsize=22)
     cbar_total.ax.set_title('Monthly average cost of only grid-connected system [$]', fontsize=32, rotation=270, x=3.5, y=0.09)
     fig.subplots_adjust(left=0.075, top=0.98, bottom=0.075)
-    plt.savefig('output/figs/Daily-Monthly-Yearly average cost of only grid-connected system.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly_average_cost_of_only_grid-connected_system.png', dpi=300)
 
     # Hourly Grid electricity price color bar map
     # Assuming Cbuy is a 1D numpy array
@@ -792,7 +811,7 @@ def Gen_Results(X):
     month_labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     ax.set_xticks(hours_per_month)
     ax.set_xticklabels(month_labels)
-    plt.savefig('output/figs/Grid Hourly Cost.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Grid_Hourly_Cost.png', dpi=300)
 
     # Calculate average money earned by selling electricity to grid in each day/month/year
     # Calculate average hourly grid sell for each day in each month
@@ -874,4 +893,6 @@ def Gen_Results(X):
         cbar_total.ax.tick_params(labelsize=22)
         cbar_total.ax.set_title('Monthly average Sell earning to the Grid [$]', fontsize=32, rotation=270, x=3.5, y=0.225)
         fig.subplots_adjust(left=0.075, top=0.98, bottom=0.075)
-        plt.savefig('output/figs/Daily-Monthly-Yearly average earning Sell to the Grid.png', dpi=300)
+        plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly_average_earning_Sell_to_the_Grid.png', dpi=300)
+
+        return answer

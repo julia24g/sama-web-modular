@@ -1,7 +1,7 @@
 import numpy as np
 from numba import jit
 
-from Battery_Model import battery_model
+from sama_python.Battery_Model import battery_model
 
 """
 Energy management 

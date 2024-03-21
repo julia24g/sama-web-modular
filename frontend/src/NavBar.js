@@ -5,7 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import Image from './SAMA_Logo-with_Typography.png'; // Make sure the path is correct
-import './App.css';
+import './style/App.css';
 
 const NavBar = () => {
     return (

@@ -1,6 +1,6 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import './App.css';
+import './style/App.css';
 
 const About = () => {
     return (

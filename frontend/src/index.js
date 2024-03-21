@@ -1,9 +1,8 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client'; // Import createRoot
-import './index.css';
+import './style/App.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { FormDataProvider } from './FormDataContext';
 
 // Get a reference to the root DOM node
 const container = document.getElementById('root');
@@ -14,9 +13,7 @@ const root = createRoot(container); // Create a root.
 // Use the root to render your component tree
 root.render(
   <React.StrictMode>
-    <FormDataProvider>
-      <App />
-    </FormDataProvider>
+  <App />
   </React.StrictMode>
 );
 

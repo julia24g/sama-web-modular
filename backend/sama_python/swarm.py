@@ -1,12 +1,16 @@
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from Results import Gen_Results
+from sama_python.Results import Gen_Results
 # Loading Inputs
-from Input_Data import InData
+from sama_python.Input_Data import InData
 import numpy as np
 from copy import copy, deepcopy
 from time import process_time
 
 start = process_time()
+
+InData = InData()
 
 PV = InData.PV
 WT = InData.WT
@@ -20,7 +24,7 @@ c2 = InData.c2
 wdamp = InData.wdamp
 
 # Problem Definition
-from Fitness import fitness as cost_function
+from sama_python.Fitness import fitness as cost_function
 
 
 class Swarm:
@@ -128,5 +132,5 @@ class Swarm:
         plt.title('Convergence curve')
         plt.legend()  # Display the legend
         plt.tight_layout()
-        plt.savefig('output/figs/Optimization.png', dpi=300)
-        Gen_Results(X)
+        plt.savefig('sama_python/output/figs/Optimization.png', dpi=300)
+        return Gen_Results(X)

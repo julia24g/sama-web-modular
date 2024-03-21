@@ -1,10 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TextField, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { useFormContext, Controller } from 'react-hook-form'; // Import useFormContext and Controller from react-hook-form
 
 const TotalLoad = () => {
-  const { control, setValue, formState: { errors } } = useFormContext(); // Use the useFormContext hook
+  const { control, register, unregister, setValue, formState: { errors }, watch } = useFormContext();
   const [termType, setTermType] = useState('Annual');
+
+  const isAnnual = watch('isAnnual');
+
+  useEffect(() => {
+    if (!isAnnual) {
+      monthLabels.forEach((_, index) => {
+        register(`monthlyLoad${index + 1}`);
+      });
+    } else {
+      monthLabels.forEach((_, index) => {
+        unregister(`monthlyLoad${index + 1}`);
+      });
+    }
+  }, [isAnnual, register, unregister]);
 
   const monthLabels = [
     'January', 'February', 'March', 'April', 'May', 'June',
