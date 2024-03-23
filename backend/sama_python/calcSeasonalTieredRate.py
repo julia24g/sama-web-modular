@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def calcSeasonalTieredRate(seasonalTieredPrices, seasonalTierMax, Eload, season):
     daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     Cbuy = np.zeros(8760)

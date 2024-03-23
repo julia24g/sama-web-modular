@@ -3,8 +3,6 @@ import pandas as pd
 from math import ceil
 from sama_python.daysInMonth import daysInMonth
 
-# Optimization
-# PSO Parameters
 class InData:
     def __init__(self):
         self.MaxIt = 200  # Maximum Number of Iterations
@@ -19,7 +17,7 @@ class InData:
 
         # Calendar
         self.n = 25  # Lifetime of system in simulations (years)
-        self.year = 2024  # Specify the desired year
+        self.year = 2023  # Specify the desired year
         # Days in each month
         self.daysInMonth = daysInMonth(self.year)
 
@@ -100,11 +98,11 @@ class InData:
 
             self.Eload_Previous = self.Eload
 
-        # elif load_previous_year_type == 2:
+        elif load_previous_year_type == 2:
 
-        #     self.path_Eload_Previous = 'content/Eload_previousyear.csv'
-        #     self.Eload_PreviousData = pd.read_csv(self.path_Eload_Previous, header=None).values
-        #     self.Eload_Previous = np.array(self.EloadData[:, 0])
+            self.path_Eload_Previous = 'content/Eload_previousyear.csv'
+            self.Eload_PreviousData = pd.read_csv(self.path_Eload_Previous, header=None).values
+            self.Eload_Previous = np.array(self.EloadData[:, 0])
 
         elif load_previous_year_type == 3:
             self.Monthly_haverage_load_previous = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])  # Define the monthly hourly averages for load here
@@ -249,7 +247,7 @@ class InData:
         # Other inputs
         # Technical data
         # Type of system (1: included, 0=not included)
-        self.PV = 0
+        self.PV = 1
         self.WT = 0
         self.DG = 0
         self.Bat = 0
@@ -280,7 +278,7 @@ class InData:
 
         # PV
         self.fpv = 0.9       # the PV derating factor [%]
-        self.Tcof = 0        # temperature coefficient [%/C]
+        self.Tcof = -0.003        # temperature coefficient [%/C]
         self.Tref = 25       # temperature at standard test condition
         self.Tc_noct = 45    # Nominal operating cell temperature
         self.Ta_noct = 20
@@ -414,9 +412,9 @@ class InData:
             #self.Engineering_Costs=0
 
             # PV
-            self.C_PV = 2510             # Capital cost ($) per KW
-            self.R_PV = 2510             # Replacement Cost of PV modules Per KW
-            self.MO_PV = 28.12      # O&M cost ($/year/kw)
+            self.C_PV = 540             # Capital cost ($) per KW
+            self.R_PV = 540             # Replacement Cost of PV modules Per KW
+            self.MO_PV = 29.49          # O&M cost ($/year/kw)
 
             # Inverter
             self.C_I = 440                 # Capital cost ($/kW)
@@ -432,13 +430,13 @@ class InData:
             self.C_DG = 240.45       # Capital cost ($/KW)
             self.R_DG = 240.45       # Replacement Cost ($/kW)
             self.MO_DG = 0.064    # O&M+ running cost ($/op.h)
-            self.C_fuel = 1.39  # Fuel Cost ($/L)
+            self.C_fuel = 5.26      # Fuel Cost ($/L)
             self.C_fuel_adj_rate = 2  # DG fuel cost yearly esclation rate (if positive) and reduction rate (if negative)
             self.C_fuel_adj = self.C_fuel_adj_rate / 100
 
             # Battery
-            self.C_B = 458.06              # Capital cost ($/KWh)
-            self.R_B = 458.06              # Replacement Cost ($/kW)
+            self.C_B = 460              # Capital cost ($/KWh)
+            self.R_B = 460              # Replacement Cost ($/kW)
             self.MO_B = 10                # Maintenance cost ($/kw.year)
 
             # Charger
@@ -538,7 +536,6 @@ class InData:
         from sama_python.generic_load import generic_load
         self.Eload = generic_load(self.load_type, 1, self.peak_month, self.daysInMonth, self.Annual_total_load)
 
-    
     def setLoadType(self, load_type):
         self.load_type = load_type
     
@@ -639,32 +636,26 @@ class InData:
         self.ir = rate
 
     def setPVCost(self, cost):
-        if cost != 0:
-            self.C_PV = cost
+        self.C_PV = cost
     
-    def setReplacementCost(self, cost):
-        if cost != 0:
-            self.R_PV = cost
+    def setPVReplacementCost(self, cost):
+        self.R_PV = cost
     
     def setPVOandM(self, cost):
-        if cost != 0:
-            self.MO_PV = cost
+        self.MO_PV = cost
     
     def setPVLifetime(self, years):
         self.L_PV = years
         self.RT_PV = ceil(self.n/self.L_PV) - 1
     
     def setBatteryCost(self, cost):
-        if cost != 0:
-            self.C_B = cost
+        self.C_B = cost
     
     def setBatteryReplacementCost(self, cost):
-        if cost != 0:
-            self.R_B = cost
+        self.R_B = cost
     
     def setBatteryOandM(self, cost):
-        if cost != 0:
-            self.MO_B = cost
+        self.MO_B = cost
     
     def setSOC_min(self, rate):
         self.SOC_min = rate
@@ -676,17 +667,13 @@ class InData:
         self.Vnom = voltage
     
     def setDGCost(self, cost):
-        if cost != 0:
-            self.C_DG = cost
+        self.C_DG = cost
     
     def setDGReplacementCost(self, cost):
-        if cost != 0:
-            self.R_DG = cost
+        self.R_DG = cost
     
     def setDGOandM(self, cost):
-        if cost != 0:
-            self.MO_DG = cost
+        self.MO_DG = cost
     
     def setDGLifetime(self, years):
-        if years != 0:
-            self.TL_DG = years
+        self.TL_DG = years

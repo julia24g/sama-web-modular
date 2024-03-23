@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def calcTieredRate(tieredPrices, tierMax, Eload, daysInMonth):
     Cbuy = np.zeros(8760)
     hCount = 0

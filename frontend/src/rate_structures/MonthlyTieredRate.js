@@ -1,9 +1,8 @@
 import React from 'react';
-import { TextField, Grid, Typography } from '@mui/material';
-import { useFormContext, Controller } from 'react-hook-form';
+import { Grid, Typography } from '@mui/material';
+import StandardField from '../field_components/FieldComponent';
 
 const MonthlyTieredRate = () => {
-  const { control } = useFormContext(); // Access form control context
 
   const monthLabels = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -29,21 +28,7 @@ const MonthlyTieredRate = () => {
           <Grid container>
             {tierLabels.map((tier, tierIndex) => (
               <Grid item xs={6} key={tierIndex}>
-                <Controller
-                  name={`${month.toLowerCase()}${tier.suffix}`}
-                  control={control}
-                  defaultValue=""
-                  render={({ field: controllerField, fieldState: { error } }) => (
-                    <TextField
-                      {...controllerField}
-                      label={`${tier.label}`}
-                      variant="outlined"
-                      fullWidth
-                      error={!!error} // Check if there's an error specific to this field
-                      helperText={error ? error.message : null} // Show the error message if it exists
-                    />
-                  )}
-                />
+                <StandardField name={`${month.toLowerCase()}${tier.suffix}`} label={`${tier.label}`} defaultValue='' unit='$' />
               </Grid>
             ))}
           </Grid>

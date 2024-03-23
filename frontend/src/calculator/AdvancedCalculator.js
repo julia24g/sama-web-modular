@@ -1,168 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { TextField } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
-import Search from '@mui/icons-material/Search'; // Ensure Search icon is imported
 import UtilityRateStructure from '../rate_structures/UtilityRateStructure';
 import SystemType from '../system_types/SystemType';
-import YesNo from '../YesNo';
+import YesNo from '../field_components/YesNo';
 import PhotovoltaicPage from '../system_types/Photovoltaic';
 import DieselGeneratorPage from '../system_types/DieselGenerator';
 import BatteryBankPage from '../system_types/BatteryBank';
 import TotalLoad from '../TotalLoad';
-import { useForm, Controller, FormProvider } from 'react-hook-form';
+import { useForm, FormProvider } from 'react-hook-form';
 import Zipcode from '../Zipcode';
 import axios from 'axios';
-import * as yup from 'yup';
 import '../style/App.css';
 import { yupResolver } from '@hookform/resolvers/yup'; // Import yupResolver
-import { createZipcodeValidation, createMonthlyLoadValidation, createRateValidation, createAnnualLoadValidation } from '../ValidationUtils'; // Import validation functions from validationUtils.js
-
-// Validation schema
-const advancedValidationSchema = yup.object({
-    zipcode: createZipcodeValidation(),
-    isAnnual: yup.boolean(),
-    annualTotalLoad: createAnnualLoadValidation(),
-    monthlyLoad1: createMonthlyLoadValidation(),
-    monthlyLoad2: createMonthlyLoadValidation(),
-    monthlyLoad3: createMonthlyLoadValidation(),
-    monthlyLoad4: createMonthlyLoadValidation(),
-    monthlyLoad5: createMonthlyLoadValidation(),
-    monthlyLoad6: createMonthlyLoadValidation(),
-    monthlyLoad7: createMonthlyLoadValidation(),
-    monthlyLoad8: createMonthlyLoadValidation(),
-    monthlyLoad9: createMonthlyLoadValidation(),
-    monthlyLoad10: createMonthlyLoadValidation(),
-    monthlyLoad11: createMonthlyLoadValidation(),
-    monthlyLoad12: createMonthlyLoadValidation(),
-    rateStructure: yup.string()
-        .required('Selecting a rate structure is required'),
-    flatRate: createRateValidation('Flat Rate'),
-    seasonalRateField1: createRateValidation('Seasonal Rate'),
-    seasonalRateField2: createRateValidation('Seasonal Rate'),
-    monthlyRate1: createRateValidation('Monthly Rate'),
-    monthlyRate2: createRateValidation('Monthly Rate'),
-    monthlyRate3: createRateValidation('Monthly Rate'),
-    monthlyRate4: createRateValidation('Monthly Rate'),
-    monthlyRate5: createRateValidation('Monthly Rate'),
-    monthlyRate6: createRateValidation('Monthly Rate'),
-    monthlyRate7: createRateValidation('Monthly Rate'),
-    monthlyRate8: createRateValidation('Monthly Rate'),
-    monthlyRate9: createRateValidation('Monthly Rate'),
-    monthlyRate10: createRateValidation('Monthly Rate'),
-    monthlyRate11: createRateValidation('Monthly Rate'),
-    monthlyRate12: createRateValidation('Monthly Rate'),
-    lowTierPrice: createRateValidation('Tiered Rate'),
-    lowTierMaxLoad: createRateValidation('Tiered Rate'),
-    mediumTierPrice: createRateValidation('Tiered Rate'),
-    mediumTierMaxLoad: createRateValidation('Tiered Rate'),
-    highTierPrice: createRateValidation('Tiered Rate'),
-    highTierMaxLoad: createRateValidation('Tiered Rate'),
-    summerLowTierPrice: createRateValidation('Seasonal Tiered Rate'),
-    summerLowTierMaxLoad: createRateValidation('Seasonal Tiered Rate'),
-    summerMediumTierPrice: createRateValidation('Seasonal Tiered Rate'),
-    summerMediumTierMaxLoad: createRateValidation('Seasonal Tiered Rate'),
-    summerHighTierPrice: createRateValidation('Seasonal Tiered Rate'),
-    summerHighTierMaxLoad: createRateValidation('Seasonal Tiered Rate'),
-    winterLowTierPrice: createRateValidation('Seasonal Tiered Rate'),
-    winterLowTierMaxLoad: createRateValidation('Seasonal Tiered Rate'),
-    winterMediumTierPrice: createRateValidation('Seasonal Tiered Rate'),
-    winterMediumTierMaxLoad: createRateValidation('Seasonal Tiered Rate'),
-    winterHighTierPrice: createRateValidation('Seasonal Tiered Rate'),
-    winterHighTierMaxLoad: createRateValidation('Seasonal Tiered Rate'),
-    januaryLowPrice: createRateValidation('Monthly Tiered Rate'),
-    januaryLowMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    januaryMediumPrice: createRateValidation('Monthly Tiered Rate'),
-    januaryMediumMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    januaryHighPrice: createRateValidation('Monthly Tiered Rate'),
-    januaryHighMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    februaryLowPrice: createRateValidation('Monthly Tiered Rate'),
-    februaryLowMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    februaryMediumPrice: createRateValidation('Monthly Tiered Rate'),
-    februaryMediumMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    februaryHighPrice: createRateValidation('Monthly Tiered Rate'),
-    februaryHighMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    marchLowPrice: createRateValidation('Monthly Tiered Rate'),
-    marchLowMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    marchMediumPrice: createRateValidation('Monthly Tiered Rate'),
-    marchMediumMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    marchHighPrice: createRateValidation('Monthly Tiered Rate'),
-    marchHighMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    aprilLowPrice: createRateValidation('Monthly Tiered Rate'),
-    aprilLowMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    aprilMediumPrice: createRateValidation('Monthly Tiered Rate'),
-    aprilMediumMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    aprilHighPrice: createRateValidation('Monthly Tiered Rate'),
-    aprilHighMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    mayLowPrice: createRateValidation('Monthly Tiered Rate'),
-    mayLowMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    mayMediumPrice: createRateValidation('Monthly Tiered Rate'),
-    mayMediumMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    mayHighPrice: createRateValidation('Monthly Tiered Rate'),
-    mayHighMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    juneLowPrice: createRateValidation('Monthly Tiered Rate'),
-    juneLowMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    juneMediumPrice: createRateValidation('Monthly Tiered Rate'),
-    juneMediumMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    juneHighPrice: createRateValidation('Monthly Tiered Rate'),
-    juneHighMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    julyLowPrice: createRateValidation('Monthly Tiered Rate'),
-    julyLowMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    julyMediumPrice: createRateValidation('Monthly Tiered Rate'),
-    julyMediumMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    julyHighPrice: createRateValidation('Monthly Tiered Rate'),
-    julyHighMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    augustLowPrice: createRateValidation('Monthly Tiered Rate'),
-    augustLowMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    augustMediumPrice: createRateValidation('Monthly Tiered Rate'),
-    augustMediumMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    augustHighPrice: createRateValidation('Monthly Tiered Rate'),
-    augustHighMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    septemberLowPrice: createRateValidation('Monthly Tiered Rate'),
-    septemberLowMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    septemberMediumPrice: createRateValidation('Monthly Tiered Rate'),
-    septemberMediumMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    septemberHighPrice: createRateValidation('Monthly Tiered Rate'),
-    septemberHighMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    octoberLowPrice: createRateValidation('Monthly Tiered Rate'),
-    octoberLowMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    octoberMediumPrice: createRateValidation('Monthly Tiered Rate'),
-    octoberMediumMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    octoberHighPrice: createRateValidation('Monthly Tiered Rate'),
-    octoberHighMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    novemberLowPrice: createRateValidation('Monthly Tiered Rate'),
-    novemberLowMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    novemberMediumPrice: createRateValidation('Monthly Tiered Rate'),
-    novemberMediumMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    novemberHighPrice: createRateValidation('Monthly Tiered Rate'),
-    novemberHighMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    decemberLowPrice: createRateValidation('Monthly Tiered Rate'),
-    decemberLowMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    decemberMediumPrice: createRateValidation('Monthly Tiered Rate'),
-    decemberMediumMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    decemberHighPrice: createRateValidation('Monthly Tiered Rate'),
-    decemberHighMaxLoad: createRateValidation('Monthly Tiered Rate'),
-    photovoltaic: yup.boolean(),
-    dieselGenerator: yup.boolean(),
-    batteryBank: yup.boolean(),
-    n: yup.number()
-        .required('This field is required'),
-    LSPS_max_rate: yup.number()
-        .required('This field is required'),
-    RE_min_rate: yup.number()
-        .required('This field is required'),
-    e_ir_rate: yup.number()
-        .required('This field is required'),
-    n_ir_rate: yup.number()
-        .required('This field is required'),
-    ir: yup.number()
-        .required('This field is required'),
-});
+import StandardField from '../field_components/FieldComponent';
+import { advancedValidationSchema } from '../validation/ValidationSchema'; // Import advancedValidationSchema
+import SubmitButton from '../field_components/SubmitButton';
 
 const AdvancedCalculator = () => {
     const methods = useForm({
         resolver: yupResolver(advancedValidationSchema),
         mode: 'onChange'
-    }); // Initialize useForm
+    });
     const { control, watch, handleSubmit } = methods;
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
@@ -182,13 +39,9 @@ const AdvancedCalculator = () => {
     const onSubmit = async (data) => {
         setLoading(true);
         const url = 'http://localhost:5000/submit/advanced';
-        let config = {
-            params: data,
-            responseType: 'json'
-        };
 
         try {
-            const response = await axios.get(url, config);
+            const response = await axios.post(url, data);
             setMessage(response.data.message);
             // Process response data here as needed
             setLoading(false);
@@ -202,7 +55,7 @@ const AdvancedCalculator = () => {
     return (
         <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <p>Get started by entering your zipcode.</p> 
+                <p>Get started by entering your zipcode.</p>
                 <Zipcode />
                 <br></br>
                 <p>Select your utility rate structure and input values in dollars per kWh (USD).</p>
@@ -225,116 +78,20 @@ const AdvancedCalculator = () => {
                 <br></br>
 
                 <p>What is your project's lifetime?</p>
-                <Controller
-                    name="n"
-                    control={control}
-                    defaultValue="25"
-                    render={({ field }) => (
-                        <TextField
-                            {...field}
-                            required
-                            label="Project Lifetime"
-                            variant="outlined"
-                            fullWidth
-                            style={{ width: "210px", margin: '10px auto' }}
-                        />
-                    )}
-                />
+                <StandardField name='n' label="Project Lifetime" defaultValue={25} unit='' />
                 <p>What is the maximum loss of power supply probability?</p>
-                <Controller
-                    name="LPSP_max_rate"
-                    control={control}
-                    defaultValue="1%"
-                    render={({ field }) => (
-                        <TextField
-                            {...field}
-                            required
-                            label="Power Supply Probability"
-                            variant="outlined"
-                            fullWidth
-                            style={{ width: "210px", margin: '10px auto' }}
-                        />
-                    )}
-                />
+                <StandardField name="LPSP_max_rate" label="Max Loss of Power Supply" defaultValue={0.01} unit='%' />
                 <p>What is the minimum renewable energy considered for optimal sizing?</p>
-                <Controller
-                    name="RE_min_rate"
-                    control={control}
-                    defaultValue="0.75"
-                    render={({ field }) => (
-                        <TextField
-                            {...field}
-                            required
-                            label="Minimum Renewable Energy"
-                            variant="outlined"
-                            fullWidth
-                            style={{ width: "210px", margin: '10px auto' }}
-                        />
-                    )}
-                />
-
+                <StandardField name="RE_min_rate" label="Minimum Renewable Energy" defaultValue={75} unit='%' />
                 <p>What is the inflation rate?</p>
-                <Controller
-                    name="e_ir_rate"
-                    control={control}
-                    defaultValue="0.02"
-                    render={({ field }) => (
-                        <TextField
-                            {...field}
-                            required
-                            label="Inflation Rate"
-                            variant="outlined"
-                            fullWidth
-                            style={{ width: "210px", margin: '10px auto' }}
-                        />
-                    )}
-                />
+                <StandardField name="e_ir_rate" label="Inflation Rate" defaultValue={2} unit='%' />
                 <p>What is the nominal discount rate?</p>
-                <Controller
-                    name="n_ir_rate"
-                    control={control}
-                    defaultValue="0.055"
-                    render={({ field }) => (
-                        <TextField
-                            {...field}
-                            required
-                            label="Nominal Discount Rate"
-                            variant="outlined"
-                            fullWidth
-                            style={{ width: "210px", margin: '10px auto' }}
-                        />
-                    )}
-                />
+                <StandardField name="n_ir_rate" label="Nominal Discount Rate" defaultValue={5.5} unit='%' />
                 <p>What is the real discount rate?</p>
-                <Controller
-                    name="ir"
-                    control={control}
-                    defaultValue="0.034"
-                    render={({ field }) => (
-                        <TextField
-                            {...field}
-                            required
-                            label="Real Discount Rate"
-                            variant="outlined"
-                            fullWidth
-                            style={{ width: "210px", margin: '10px auto' }}
-                        />
-                    )}
-                />
-                <p style={{ fontStyle: "italic" }}>It can take up to 1 min to calculate your results.</p>
-                <LoadingButton
-                    onClick={onSubmit}
-                    loading={loading}
-                    loadingPosition="start"
-                    startIcon={<Search />}
-                    variant="contained"
-                    type="submit"
-                    style={{ margin: '10px' }}
-                    sx={{ backgroundColor: "#4F2683", color: "white", fontWeight: "600" }}
-                    disabled={!isValid || loading}
-                >
-                    Submit
-                </LoadingButton>
+                <StandardField name="ir" label="Real Discount Rate" defaultValue={3.4} unit='%' />
+
+                <SubmitButton loading={loading} isValid={isValid} />
+
             </form>
         </FormProvider>
     );

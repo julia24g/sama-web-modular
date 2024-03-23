@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TextField, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import { TextField, ToggleButtonGroup, ToggleButton, InputAdornment } from '@mui/material';
 import { useFormContext, Controller } from 'react-hook-form'; // Import useFormContext and Controller from react-hook-form
 
 const TotalLoad = () => {
@@ -65,6 +65,9 @@ const TotalLoad = () => {
                 style={{ margin: '5px' }}
                 error={!!error} // Check if there's an error specific to this field
                 helperText={error ? error.message : null} // Show the error message if it exists
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">kW</InputAdornment>,
+                }}
               />
             )}
           />
@@ -82,6 +85,9 @@ const TotalLoad = () => {
               style={{ margin: '5px' }}
               error={!!errors.annualTotalLoad}
               helperText={errors.annualTotalLoad ? errors.annualTotalLoad.message : null}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">kW</InputAdornment>,
+              }}
             />
           )}
         />

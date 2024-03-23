@@ -1,9 +1,8 @@
 import React from 'react';
-import { TextField, Grid, Typography } from '@mui/material';
-import { useFormContext, Controller } from 'react-hook-form';
+import { Grid, Typography } from '@mui/material';
+import StandardField from '../field_components/FieldComponent';
 
 const SeasonalTieredRate = () => {
-  const { control } = useFormContext(); // Access form control context
 
   // Define fields for both summer and winter, each having low, medium, and high tiers
   const seasonalTieredRateFields = {
@@ -33,21 +32,7 @@ const SeasonalTieredRate = () => {
           <Grid container>
             {fields.map((field, index) => (
               <Grid item xs={6} key={index}> {/* xs={6} makes each TextField take half width of the container */}
-                <Controller
-                  name={field.name}
-                  control={control}
-                  defaultValue=""
-                  render={({ field: controllerField, fieldState: { error } }) => (
-                    <TextField
-                      {...controllerField}
-                      label={field.label}
-                      variant="outlined"
-                      fullWidth
-                      error={!!error} // Check if there's an error specific to this field
-                      helperText={error ? error.message : null} // Show the error message if it exists
-                    />
-                  )}
-                />
+                <StandardField name={field.name} label={field.label} defaultValue='' unit='$' />
               </Grid>
             ))}
           </Grid>

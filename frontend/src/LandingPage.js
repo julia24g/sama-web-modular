@@ -10,7 +10,7 @@ const LandingPage = () => {
             <div className="landingText">
                 <h1>WELCOME TO SAMA!</h1>
                 <br></br>
-                <p>SAMA () is the first-ever publicly available tool to help you determine if you should leave the grid and reduce your electric costs by installing a solar, battery and generator system.</p>
+                <p>SAMA (Solar Alone Multi-objective Advisor) is the first-ever publicly available tool to help you determine if you should leave the grid and reduce your electric costs by installing a solar, battery and generator system.</p>
                 <br></br>
                 <Link href="#calculator" underline="none" color="inherit    ">
                 <Button variant="contained" size="large" sx={{ backgroundColor:"#4F2683", color: "white", fontWeight: "600" }}>Get Started →</Button>

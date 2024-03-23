@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def calcMonthlyTieredRate(monthlyTieredPrices, monthlyTierLimits, Eload):
     Cbuy = np.zeros(8760)
     daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]

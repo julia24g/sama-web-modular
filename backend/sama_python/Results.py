@@ -1,4 +1,3 @@
-from sama_python.Input_Data import InData
 import seaborn as sns
 import matplotlib
 matplotlib.use('Agg')
@@ -10,111 +9,109 @@ import pandas as pd
 from math import ceil
 from sama_python.EMS import EMS
 
-InData = InData()
-
-# Loading all inputs
-daysInMonth = InData.daysInMonth
-Eload = InData.Eload
-Ppv_r = InData.Ppv_r
-Pwt_r = InData.Pwt_r
-Cbt_r = InData.Cbt_r
-Cdg_r = InData.Cdg_r
-T = InData.T
-Tc_noct = InData.Tc_noct
-G = InData.G
-c2 = InData.c2
-fpv = InData.fpv
-Gref = InData.Gref
-Tcof = InData.Tcof
-Tref = InData.Tref
-Ta_noct = InData.Ta_noct
-G_noct = InData.G_noct
-n_PV =  InData.n_PV
-gama =  InData.gama
-Vw = InData.Vw
-h_hub = InData.h_hub
-h0 = InData.h0
-alfa_wind_turbine = InData.alfa_wind_turbine
-v_cut_in = InData.v_cut_in
-v_cut_out = InData.v_cut_out
-v_rated = InData.v_rated
-R_B = InData.R_B
-Q_lifetime = InData.Q_lifetime
-ef_bat = InData.ef_bat
-b = InData.b
-C_fuel = InData.C_fuel
-R_DG = InData.R_DG
-TL_DG = InData.TL_DG
-MO_DG = InData.MO_DG
-SOC_max = InData.SOC_max
-SOC_min = InData.SOC_min
-SOC_initial = InData.SOC_initial
-n_I = InData.n_I
-Grid = InData.Grid
-Cbuy = InData.Cbuy
-a = InData.a
-LR_DG = InData.LR_DG
-Pbuy_max = InData.Pbuy_max
-Psell_max = InData.Psell_max
-self_discharge_rate = InData.self_discharge_rate
-alfa_battery = InData.alfa_battery
-c = InData.c
-k = InData.k
-Imax = InData.Imax
-Vnom = InData.Vnom
-RE_incentives = InData.RE_incentives
-C_PV = InData.C_PV
-C_WT = InData.C_WT
-C_DG = InData.C_DG
-C_B = InData.C_B
-C_I=InData.C_I
-C_CH=InData.C_CH
-Engineering_Costs=InData.Engineering_Costs
-n=InData.n
-L_PV=InData.L_PV
-R_PV=InData.R_PV
-ir=InData.ir
-L_WT=InData.L_WT
-R_WT=InData.R_WT
-L_B=InData.L_B
-L_I=InData.L_I
-R_I=InData.R_I
-L_CH=InData.L_CH
-R_CH=InData.R_CH
-MO_PV=InData.MO_PV
-MO_WT=InData.MO_WT
-MO_B=InData.MO_B
-MO_I=InData.MO_I
-MO_CH=InData.MO_CH
-RT_PV=InData.RT_PV
-RT_WT=InData.RT_WT
-RT_B=InData.RT_B
-RT_I=InData.RT_I
-RT_CH=InData.RT_CH
-CO2=InData.CO2
-NOx=InData.NOx
-SO2=InData.SO2
-E_CO2=InData.E_CO2
-E_SO2=InData.E_SO2
-E_NOx=InData.E_NOx
-Annual_expenses=InData.Annual_expenses
-Service_charge=InData.Service_charge
-Csell=InData.Csell
-Grid_Tax=InData.Grid_Tax
-System_Tax=InData.System_Tax
-EM=InData.EM
-LPSP_max=InData.LPSP_max
-RE_min=InData.RE_min
-Budget=InData.Budget
-WT=InData.WT
-Grid_escalation = InData.Grid_escalation
-C_fuel_adj = InData.C_fuel_adj
-Grid_Tax_amount = InData.Grid_Tax_amount
-Grid_credit = InData.Grid_credit
-NEM_fee = InData.NEM_fee
 
 #@jit(nopython=True, fastmath=True)
-def Gen_Results(X):
+def Gen_Results(X, InData):
+    daysInMonth = InData.daysInMonth
+    Eload = InData.Eload
+    Ppv_r = InData.Ppv_r
+    Pwt_r = InData.Pwt_r
+    Cbt_r = InData.Cbt_r
+    Cdg_r = InData.Cdg_r
+    T = InData.T
+    Tc_noct = InData.Tc_noct
+    G = InData.G
+    c2 = InData.c2
+    fpv = InData.fpv
+    Gref = InData.Gref
+    Tcof = InData.Tcof
+    Tref = InData.Tref
+    Ta_noct = InData.Ta_noct
+    G_noct = InData.G_noct
+    n_PV =  InData.n_PV
+    gama =  InData.gama
+    Vw = InData.Vw
+    h_hub = InData.h_hub
+    h0 = InData.h0
+    alfa_wind_turbine = InData.alfa_wind_turbine
+    v_cut_in = InData.v_cut_in
+    v_cut_out = InData.v_cut_out
+    v_rated = InData.v_rated
+    R_B = InData.R_B
+    Q_lifetime = InData.Q_lifetime
+    ef_bat = InData.ef_bat
+    b = InData.b
+    C_fuel = InData.C_fuel
+    R_DG = InData.R_DG
+    TL_DG = InData.TL_DG
+    MO_DG = InData.MO_DG
+    SOC_max = InData.SOC_max
+    SOC_min = InData.SOC_min
+    SOC_initial = InData.SOC_initial
+    n_I = InData.n_I
+    Grid = InData.Grid
+    Cbuy = InData.Cbuy
+    a = InData.a
+    LR_DG = InData.LR_DG
+    Pbuy_max = InData.Pbuy_max
+    Psell_max = InData.Psell_max
+    self_discharge_rate = InData.self_discharge_rate
+    alfa_battery = InData.alfa_battery
+    c = InData.c
+    k = InData.k
+    Imax = InData.Imax
+    Vnom = InData.Vnom
+    RE_incentives = InData.RE_incentives
+    C_PV = InData.C_PV
+    C_WT = InData.C_WT
+    C_DG = InData.C_DG
+    C_B = InData.C_B
+    C_I=InData.C_I
+    C_CH=InData.C_CH
+    Engineering_Costs=InData.Engineering_Costs
+    n=InData.n
+    L_PV=InData.L_PV
+    R_PV=InData.R_PV
+    ir=InData.ir
+    L_WT=InData.L_WT
+    R_WT=InData.R_WT
+    L_B=InData.L_B
+    L_I=InData.L_I
+    R_I=InData.R_I
+    L_CH=InData.L_CH
+    R_CH=InData.R_CH
+    MO_PV=InData.MO_PV
+    MO_WT=InData.MO_WT
+    MO_B=InData.MO_B
+    MO_I=InData.MO_I
+    MO_CH=InData.MO_CH
+    RT_PV=InData.RT_PV
+    RT_WT=InData.RT_WT
+    RT_B=InData.RT_B
+    RT_I=InData.RT_I
+    RT_CH=InData.RT_CH
+    CO2=InData.CO2
+    NOx=InData.NOx
+    SO2=InData.SO2
+    E_CO2=InData.E_CO2
+    E_SO2=InData.E_SO2
+    E_NOx=InData.E_NOx
+    Annual_expenses=InData.Annual_expenses
+    Service_charge=InData.Service_charge
+    Csell=InData.Csell
+    Grid_Tax=InData.Grid_Tax
+    System_Tax=InData.System_Tax
+    EM=InData.EM
+    LPSP_max=InData.LPSP_max
+    RE_min=InData.RE_min
+    Budget=InData.Budget
+    WT=InData.WT
+    Grid_escalation = InData.Grid_escalation
+    C_fuel_adj = InData.C_fuel_adj
+    Grid_Tax_amount = InData.Grid_Tax_amount
+    Grid_credit = InData.Grid_credit
+    NEM_fee = InData.NEM_fee
+    
     if (len(X)) == 1:
         X = X[0]
 
@@ -529,8 +526,6 @@ def Gen_Results(X):
         plt.tight_layout()
         plt.savefig('sama_python/output/figs/Battery_State_of_Charge.png', dpi=300)
 
-        return answer
-
     # Plot results for one specific day
     # Function to filter out data series with sum less than 0.1 in the specified range
     def non_zero_data_series(data_series, t1, t2):
@@ -896,3 +891,5 @@ def Gen_Results(X):
         cbar_total.ax.set_title('Monthly average Sell earning to the Grid [$]', fontsize=32, rotation=270, x=3.5, y=0.225)
         fig.subplots_adjust(left=0.075, top=0.98, bottom=0.075)
         plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly_average_earning_Sell_to_the_Grid.png', dpi=300)
+    
+    return answer

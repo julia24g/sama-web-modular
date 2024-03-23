@@ -3,32 +3,22 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from sama_python.Results import Gen_Results
 # Loading Inputs
-from sama_python.Input_Data import InData
 import numpy as np
-from copy import copy, deepcopy
+from copy import deepcopy
 from time import process_time
 
 start = process_time()
 
-InData = InData()
-
-PV = InData.PV
-WT = InData.WT
-Bat = InData.Bat
-DG = InData.DG
-Run_Time = InData.Run_Time
-nPop = InData.nPop
-MaxIt = InData.MaxIt
-c1 = InData.c1
-c2 = InData.c2
-wdamp = InData.wdamp
-
 # Problem Definition
 from sama_python.Fitness import fitness as cost_function
 
-
 class Swarm:
-    def __init__(self, **kwargs):
+    def __init__(self, InData):
+        self.In_Data = InData
+        PV = self.In_Data.PV
+        WT = self.In_Data.WT
+        Bat = self.In_Data.Bat
+        DG = self.In_Data.DG
         self.nVar = 5  # number of decision variables
 
         # Variable: PV number, WT number, Battery number, number of DG, Rated Power Inverter
@@ -44,7 +34,13 @@ class Swarm:
         self.solution_cost_curve = []
 
     def optimize(self):
-        w = InData.w
+        Run_Time = self.In_Data.Run_Time
+        nPop = self.In_Data.nPop
+        MaxIt = self.In_Data.MaxIt
+        c1 = self.In_Data.c1
+        c2 = self.In_Data.c2
+        wdamp = self.In_Data.wdamp
+        w = self.In_Data.w
         plt.rcParams["font.family"] = "Times New Roman"
         fig, ax = plt.subplots()
         for tt in range(Run_Time):
@@ -57,7 +53,7 @@ class Swarm:
             particle_velocities = np.zeros((nPop, self.nVar))
 
             # Evaluate costs per initial particle
-            particle_costs = np.apply_along_axis(cost_function, 1, particle_positions)
+            particle_costs = np.apply_along_axis(func1d=cost_function, axis=1, arr=particle_positions, input_object=self.In_Data)
             particle_personal_best_cost = deepcopy(particle_costs)
 
             # Determine global best
@@ -92,7 +88,7 @@ class Swarm:
                     particle_positions[i] = np.minimum(np.maximum(particle_positions[i], self.VarMin), self.VarMax)
 
                     # Evaluation
-                    particle_costs[i] = cost_function(particle_positions[i])
+                    particle_costs[i] = cost_function(particle_positions[i], self.In_Data)
 
                     # Update Personal Best
                     if particle_costs[i] < particle_personal_best_cost[i]:
@@ -133,4 +129,4 @@ class Swarm:
         plt.legend()  # Display the legend
         plt.tight_layout()
         plt.savefig('sama_python/output/figs/Optimization.png', dpi=300)
-        return Gen_Results(X)
+        return Gen_Results(X, self.In_Data)
