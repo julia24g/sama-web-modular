@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { TextField, ToggleButtonGroup, ToggleButton, InputAdornment } from '@mui/material';
-import { useFormContext, Controller } from 'react-hook-form'; // Import useFormContext and Controller from react-hook-form
+import { ToggleButtonGroup, ToggleButton, InputAdornment } from '@mui/material';
+import { useFormContext } from 'react-hook-form';
+import StandardField from './field_components/FieldComponent';
 
 const TotalLoad = () => {
-  const { control, register, unregister, setValue, formState: { errors }, watch } = useFormContext();
+  const { register, unregister, setValue, formState: { errors }, watch } = useFormContext();
   const [termType, setTermType] = useState('Annual');
 
   const isAnnual = watch('isAnnual');
@@ -13,12 +14,18 @@ const TotalLoad = () => {
       monthLabels.forEach((_, index) => {
         register(`monthlyLoad${index + 1}`);
       });
+      unregister('annualTotalLoad');
     } else {
       monthLabels.forEach((_, index) => {
         unregister(`monthlyLoad${index + 1}`);
       });
+      register('annualTotalLoad')
     }
   }, [isAnnual, register, unregister]);
+
+  useEffect(() => {
+    setValue('isAnnual', true);
+  }, [setValue]);
 
   const monthLabels = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -52,45 +59,10 @@ const TotalLoad = () => {
       <br />
       {termType === 'Monthly' ? (
         monthLabels.map((label, index) => (
-          <Controller
-            key={index}
-            name={`monthlyLoad${index + 1}`}
-            control={control}
-            defaultValue=""
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                label={`${label} Load`}
-                variant="outlined"
-                style={{ margin: '5px' }}
-                error={!!error} // Check if there's an error specific to this field
-                helperText={error ? error.message : null} // Show the error message if it exists
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">kW</InputAdornment>,
-                }}
-              />
-            )}
-          />
+          <StandardField name={`monthlyLoad${index + 1}`} label={`${label} Load`} defaultValue='' unit='kW' />
         ))
       ) : (
-        <Controller
-          name="annualTotalLoad"
-          control={control}
-          defaultValue=""
-          render={({ field }) => (
-            <TextField
-              {...field}
-              label="Annual Load"
-              variant="outlined"
-              style={{ margin: '5px' }}
-              error={!!errors.annualTotalLoad}
-              helperText={errors.annualTotalLoad ? errors.annualTotalLoad.message : null}
-              InputProps={{
-                startAdornment: <InputAdornment position="start">kW</InputAdornment>,
-              }}
-            />
-          )}
-        />
+        <StandardField name="annualTotalLoad" label="Annual Load" defaultValue={undefined} unit='kW' />
       )}
     </div>
   );

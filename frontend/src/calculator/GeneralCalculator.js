@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UtilityRateStructure from '../rate_structures/UtilityRateStructure';
 import TotalLoad from '../TotalLoad';
 import Zipcode from '../Zipcode';
@@ -14,10 +14,10 @@ const GeneralCalculator = () => {
         resolver: yupResolver(baseValidationSchema),
         mode: 'onChange'
     });
-    const { formState: { isValid } } = methods;
+    const { formState: { isValid }, watch } = methods;
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
-    
+
     const onSubmit = async (data) => {
         setLoading(true);
         const url = 'http://127.0.0.1:5000/submit/general';
@@ -38,6 +38,11 @@ const GeneralCalculator = () => {
 
     const { handleSubmit } = methods;
 
+    const formData = watch();
+    useEffect(() => {
+        console.log("Form data changed:", formData);
+    }, [formData]);
+    
     return (
         <FormProvider {...methods}>
             <form className="form" onSubmit={handleSubmit(onSubmit)}>
@@ -49,7 +54,7 @@ const GeneralCalculator = () => {
                 <br></br>
                 <p>Select your utility rate structure and input values in dollars per kWh (USD).</p>
                 <UtilityRateStructure />
-            
+
                 <SubmitButton loading={loading} isValid={isValid} />
             </form>
         </FormProvider>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import FlatRate from './FlatRate';
 import SeasonalRate from './SeasonalRate';
@@ -8,16 +8,32 @@ import SeasonalTieredRate from './SeasonalTieredRate';
 import MonthlyTieredRate from './MonthlyTieredRate';
 import TimeOfUse from './TOURate';
 import { useFormContext } from 'react-hook-form';
+import RateStructureFieldMap from './RateStructureFieldMap';
 
 const UtilityRateStructure = () => {
   const [selectedRateStructure, setSelectedRateStructure] = useState('');
-  const { setValue } = useFormContext(); // Use the useFormContext hook
+  const previousRateStructureRef = useRef(''); // Using a ref to keep track of the previous rate structure
+  const { setValue, unregister } = useFormContext();
+  const rateStructures = ["Flat Rate", "Seasonal Rate", "Monthly Rate", "Tiered Rate", "Seasonal Tiered Rate", "Monthly Tiered Rate", "Time of Use"];
 
-  const rateStructures = ["Flat Rate", "Seasonal Rate", "Monthly Rate", "Tiered Rate", "Seasonal Tiered Rate", "Monthly Tiered Rate", "Time of Use"]; // Add other rate structures as needed
+  useEffect(() => {
+    if (selectedRateStructure && previousRateStructureRef.current) {
+      unregisterFields(previousRateStructureRef.current); // Unregister fields of the previous rate structure
+    }
+    previousRateStructureRef.current = selectedRateStructure;
+  }, [selectedRateStructure, unregister]);
+
+  const unregisterFields = (rateStructureName) => {
+    const fieldsToUnregister = RateStructureFieldMap[rateStructureName];
+    fieldsToUnregister.forEach(fieldName => {
+      unregister(fieldName);
+    });
+  };
 
   const handleRateStructureChange = (event) => {
-    setSelectedRateStructure(event.target.value);
-    setValue('rateStructure', event.target.value);
+    const newRateStructure = event.target.value;
+    setSelectedRateStructure(newRateStructure);
+    setValue('rateStructure', newRateStructure);
   };
 
   const renderRateStructureComponent = () => {

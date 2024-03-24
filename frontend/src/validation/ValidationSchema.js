@@ -1,22 +1,22 @@
 import * as yup from 'yup';
-import { zipcodeValidation, createMonthlyLoadValidation, createRateValidation, createAnnualLoadValidation, percentageValidation, wholeNumberValidation, positiveNumberValidation } from './ValidationUtils'; // Import validation functions from validationUtils.js
+import { zipcodeValidation, createMonthlyLoadValidation, createRateValidation, createAnnualLoadValidation, percentageValidation, wholeNumberValidation, positiveNumberValidation, timeRangeValidation } from './ValidationUtils';
 
 export const baseValidationSchema = yup.object({
     zipcode: zipcodeValidation,
     isAnnual: yup.boolean(),
-    annualTotalLoad: createAnnualLoadValidation(),
-    monthlyLoad1: createMonthlyLoadValidation(),
-    monthlyLoad2: createMonthlyLoadValidation(),
-    monthlyLoad3: createMonthlyLoadValidation(),
-    monthlyLoad4: createMonthlyLoadValidation(),
-    monthlyLoad5: createMonthlyLoadValidation(),
-    monthlyLoad6: createMonthlyLoadValidation(),
-    monthlyLoad7: createMonthlyLoadValidation(),
-    monthlyLoad8: createMonthlyLoadValidation(),
-    monthlyLoad9: createMonthlyLoadValidation(),
-    monthlyLoad10: createMonthlyLoadValidation(),
-    monthlyLoad11: createMonthlyLoadValidation(),
-    monthlyLoad12: createMonthlyLoadValidation(),
+    annualTotalLoad: createAnnualLoadValidation,
+    monthlyLoad1: createMonthlyLoadValidation,
+    monthlyLoad2: createMonthlyLoadValidation,
+    monthlyLoad3: createMonthlyLoadValidation,
+    monthlyLoad4: createMonthlyLoadValidation,
+    monthlyLoad5: createMonthlyLoadValidation,
+    monthlyLoad6: createMonthlyLoadValidation,
+    monthlyLoad7: createMonthlyLoadValidation,
+    monthlyLoad8: createMonthlyLoadValidation,
+    monthlyLoad9: createMonthlyLoadValidation,
+    monthlyLoad10: createMonthlyLoadValidation,
+    monthlyLoad11: createMonthlyLoadValidation,
+    monthlyLoad12: createMonthlyLoadValidation,
     rateStructure: yup.string()
         .required('Selecting a rate structure is required'),
     flatRate: createRateValidation('Flat Rate'),
@@ -123,10 +123,19 @@ export const baseValidationSchema = yup.object({
     decemberMediumPrice: createRateValidation('Monthly Tiered Rate'),
     decemberMediumMaxLoad: createRateValidation('Monthly Tiered Rate'),
     decemberHighPrice: createRateValidation('Monthly Tiered Rate'),
-    decemberHighMaxLoad: createRateValidation('Monthly Tiered Rate')
+    decemberHighMaxLoad: createRateValidation('Monthly Tiered Rate'),
+    summerOnPeakPrice: createRateValidation('Time of Use'),
+    summerMidPeakPrice: createRateValidation('Time of Use'),
+    summerOffPeakPrice: createRateValidation('Time of Use'),
+    winterOnPeakPrice: createRateValidation('Time of Use'),
+    winterMidPeakPrice: createRateValidation('Time of Use'),
+    winterOffPeakPrice: createRateValidation('Time of Use'),
+    // summerOnTimeRange: timeRangeValidation,
+    // summerMidTimeRange: timeRangeValidation,
+    // winterOnTimeRange: timeRangeValidation,
+    // winterMidTimeRange: timeRangeValidation
 });
 
-// Extend base schema for advanced calculator
 export const advancedValidationSchema = baseValidationSchema.shape({
     photovoltaic: yup.boolean(),
     dieselGenerator: yup.boolean(),

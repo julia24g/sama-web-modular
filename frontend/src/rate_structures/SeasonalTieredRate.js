@@ -7,12 +7,12 @@ const SeasonalTieredRate = () => {
   const seasonLabels = ['Summer', 'Winter'];
 
   const seasonalTieredRateFields = [
-    { label: 'Low Tier Price', name: 'LowTierPrice' },
-    { label: 'Low Tier Max Load', name: 'LowTierMaxLoad' },
-    { label: 'Medium Tier Price', name: 'MediumTierPrice' },
-    { label: 'Medium Tier Max Load', name: 'MediumTierMaxLoad' },
-    { label: 'High Tier Price', name: 'HighTierPrice' },
-    { label: 'High Tier Max Load', name: 'HighTierMaxLoad' }
+    { label: 'Low Tier Price', suffix: 'LowTierPrice' },
+    { label: 'Low Tier Max Load', suffix: 'LowTierMaxLoad' },
+    { label: 'Medium Tier Price', suffix: 'MediumTierPrice' },
+    { label: 'Medium Tier Max Load', suffix: 'MediumTierMaxLoad' },
+    { label: 'High Tier Price', suffix: 'HighTierPrice' },
+    { label: 'High Tier Max Load', suffix: 'HighTierMaxLoad' }
   ];
   return (
     <>

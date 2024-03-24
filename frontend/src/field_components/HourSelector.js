@@ -16,7 +16,6 @@ const HourSelector = ({ season, tier }) => {
         const hours = Array(24).fill(0);
         ranges.forEach((range) => {
             if (range.startTime !== null && range.endTime !== null) {
-                console.log(range.startTime, range.endTime)
                 const startHour = range.startTime;
                 const endHour = range.endTime;
                 for (let i = startHour; i < endHour; i++) {
@@ -49,13 +48,29 @@ const HourSelector = ({ season, tier }) => {
         <div>
             {ranges.map((range, index) => (
                 <div key={index}>
-                    <TimeRange
-                        startTime={range.startTime}
-                        endTime={range.endTime}
-                        onTimeChange={(startTime, endTime) =>
-                            handleChangeRange(index, startTime, endTime)
-                        }
-                    />
+                    {index === 0 ? (
+                        <Controller
+                            name={`${season}${tier}TimeRange`}
+                            defaultValue={{ startTime: range.startTime, endTime: range.endTime }}
+                            render={({ field }) => (
+                                <TimeRange
+                                    {...field}
+                                    onTimeChange={(startTime, endTime) =>
+                                        handleChangeRange(index, startTime, endTime)
+                                    }
+                                    controlled
+                                />
+                            )}
+                        />
+                    ) : (
+                        <TimeRange
+                            startTime={range.startTime}
+                            endTime={range.endTime}
+                            onTimeChange={(startTime, endTime) =>
+                                handleChangeRange(index, startTime, endTime)
+                            }
+                        />
+                    )}
                     <Button
                         variant="contained"
                         color="error"
@@ -81,9 +96,9 @@ const HourSelector = ({ season, tier }) => {
                 defaultValue={onHours}
                 render={({ field }) => <input type="hidden" {...field} />}
             />
-            {/* <div>
+            <div>
                 Hour Availability: {onHours.join(', ')}
-            </div> */}
+            </div>
         </div>
     );
 

@@ -47,7 +47,7 @@ const TimeRange = ({ startTime, endTime, onTimeChange }) => {
                     hours.push(i);
                 }
                 return hours;
-            }; 
+            };
         }
         return { disabledHours };
     };

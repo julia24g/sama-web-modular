@@ -8,7 +8,7 @@ const TOURate = () => {
     const tierLabels = [
         { label: 'On-Peak Price', suffix: 'OnPeakPrice' },
         { label: 'Mid-Peak Price', suffix: 'MidPeakPrice' },
-        { label: 'Off-Peak Price', suffix: 'OffPeakPricee' },
+        { label: 'Off-Peak Price', suffix: 'OffPeakPrice' },
     ];
 
     return (
@@ -26,9 +26,9 @@ const TOURate = () => {
                         ))}
                     </Grid>
                     <p>Please provide the hourly range(s) for on-peak hours.</p>
-                    <HourSelector season={season} tier="On" />
+                    <HourSelector season={season.toLowerCase()} tier="On" />
                     <p>Please provide the hourly range(s) for mid-peak hours.</p>
-                    <HourSelector season={season} tier="Mid"/>
+                    <HourSelector season={season.toLowerCase()} tier="Mid"/>
                 </div>
             ))}
         </>
