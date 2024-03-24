@@ -16,7 +16,7 @@ const TieredRate = () => {
         <Grid container>
             {tieredRateFields.map((field, index) => {
                 return (
-                    <Grid item xs={6} key={index}> {/* xs={6} makes each TextField take half width of the container */}
+                    <Grid item xs={6} key={index}>
                         <StandardField name={field.name} label={field.label} defaultValue='' unit='$' />
                     </Grid>
                 );

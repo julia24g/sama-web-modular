@@ -106,9 +106,14 @@ def process_general_data(data):
         decemberTieredLoads = np.array([data['decemberLowMaxLoad'], data['decemberMidMaxLoad'], data['decemberHighMaxLoad']])
         monthlyTieredLoads = np.array([januaryTieredLoads, februaryTieredLoads, marchTieredLoads, aprilTieredLoads, mayTieredLoads, juneTieredLoads, julyTieredLoads, augustTieredLoads, septemberTieredLoads, octoberTieredLoads, novemberTieredLoads, decemberTieredLoads])
         Input_Data.setMonthlyTieredRate(monthlyTieredPrices, monthlyTieredLoads)
-    else:
-        return jsonify({'error': 'Not implemented yet'})
-
+    elif rateStructureType == 'Time of Use':
+        onPrice = np.array([data['summerOnPeakPrice'], data['winterOnPeakPrice']])
+        midPrice = np.array([data['summerMidPeakPrice'], data['winterMidPeakPrice']])
+        offPrice = np.array([data['summerOffPeakPrice'], data['winterOffPeakPrice']])
+        onHours = np.array([data['summerOnPeakHours'], data['winterOnPeakHours']])
+        midHours = np.array([data['summerMidPeakHours'], data['winterMidPeakHours']])
+        Input_Data.setTimeOfUseRate(onPrice, midPrice, offPrice, onHours, midHours)
+        
     return Input_Data
 
 def process_advanced_data(Input_Data, data):

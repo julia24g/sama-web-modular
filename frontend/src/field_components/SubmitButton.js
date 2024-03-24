@@ -2,12 +2,11 @@ import React from 'react';
 import { LoadingButton } from '@mui/lab';
 import Search from '@mui/icons-material/Search';
 
-const SubmitButton = ({ onSubmit, loading, isValid }) => {
+const SubmitButton = ({ loading, isValid }) => {
     return (
         <>
             <p style={{ fontStyle: "italic" }}>It can take up to 1 min to calculate your results.</p>
             <LoadingButton
-                onClick={onSubmit}
                 loading={loading}
                 loadingPosition="start"
                 startIcon={<Search />}

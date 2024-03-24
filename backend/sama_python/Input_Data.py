@@ -585,7 +585,7 @@ class InData:
         from sama_python.calcMonthlyTieredRate import calcMonthlyTieredRate
         self.Cbuy = calcMonthlyTieredRate(self.monthlyTieredPrices, self.monthlyTierLimits, self.Eload)
 
-    def setTimeOfUseRate(self, on_price_array, mid_price_array, off_price_array, on_hours_array, mid_hours_array, season_array, holidays_array):
+    def setTimeOfUseRate(self, on_price_array, mid_price_array, off_price_array, on_hours_array, mid_hours_array):
         self.rateStructure = 7  # Time of use rate
         self.onPrice = on_price_array
         self.midPrice = mid_price_array

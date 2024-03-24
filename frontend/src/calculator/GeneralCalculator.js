@@ -21,6 +21,7 @@ const GeneralCalculator = () => {
     const onSubmit = async (data) => {
         setLoading(true);
         const url = 'http://127.0.0.1:5000/submit/general';
+        console.log(data)
 
         try {
             const response = await axios.post(url, data);
@@ -49,7 +50,7 @@ const GeneralCalculator = () => {
                 <p>Select your utility rate structure and input values in dollars per kWh (USD).</p>
                 <UtilityRateStructure />
             
-                <SubmitButton onSubmit={onSubmit} loading={loading} isValid={isValid} />
+                <SubmitButton loading={loading} isValid={isValid} />
             </form>
         </FormProvider>
     );
