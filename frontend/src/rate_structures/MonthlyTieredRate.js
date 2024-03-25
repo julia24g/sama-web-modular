@@ -10,12 +10,12 @@ const MonthlyTieredRate = () => {
   ];
 
   const tierLabels = [
-    { label: 'Low Tier Price', suffix: 'LowPrice' },
-    { label: 'Low Tier Max Load', suffix: 'LowMaxLoad' },
-    { label: 'Medium Tier Price', suffix: 'MedPrice' },
-    { label: 'Medium Tier Max Load', suffix: 'MedMaxLoad' },
-    { label: 'High Tier Price', suffix: 'HighPrice' },
-    { label: 'High Tier Max Load', suffix: 'HighMaxLoad' }
+    { label: 'Low Tier Price', suffix: 'LowPrice', unit: '$' },
+    { label: 'Low Tier Max Load', suffix: 'LowMaxLoad', unit: 'kW' },
+    { label: 'Medium Tier Price', suffix: 'MedPrice', unit: '$' },
+    { label: 'Medium Tier Max Load', suffix: 'MedMaxLoad', unit: 'kW' },
+    { label: 'High Tier Price', suffix: 'HighPrice', unit: '$' },
+    { label: 'High Tier Max Load', suffix: 'HighMaxLoad', unit: 'kW' }
   ];
 
   return (
@@ -28,7 +28,7 @@ const MonthlyTieredRate = () => {
           <Grid container>
             {tierLabels.map((tier, tierIndex) => (
               <Grid item xs={6} key={tierIndex}>
-                <StandardField name={`${month.toLowerCase()}${tier.suffix}`} label={`${tier.label}`} defaultValue='' unit='$' />
+                <StandardField name={`${month.toLowerCase()}${tier.suffix}`} label={`${tier.label}`} defaultValue='' unit={tier.unit} />
               </Grid>
             ))}
           </Grid>

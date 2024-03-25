@@ -1,7 +1,6 @@
 import React from 'react';
-import { Controller } from 'react-hook-form';
-import { TextField, InputAdornment } from '@mui/material';
 import '../style/App.css';
+import StandardField from '../field_components/FieldComponent';
 
 const DieselGenerator = () => {
   const dieselGeneratorFields = [
@@ -16,23 +15,7 @@ const DieselGenerator = () => {
       {dieselGeneratorFields.map((field, index) => (
         <div key={index}>
           <p>{field.question}</p>
-          <Controller
-            name={field.name}
-            defaultValue={field.defaultValue}
-            render={({ field: controllerField }) => (
-              <TextField
-                {...controllerField}
-                required
-                label={field.label}
-                variant="outlined"
-                fullWidth
-                style={{width: "210px", margin: '10px auto'}}
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">{field.unit}</InputAdornment>,
-                }}
-              />
-            )}
-          />
+          <StandardField name={field.name} label={field.label} defaultValue={field.defaultValue} unit={field.unit} />
         </div>
       ))}
     </div>

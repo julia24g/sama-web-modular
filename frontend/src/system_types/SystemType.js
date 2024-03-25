@@ -1,11 +1,9 @@
 import React from 'react';
-import { useFormContext, Controller } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
-const SystemSelectionForm = ({ onSystemsSelected }) => {
-  const { control } = useFormContext();
-
+const SystemSelectionForm = () => {
   const systemOptions = [
     { label: "Photovoltaic", value: "photovoltaic" },
     { label: "Diesel Generator", value: "dieselGenerator" },
@@ -16,9 +14,7 @@ const SystemSelectionForm = ({ onSystemsSelected }) => {
     <div>
       {systemOptions.map((option) => (
         <Controller
-          key={option.value}
           name={option.value}
-          control={control}
           defaultValue={false}
           render={({ field }) => (
             <FormControlLabel

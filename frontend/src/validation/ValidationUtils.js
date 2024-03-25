@@ -47,7 +47,7 @@ export const positiveNumberValidation = yup.number()
     .min(0, 'Must be a positive number')
 
 export const timeRangeValidation = yup.object().shape({
-    startTime: yup.number().required('Start time is required'), // Assuming startTime and endTime are numbers
+    startTime: yup.number().required('Start time is required'),
     endTime: yup.number().required('End time is required')
         .test('is-after-start', 'End time must be after start time', function (value) {
             const { startTime } = this.parent;

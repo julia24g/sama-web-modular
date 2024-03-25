@@ -4,12 +4,12 @@ import StandardField from '../field_components/FieldComponent';
 
 const TieredRate = () => {
     const tieredRateFields = [
-        { label: 'Low Tier Price', name: 'lowTierPrice' },
-        { label: 'Low Tier Max Load', name: 'lowTierMaxLoad' },
-        { label: 'Medium Tier Price', name: 'mediumTierPrice' },
-        { label: 'Medium Tier Max Load', name: 'mediumTierMaxLoad' },
-        { label: 'High Tier Price', name: 'highTierPrice' },
-        { label: 'High Tier Max Load', name: 'highTierMaxLoad' }
+        { label: 'Low Tier Price', name: 'lowTierPrice', unit: '$' },
+        { label: 'Low Tier Max Load', name: 'lowTierMaxLoad', unit: 'kW' },
+        { label: 'Medium Tier Price', name: 'mediumTierPrice', unit: '$' },
+        { label: 'Medium Tier Max Load', name: 'mediumTierMaxLoad', unit: 'kW' },
+        { label: 'High Tier Price', name: 'highTierPrice', unit: '$' },
+        { label: 'High Tier Max Load', name: 'highTierMaxLoad', unit: 'kW' }
     ];
 
     return (
@@ -17,7 +17,7 @@ const TieredRate = () => {
             {tieredRateFields.map((field, index) => {
                 return (
                     <Grid item xs={6} key={index}>
-                        <StandardField name={field.name} label={field.label} defaultValue='' unit='$' />
+                        <StandardField name={field.name} label={field.label} defaultValue='' unit={field.unit} />
                     </Grid>
                 );
             })}

@@ -7,10 +7,11 @@ const StandardField = ({ name, label, defaultValue, unit }) => {
     <Controller
       name={name}
       defaultValue={defaultValue}
-      render={({ field: { onChange, value }, fieldState: { error } }) => (
+      render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
         <TextField
           value={value ?? ''}
           onChange={onChange}
+          onBlur={onBlur}
           error={!!error}
           helperText={error ? error.message : null}
           fullWidth

@@ -1,7 +1,6 @@
 import React from 'react';
-import { Controller } from 'react-hook-form';
-import { TextField, InputAdornment } from '@mui/material';
 import '../style/App.css';
+import StandardField from '../field_components/FieldComponent';
 
 const PVQuestions = () => {
   const pvQuestionFields = [
@@ -16,23 +15,7 @@ const PVQuestions = () => {
       {pvQuestionFields.map((field, index) => (
         <div key={index}>
           <p>{field.question}</p>
-          <Controller
-            name={field.name}
-            defaultValue={field.defaultValue}
-            render={({ field: controllerField }) => (
-              <TextField
-                {...controllerField}
-                required
-                label={field.label}
-                variant="outlined"
-                fullWidth
-                style={{ margin: '10px auto', width: '210px' }}
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">{field.unit}</InputAdornment>,
-                }}
-              />
-            )}
-          />
+          <StandardField name={field.name} label={field.label} defaultValue={field.defaultValue} unit={field.unit} />
         </div>
       ))}
     </div>

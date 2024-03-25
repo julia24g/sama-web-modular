@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 import UtilityRateStructure from '../rate_structures/UtilityRateStructure';
 import TotalLoad from '../TotalLoad';
 import Zipcode from '../Zipcode';
-import { FormProvider, useForm } from 'react-hook-form'; // Import useForm and FormProvider from React Hook Form
+import { FormProvider, useForm } from 'react-hook-form';
 import axios from 'axios';
 import '../style/App.css';
-import { yupResolver } from '@hookform/resolvers/yup'; // Import yupResolver
+import { yupResolver } from '@hookform/resolvers/yup';
 import { baseValidationSchema } from '../validation/ValidationSchema';
 import SubmitButton from '../field_components/SubmitButton';
 
 const GeneralCalculator = () => {
     const methods = useForm({
         resolver: yupResolver(baseValidationSchema),
-        mode: 'onChange'
+        mode: 'onBlur'
     });
     const { formState: { isValid }, watch } = methods;
     const [loading, setLoading] = useState(false);

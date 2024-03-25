@@ -892,4 +892,5 @@ def Gen_Results(X, InData):
         fig.subplots_adjust(left=0.075, top=0.98, bottom=0.075)
         plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly_average_earning_Sell_to_the_Grid.png', dpi=300)
     
+    matplotlib.pyplot.close('all')
     return answer

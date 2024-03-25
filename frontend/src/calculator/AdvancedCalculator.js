@@ -12,15 +12,15 @@ import axios from 'axios';
 import '../style/App.css';
 import { yupResolver } from '@hookform/resolvers/yup';
 import StandardField from '../field_components/FieldComponent';
-import { advancedValidationSchema } from '../validation/ValidationSchema';
+import { advancedValidationSchema, defaultValues } from '../validation/ValidationSchema';
 import SubmitButton from '../field_components/SubmitButton';
 
 const AdvancedCalculator = () => {
     const methods = useForm({
         resolver: yupResolver(advancedValidationSchema),
-        mode: 'onChange'
+        mode: 'onBlur'
     });
-    const { watch, handleSubmit, register, unregister } = methods;
+    const { watch, handleSubmit, register, unregister, trigger } = methods;
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
     const { formState: { isValid } } = methods;
@@ -36,7 +36,6 @@ const AdvancedCalculator = () => {
     const batteryBankFields = ['C_B', 'R_B', 'batteryOandM', 'batteryYearlyDegradation', 'SOC_min', 'SOC_max', 'batteryVoltage'];
 
     useEffect(() => {
-        console.log("isPhotovoltaic:", isPhotovoltaic);
         if (isPhotovoltaic) {
             photovoltaicFields.forEach(field => {
                 register(field);
@@ -73,30 +72,32 @@ const AdvancedCalculator = () => {
     }, [isBatteryBank, register, unregister]);
 
     useEffect(() => {
-        const realInterestRate = ((n_ir_rate - e_ir_rate) / (1 + e_ir_rate)).toFixed(2);
+        var realInterestRate = ((n_ir_rate - e_ir_rate) / (1 + e_ir_rate)).toFixed(2);
         methods.setValue('ir', realInterestRate);
-    }, [n_ir_rate, e_ir_rate, methods]);
+        trigger(defaultValues);
+    }, [n_ir_rate, e_ir_rate, methods.setValue, trigger]);
 
     const onSubmit = async (data) => {
         setLoading(true);
-        const url = 'http://localhost:5000/submit/advanced';
+        const url = 'http://127.0.0.1:5000/submit/advanced';
 
         try {
             const response = await axios.post(url, data);
             setMessage(response.data.message);
-            // Process response data here as needed
             setLoading(false);
         } catch (error) {
             setMessage('Error accessing backend. Please try again later.');
             console.error('Error', error);
             setLoading(false);
         }
+
+        window.location.href = "/results";
     };
 
-    const formData = watch();
-    useEffect(() => {
-        console.log("Form data changed:", formData);
-    }, [formData]);
+    // const formData = watch();
+    // useEffect(() => {
+    //     console.log("Form data changed:", formData);
+    // }, [formData]);
 
     return (
         <FormProvider {...methods}>

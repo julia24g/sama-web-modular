@@ -137,6 +137,11 @@ export const baseValidationSchema = yup.object({
 });
 
 export const advancedValidationSchema = baseValidationSchema.shape({
+    photovoltaic: yup.boolean(),
+    dieselGenerator: yup.boolean(),
+    batteryBank: yup.boolean(),
+    connectedToGrid: yup.boolean().required(),
+    netMetered: yup.boolean().required(),
     n: wholeNumberValidation,
     LPSP_max_rate: percentageValidation,
     RE_min_rate: percentageValidation,
@@ -157,7 +162,7 @@ export const advancedValidationSchema = baseValidationSchema.shape({
     C_DG: positiveNumberValidation,
     R_DG: positiveNumberValidation,
     MO_DG: positiveNumberValidation,
-    TL_DG: wholeNumberValidation,
-    connectedToGrid: yup.boolean().required('This field is required'),
-    netMetered: yup.boolean().required('This field is required')
+    TL_DG: wholeNumberValidation
 });
+
+export const defaultValues = ['n', 'LPSP_max_rate', 'RE_min_rate', 'e_ir_rate', 'n_ir_rate', 'ir'];

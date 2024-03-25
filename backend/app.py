@@ -11,8 +11,7 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-global_general_answer = None
-global_advanced_answer = None
+global_answer = None
 
 def get_coordinates(zipcode):
     url = f'https://nominatim.openstreetmap.org/search?q={zipcode}&format=json&limit=1'
@@ -124,63 +123,61 @@ def process_general_data(data):
     return Input_Data
 
 def process_advanced_data(Input_Data, data):
-    if data['batteryBank'] == True:
+    if data['batteryBank']:
         Input_Data.isBat()
-    if data['photovoltaic'] == True:
-        Input_Data.isBat()
-    if data['dieselGenerator'] == True:
+        Input_Data.setBatteryCost(data['C_B'])
+        Input_Data.setBatteryReplacementCost(data['R_B'])
+        Input_Data.setBatteryOandM(data['batteryOandM'])
+        Input_Data.setSOC_min(data['SOC_min'])
+        Input_Data.setSOC_max(data['SOC_max'])
+    if data['photovoltaic']:
+        Input_Data.isPV()
+        Input_Data.setPVCost(data['PVCost'])
+        Input_Data.setPVReplacementCost(data['PVReplacementCost'])
+        Input_Data.setPVOandM(data['PVOandM'])
+        Input_Data.setPVLifetime(data['PVLifetime'])
+    if data['dieselGenerator']:
         Input_Data.isDG()
-    if data['connectedToGrid'] == True:
+        Input_Data.setDGCost(data['C_DG'])
+        Input_Data.setDGReplacementCost(data['R_DG'])
+        Input_Data.setDGOandM(data['MO_DG'])
+        Input_Data.setDGLifetime(data['TL_DG'])
+    if data['connectedToGrid']:
         Input_Data.isGrid()
-    if data['netMetered'] == True:
+    if data['netMetered']:
         Input_Data.isNEM()
     
     Input_Data.projectLifetime(data['n'])
-    Input_Data.setLPSP_max_rate(data['LSPS_max_rate'])
+    Input_Data.setLPSP_max_rate(data['LPSP_max_rate'])
     Input_Data.setRE_min_rate(data['RE_min_rate'])
     Input_Data.sete_ir_rate(data['e_ir_rate'])
     Input_Data.setn_ir_rate(data['n_ir_rate'])
     Input_Data.setir(data['ir'])
-    
-    Input_Data.setPVCost(data['PVCost'])
-    Input_Data.setPVReplacementCost(data['PVReplacementCost'])
-    Input_Data.setPVOandM(data['PVOandM'])
-    Input_Data.setPVLifetime(data['PVLifetime'])
 
-    Input_Data.setBatteryCost(data['C_B'])
-    Input_Data.setBatteryReplacementCost(data['R_B'])
-    Input_Data.setBatteryOandM(data['batteryOandM'])
-    Input_Data.setSOC_min(data['SOC_min'])
-    Input_Data.setSOC_max(data['SOC_max'])
-    Input_Data.setBatteryVoltage(data['batteryVoltage'])
-
-    Input_Data.setDGCost(data['C_DG'])
-    Input_Data.setDGReplacementCost(data['R_DG'])
-    Input_Data.setDGOandM(data['MO_DG'])
-    Input_Data.setDGLifetime(data['TL_DG'])
+    return Input_Data
 
 @app.route("/submit/general", methods=['POST'])
 def submit_general():
-    global global_general_answer  # Declare it as global within your function
+    global global_answer
     data = request.json
     Input_Data = process_general_data(data)
-    global_general_answer = pso.run(Input_Data)
+    global_answer = pso.run(Input_Data)
     return jsonify({'message': 'General calculator processing complete'})
 
 @app.route('/submit/advanced', methods=['POST'])
 def submit_advanced():
-    global global_advanced_answer
+    global global_answer
     data = request.json
     Input_Data = process_general_data(data)
-    process_advanced_data(Input_Data, data)
-    global_advanced_answer = pso.run()
+    Input_Data = process_advanced_data(Input_Data, data)
+    global_answer = pso.run(Input_Data)
     return jsonify({'message': 'Advanced calculator processing complete'})
 
 @app.route("/results", methods=['GET'])
 def display_results():
-    global global_general_answer  # Declare it as global within your function
-    if global_general_answer is not None:
-        return jsonify(global_general_answer)  # Return the stored answer
+    global global_answer
+    if global_answer is not None:
+        return jsonify(global_answer)
     else:
         return jsonify({'error': 'No results available yet'})
 

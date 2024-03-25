@@ -4,7 +4,7 @@ import { TextField } from '@mui/material';
 import './style/App.css';
 
 const Zipcode = () => {
-  const { control, watch, setValue, formState: { errors } } = useFormContext();
+  const { watch, setValue, formState: { errors } } = useFormContext();
   const watchedZipcode = watch("zipcode");
 
   useEffect(() => {
@@ -45,7 +45,6 @@ const Zipcode = () => {
     <div className="form">
       <Controller
         name="zipcode"
-        control={control}
         defaultValue=""
         render={({ field }) => (
           <TextField
