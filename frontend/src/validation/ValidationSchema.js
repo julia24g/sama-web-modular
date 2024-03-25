@@ -130,16 +130,13 @@ export const baseValidationSchema = yup.object({
     winterOnPeakPrice: createRateValidation('Time of Use'),
     winterMidPeakPrice: createRateValidation('Time of Use'),
     winterOffPeakPrice: createRateValidation('Time of Use'),
-    // summerOnTimeRange: timeRangeValidation,
-    // summerMidTimeRange: timeRangeValidation,
-    // winterOnTimeRange: timeRangeValidation,
-    // winterMidTimeRange: timeRangeValidation
+    summerOnTimeRange: yup.array().of(timeRangeValidation),
+    summerMidTimeRange: yup.array().of(timeRangeValidation),
+    winterOnTimeRange: yup.array().of(timeRangeValidation),
+    winterMidTimeRange: yup.array().of(timeRangeValidation)
 });
 
 export const advancedValidationSchema = baseValidationSchema.shape({
-    photovoltaic: yup.boolean(),
-    dieselGenerator: yup.boolean(),
-    batteryBank: yup.boolean(),
     n: wholeNumberValidation,
     LPSP_max_rate: percentageValidation,
     RE_min_rate: percentageValidation,
@@ -161,8 +158,6 @@ export const advancedValidationSchema = baseValidationSchema.shape({
     R_DG: positiveNumberValidation,
     MO_DG: positiveNumberValidation,
     TL_DG: wholeNumberValidation,
-    connectedToGrid: yup.boolean()
-        .required('Selecting a grid connection is required'),
-    netMetered: yup.boolean()
-        .required('Selecting net metering is required')
+    connectedToGrid: yup.boolean().required('This field is required'),
+    netMetered: yup.boolean().required('This field is required')
 });

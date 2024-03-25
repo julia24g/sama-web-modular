@@ -46,7 +46,7 @@ def get_utility_rates_endpoint():
     return jsonify(utility_data)
 
 def process_general_data(data):
-    zipcode = data['zipcode'] # store in database later
+    # zipcode = data['zipcode'] # store in database later
     loadType = data['isAnnual']
     rateStructureType = data['rateStructure']
 

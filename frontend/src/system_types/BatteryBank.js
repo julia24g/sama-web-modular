@@ -1,11 +1,9 @@
 import React from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import { TextField, InputAdornment } from '@mui/material';
 import '../style/App.css';
 
 const BatteryBank = () => {
-  const { control } = useFormContext(); // Access form control context
-
   const batteryBankFields = [
     { question: 'What is the capital cost of the battery bank per kW installed (USD)?', label: 'Capital Cost of Battery', name: 'C_B', defaultValue: '460', unit: '$' },
     { question: 'What is the replacement cost of the battery bank per kW (USD)?', label: 'Replacement Cost of Battery', name: 'R_B', defaultValue: '460', unit: '$' },
@@ -23,7 +21,6 @@ const BatteryBank = () => {
           <p>{field.question}</p>
           <Controller
             name={field.name}
-            control={control}
             defaultValue={field.defaultValue}
             render={({ field: controllerField }) => (
               <TextField

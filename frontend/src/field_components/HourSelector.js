@@ -3,14 +3,20 @@ import { Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TimeRange from './TimeRange';
 import { Controller } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 const HourSelector = ({ season, tier }) => {
+    const { setValue } = useFormContext();
     const [ranges, setRanges] = useState([{ startTime: null, endTime: null }]);
     const [onHours, setOnHours] = useState(Array(24).fill(0));
 
     useEffect(() => {
         updateOnHours();
     }, [ranges]);
+
+    useEffect(() => {
+        setValue(`${season}${tier}PeakHours`, onHours);
+    }, [onHours, setValue, season, tier]);
 
     const updateOnHours = () => {
         const hours = Array(24).fill(0);
@@ -27,7 +33,8 @@ const HourSelector = ({ season, tier }) => {
     };
 
     const handleAddRange = () => {
-        setRanges([...ranges, { startTime: null, endTime: null }]);
+        const updatedRanges = [...ranges, { startTime: null, endTime: null }];
+        setRanges(updatedRanges);
     };
 
     const handleRemoveRange = (index) => {
@@ -38,10 +45,13 @@ const HourSelector = ({ season, tier }) => {
         }
     };
 
-    const handleChangeRange = (index, startTime, endTime) => {
-        const newRanges = [...ranges];
-        newRanges[index] = { startTime, endTime };
+    const handleChangeRange = (index, startTime, endTime, onChange) => {
+        const newRanges = ranges.map((range, idx) => idx === index ? { startTime, endTime } : range);
         setRanges(newRanges);
+
+        if (onChange) {
+            onChange(newRanges); // This updates the form state with the new range values.
+        }
     };
 
     return (
@@ -54,10 +64,9 @@ const HourSelector = ({ season, tier }) => {
                             defaultValue={{ startTime: range.startTime, endTime: range.endTime }}
                             render={({ field }) => (
                                 <TimeRange
-                                    {...field}
-                                    onTimeChange={(startTime, endTime) =>
-                                        handleChangeRange(index, startTime, endTime)
-                                    }
+                                    startTime={field.value.startTime}
+                                    endTime={field.value.endTime}
+                                    onTimeChange={(start, end) => handleChangeRange(index, start, end, field.onChange)}
                                     controlled
                                 />
                             )}

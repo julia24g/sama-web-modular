@@ -18,7 +18,7 @@ const UtilityRateStructure = () => {
 
   useEffect(() => {
     if (selectedRateStructure && previousRateStructureRef.current) {
-      unregisterFields(previousRateStructureRef.current); // Unregister fields of the previous rate structure
+      unregisterFields(previousRateStructureRef.current);
     }
     previousRateStructureRef.current = selectedRateStructure;
   }, [selectedRateStructure, unregister]);

@@ -10,9 +10,9 @@ import { useForm, FormProvider } from 'react-hook-form';
 import Zipcode from '../Zipcode';
 import axios from 'axios';
 import '../style/App.css';
-import { yupResolver } from '@hookform/resolvers/yup'; // Import yupResolver
+import { yupResolver } from '@hookform/resolvers/yup';
 import StandardField from '../field_components/FieldComponent';
-import { advancedValidationSchema } from '../validation/ValidationSchema'; // Import advancedValidationSchema
+import { advancedValidationSchema } from '../validation/ValidationSchema';
 import SubmitButton from '../field_components/SubmitButton';
 
 const AdvancedCalculator = () => {
@@ -20,7 +20,7 @@ const AdvancedCalculator = () => {
         resolver: yupResolver(advancedValidationSchema),
         mode: 'onChange'
     });
-    const { control, watch, handleSubmit } = methods;
+    const { watch, handleSubmit, register, unregister } = methods;
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
     const { formState: { isValid } } = methods;
@@ -30,6 +30,47 @@ const AdvancedCalculator = () => {
     const isBatteryBank = watch('batteryBank');
     const n_ir_rate = watch('n_ir_rate');
     const e_ir_rate = watch('e_ir_rate');
+
+    const photovoltaicFields = ['PVCost', 'PVReplacementCost', 'PVOandM', 'PVLifetime'];
+    const dieselGeneratorFields = ['C_DG', 'R_DG', 'MO_DG', 'TL_DG'];
+    const batteryBankFields = ['C_B', 'R_B', 'batteryOandM', 'batteryYearlyDegradation', 'SOC_min', 'SOC_max', 'batteryVoltage'];
+
+    useEffect(() => {
+        console.log("isPhotovoltaic:", isPhotovoltaic);
+        if (isPhotovoltaic) {
+            photovoltaicFields.forEach(field => {
+                register(field);
+            });
+        } else {
+            photovoltaicFields.forEach(field => {
+                unregister(field);
+            });
+        }
+    }, [isPhotovoltaic, register, unregister]);
+
+    useEffect(() => {
+        if (isDieselGenerator) {
+            dieselGeneratorFields.forEach(field => {
+                register(field);
+            });
+        } else {
+            dieselGeneratorFields.forEach(field => {
+                unregister(field);
+            });
+        }
+    }, [isDieselGenerator, register, unregister]);
+
+    useEffect(() => {
+        if (isBatteryBank) {
+            batteryBankFields.forEach(field => {
+                register(field);
+            });
+        } else {
+            batteryBankFields.forEach(field => {
+                unregister(field);
+            });
+        }
+    }, [isBatteryBank, register, unregister]);
 
     useEffect(() => {
         const realInterestRate = ((n_ir_rate - e_ir_rate) / (1 + e_ir_rate)).toFixed(2);
@@ -52,17 +93,22 @@ const AdvancedCalculator = () => {
         }
     };
 
+    const formData = watch();
+    useEffect(() => {
+        console.log("Form data changed:", formData);
+    }, [formData]);
+
     return (
         <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <p>Get started by entering your zipcode.</p>
                 <Zipcode />
                 <br></br>
-                <p>Select your utility rate structure and input values in dollars per kWh (USD).</p>
-                <UtilityRateStructure />
-                <br></br>
                 <p>Input annual or monthly load data in kW.</p>
                 <TotalLoad />
+                <br></br>
+                <p>Select your utility rate structure and input values in dollars per kWh (USD).</p>
+                <UtilityRateStructure />
                 <br></br>
                 <p>Select the components of your system.</p>
                 <SystemType />

@@ -1,11 +1,9 @@
 import React from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import { TextField, InputAdornment } from '@mui/material';
 import '../style/App.css';
 
 const DieselGenerator = () => {
-  const { control } = useFormContext(); // Access form control context
-
   const dieselGeneratorFields = [
     { question: 'What is the capital cost of the diesel generator per kW installed (USD)?', label: 'Capital Cost of DG', name: 'C_DG', defaultValue: '240.45', unit: '$' },
     { question: 'What is the replacement cost of the diesel generator per kW (USD)?', label: 'Replacement Cost of DG', name: 'R_DG', defaultValue: '240.45', unit: '$' },
@@ -20,7 +18,6 @@ const DieselGenerator = () => {
           <p>{field.question}</p>
           <Controller
             name={field.name}
-            control={control}
             defaultValue={field.defaultValue}
             render={({ field: controllerField }) => (
               <TextField

@@ -24,6 +24,11 @@ const TimeRange = ({ startTime, endTime, onTimeChange }) => {
             const newEndTime = parseTimeStringToHour(info[1]);
             onTimeChange(startTime, newEndTime);
         }
+        if (info[0] && info[1]){
+            const newStartTime = parseTimeStringToHour(info[0]);
+            const newEndTime = parseTimeStringToHour(info[1]);
+            onTimeChange(newStartTime, newEndTime);
+        }
     };
 
     const RangeDisabledTime = (now, type) => {
@@ -59,6 +64,8 @@ const TimeRange = ({ startTime, endTime, onTimeChange }) => {
             onCalendarChange={handleCalendarChange}
             disabledTime={(now, type) => RangeDisabledTime(now, type)}
             size="large"
+            allowClear={false}
+            needConfirm={false}
         />
     );
 };

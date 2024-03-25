@@ -16,20 +16,20 @@ export const createRateValidation = (rateStructureName) => {
 };
 
 export const createMonthlyLoadValidation = yup.number()
-        .typeError('Must be a number')
-        .min(0, 'Must be a positive number')
-        .when('isAnnual', {
-            is: false, 
-            then: schema => schema.required('This field is required'), 
-        })
+    .typeError('Must be a number')
+    .min(0, 'Must be a positive number')
+    .when('isAnnual', {
+        is: false,
+        then: schema => schema.required('This field is required'),
+    })
 
 export const createAnnualLoadValidation = yup.number()
-        .typeError('Must be a number')
-        .min(0, 'Must be a positive number')
-        .when('isAnnual', {
-            is: true,
-            then: schema => schema.required('This field is required'), 
-        })
+    .typeError('Must be a number')
+    .min(0, 'Must be a positive number')
+    .when('isAnnual', {
+        is: true,
+        then: schema => schema.required('This field is required'),
+    })
 
 export const percentageValidation = yup.number()
     .typeError('Must be a number')
@@ -41,22 +41,17 @@ export const wholeNumberValidation = yup.number()
     .typeError('Must be a number')
     .integer('Must be a whole number')
     .min(0, 'Must be a positive number')
-    .required('This field is required');
 
 export const positiveNumberValidation = yup.number()
     .typeError('Must be a number')
     .min(0, 'Must be a positive number')
-    .required('This field is required');
 
 export const timeRangeValidation = yup.object().shape({
-    startTime: yup.string().required('Start time is required'),
-    endTime: yup.string().required('End time is required')
-        // .test('is-after-start', 'End time must be after start time', function (value) {
-        //     const { startTime } = this.parent;
-        //     if (!startTime || !value) {
-        //         return true;
-        //     }
-        //     return startTime < value;
-        // })
+    startTime: yup.number().required('Start time is required'), // Assuming startTime and endTime are numbers
+    endTime: yup.number().required('End time is required')
+        .test('is-after-start', 'End time must be after start time', function (value) {
+            const { startTime } = this.parent;
+            return startTime < value;
+        }),
 });
 

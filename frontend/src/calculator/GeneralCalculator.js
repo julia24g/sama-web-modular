@@ -38,10 +38,10 @@ const GeneralCalculator = () => {
 
     const { handleSubmit } = methods;
 
-    const formData = watch();
-    useEffect(() => {
-        console.log("Form data changed:", formData);
-    }, [formData]);
+    // const formData = watch();
+    // useEffect(() => {
+    //     console.log("Form data changed:", formData);
+    // }, [formData]);
     
     return (
         <FormProvider {...methods}>
