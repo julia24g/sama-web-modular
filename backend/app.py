@@ -45,6 +45,13 @@ def get_utility_rates_endpoint():
         return jsonify({'error': 'Failed to fetch utility rates'})
     return jsonify(utility_data)
 
+def tou_hour_array_conversion(hour_array):
+    hours = list()
+    for i, boolVal in enumerate(hour_array):
+        if boolVal:
+            hours.append(i)
+    return hours
+
 def process_general_data(data):
     # zipcode = data['zipcode'] # store in database later
     loadType = data['isAnnual']
@@ -110,10 +117,10 @@ def process_general_data(data):
         onPrice = np.array([data['summerOnPeakPrice'], data['winterOnPeakPrice']])
         midPrice = np.array([data['summerMidPeakPrice'], data['winterMidPeakPrice']])
         offPrice = np.array([data['summerOffPeakPrice'], data['winterOffPeakPrice']])
-        onHours = np.array([data['summerOnPeakHours'], data['winterOnPeakHours']])
-        midHours = np.array([data['summerMidPeakHours'], data['winterMidPeakHours']])
+        onHours = np.array([tou_hour_array_conversion(data['summerOnPeakHours']), tou_hour_array_conversion(data['winterOnPeakHours'])])
+        midHours = np.array([tou_hour_array_conversion(data['summerMidPeakHours']), tou_hour_array_conversion(data['winterMidPeakHours'])])
         Input_Data.setTimeOfUseRate(onPrice, midPrice, offPrice, onHours, midHours)
-        
+            
     return Input_Data
 
 def process_advanced_data(Input_Data, data):

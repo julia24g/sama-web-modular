@@ -21,7 +21,6 @@ const GeneralCalculator = () => {
     const onSubmit = async (data) => {
         setLoading(true);
         const url = 'http://127.0.0.1:5000/submit/general';
-        console.log(data)
 
         try {
             const response = await axios.post(url, data);
