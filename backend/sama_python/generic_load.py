@@ -6,7 +6,7 @@ def generic_load(load_type, load_previous_year_type, peakmonth, daysInMonth, use
         if peakmonth == 'July':
             path_generic_load = 'sama_python/content/Generic_load_JulyP.csv'
         else:
-            path_generic_load = 'content/Generic_load_JanuaryP.csv'
+            path_generic_load = 'sama_python/content/Generic_load_JanuaryP.csv'
 
         EloadData = pd.read_csv(path_generic_load, header=None).values
         Eload = np.array(EloadData[:, 0])
@@ -15,18 +15,18 @@ def generic_load(load_type, load_previous_year_type, peakmonth, daysInMonth, use
         scaled_data = scaling_factor * Eload
     elif load_type == 9 or load_previous_year_type == 10:
         if peakmonth == 'July':
-            path_generic_load = 'content/Generic_load_JulyP.csv'
+            path_generic_load = 'sama_python/content/Generic_load_JulyP.csv'
         else:
-            path_generic_load = 'content/Generic_load_JanuaryP.csv'
+            path_generic_load = 'sama_python/content/Generic_load_JanuaryP.csv'
 
         EloadData = pd.read_csv(path_generic_load, header=None).values
         Eload = np.array(EloadData[:, 0])
         scaled_data = Eload
     else:
         if peakmonth == 'July':
-            path_generic_load = 'content/Generic_load_JulyP.csv'
+            path_generic_load = 'sama_python/content/Generic_load_JulyP.csv'
         else:
-            path_generic_load = 'content/Generic_load_JanuaryP.csv'
+            path_generic_load = 'sama_python/content/Generic_load_JanuaryP.csv'
 
         EloadData = pd.read_csv(path_generic_load, header=None).values
         Eload = np.array(EloadData[:, 0])

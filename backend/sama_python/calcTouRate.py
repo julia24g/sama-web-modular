@@ -42,6 +42,7 @@ def calcTouRate(year, onPrice, midPrice, offPrice, onHours, midHours, season, da
       P_offpeak = offPrice[1]
 
     Cbuy[t_index] = P_offpeak  # set all hours to off-peak by default
+    print(tp)
 
     for d in range(daysInMonth[m]):
       if tp is not None:

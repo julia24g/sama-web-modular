@@ -572,7 +572,7 @@ class InData:
         self.rateStructure = 5  # Seasonal tiered rate
         self.seasonalTieredPrices = seasonal_tiered_rate_array
         self.seasonalTierMax = seasonal_tier_max_array
-        self.season = np.array([0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0])  # define summer season 1= Summer
+        self.season = np.array([0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0])  # define summer season 1= Summer
 
         from sama_python.calcSeasonalTieredRate import calcSeasonalTieredRate
         self.Cbuy = calcSeasonalTieredRate(self.seasonalTieredPrices, self.seasonalTierMax, self.Eload, self.season)
