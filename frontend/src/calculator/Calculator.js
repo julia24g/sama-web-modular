@@ -1,11 +1,8 @@
-import React, { useState } from 'react';
-
+import React from 'react';
 import GeneralCalculator from './GeneralCalculator';
 import AdvancedCalculator from './AdvancedCalculator';
-
 import Box from '@mui/material/Box';
 
-// Tabs
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -14,9 +11,6 @@ import TabPanel from '@mui/lab/TabPanel';
 import '../style/App.css';
 
 const Calculator = () => {
-
-
-    // State for managing tabs in the calculator section
     const [calculatorTabValue, setCalculatorTabValue] = React.useState('1');
     const handleCalculatorTabChange = (event, newValue) => {
         setCalculatorTabValue(newValue);
@@ -48,9 +42,6 @@ const Calculator = () => {
                     </TabPanel>
                 </TabContext>
             </Box>
-
-            <br></br>
-            <img id="figure" style={{ width: "100%" }}></img>
         </Box>
 
     );

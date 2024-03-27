@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Grid, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
 import DataCard from '../field_components/DataCard';
 
 const dataCards = [
@@ -43,7 +43,7 @@ const Results = () => {
 
     return (
         <>
-            <h1>Images from Flask</h1>
+            <h1>Results</h1>
             <img
                 src={`${flaskServerUrl}/images/${imageFilename1}`}
                 alt="Cash Flow"
@@ -61,9 +61,6 @@ const Results = () => {
             />
 
             <Grid container rowSpacing={4.5} columnSpacing={2.75}>
-                <Grid item xs={12} sx={{ mb: -2.25 }}>
-                    <Typography variant="h5">Dashboard</Typography>
-                </Grid>
                 {dataCards.map((card) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={card.title}>
                         <DataCard

@@ -14,8 +14,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import StandardField from '../field_components/FieldComponent';
 import { advancedValidationSchema, defaultValues } from '../validation/ValidationSchema';
 import SubmitButton from '../field_components/SubmitButton';
+import { useNavigate } from 'react-router-dom';
 
 const AdvancedCalculator = () => {
+    const navigate = useNavigate();
     const methods = useForm({
         resolver: yupResolver(advancedValidationSchema),
         mode: 'onBlur'
@@ -85,13 +87,12 @@ const AdvancedCalculator = () => {
             const response = await axios.post(url, data);
             setMessage(response.data.message);
             setLoading(false);
+            navigate('/results');
         } catch (error) {
             setMessage('Error accessing backend. Please try again later.');
             console.error('Error', error);
             setLoading(false);
         }
-
-        window.location.href = "/results";
     };
 
     // const formData = watch();

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import UtilityRateStructure from '../rate_structures/UtilityRateStructure';
 import TotalLoad from '../TotalLoad';
 import Zipcode from '../Zipcode';
@@ -8,13 +8,15 @@ import '../style/App.css';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { baseValidationSchema } from '../validation/ValidationSchema';
 import SubmitButton from '../field_components/SubmitButton';
+import { useNavigate } from 'react-router-dom';
 
 const GeneralCalculator = () => {
+    const navigate = useNavigate();
     const methods = useForm({
         resolver: yupResolver(baseValidationSchema),
         mode: 'onBlur'
     });
-    const { formState: { isValid }, watch } = methods;
+    const { formState: { isValid } } = methods;
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
 
@@ -26,13 +28,12 @@ const GeneralCalculator = () => {
             const response = await axios.post(url, data);
             setMessage(response.data.message);
             setLoading(false);
+            navigate('/results');
         } catch (error) {
             setMessage('Error accessing backend. Please try again later.');
             console.error(error.response.data);
             setLoading(false);
         }
-
-        window.location.href = "/results";
     };
 
     const { handleSubmit } = methods;
@@ -53,7 +54,6 @@ const GeneralCalculator = () => {
                 <br></br>
                 <p>Select your utility rate structure and input values in dollars per kWh (USD).</p>
                 <UtilityRateStructure />
-
                 <SubmitButton loading={loading} isValid={isValid} />
             </form>
         </FormProvider>
