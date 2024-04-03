@@ -249,9 +249,9 @@ class InData:
         # Type of system (1: included, 0=not included)
         self.PV = 1
         self.WT = 0
-        self.DG = 0
-        self.Bat = 0
-        self.Grid = 0
+        self.DG = 1
+        self.Bat = 1
+        self.Grid = 1
         # Net metering scheme
         # If compensation is towrds credits in Net metering, not monetary comenstation, by choosing the below option (putting NEM equals to 1), the yearly credits will be reconciled after 12 months
         self.NEM = 0
@@ -596,20 +596,20 @@ class InData:
         from sama_python.calcTouRate import calcTouRate
         self.Cbuy = calcTouRate(self.year, self.onPrice, self.midPrice, self.offPrice, self.onHours, self.midHours, self.season, self.daysInMonth, self.holidays)
 
-    def isPV(self):
-        self.PV = 1
+    def setPV(self, x):
+        self.PV = x
     
-    def isDG(self):
-        self.DG = 1
+    def setDG(self, x):
+        self.DG = x
     
-    def isBat(self):
-        self.Bat = 1
+    def setBat(self, x):
+        self.Bat = x
     
-    def isGrid(self):
-        self.Grid = 1
+    def setGrid(self, x):
+        self.Grid = x
     
-    def isNEM(self):
-        self.NEM = 1
+    def setNEM(self, x):
+        self.NEM = x
     
     def projectLifetime(self, years):
         self.n = years

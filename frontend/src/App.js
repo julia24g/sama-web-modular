@@ -6,7 +6,6 @@ import Calculator from './calculator/Calculator';
 import Results from './results/Results';
 import About from './About';
 import Contact from './Contact';
-import './style/App.css';
 
 function App() {
     return (
@@ -19,7 +18,7 @@ function App() {
                     <Route path="/about" element={<About />} />
                     <Route path="/contact" element={<Contact />} />
                 </Routes>
-                
+
                 <div id="footer">
                     <h3>Western University</h3>
                     <p>1151 Richmond St.</p>

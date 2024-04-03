@@ -1,5 +1,4 @@
 import React from 'react';
-import '../style/App.css';
 import StandardField from '../field_components/FieldComponent';
 
 const PVQuestions = () => {

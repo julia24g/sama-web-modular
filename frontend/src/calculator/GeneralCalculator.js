@@ -4,7 +4,6 @@ import TotalLoad from '../TotalLoad';
 import Zipcode from '../Zipcode';
 import { FormProvider, useForm } from 'react-hook-form';
 import axios from 'axios';
-import '../style/App.css';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { baseValidationSchema } from '../validation/ValidationSchema';
 import SubmitButton from '../field_components/SubmitButton';
@@ -22,13 +21,13 @@ const GeneralCalculator = () => {
 
     const onSubmit = async (data) => {
         setLoading(true);
-        const url = 'http://127.0.0.1:5000/submit/general';
+        const url = 'https://127.0.0.1:8000/submit/general';
 
         try {
             const response = await axios.post(url, data);
             setMessage(response.data.message);
             setLoading(false);
-            navigate('/results');
+            navigate('/results', { state: { results: response.data } });
         } catch (error) {
             setMessage('Error accessing backend. Please try again later.');
             console.error(error.response.data);
@@ -46,13 +45,8 @@ const GeneralCalculator = () => {
     return (
         <FormProvider {...methods}>
             <form className="form" onSubmit={handleSubmit(onSubmit)}>
-                <p>Get started by entering your zipcode.</p>
                 <Zipcode />
-                <br></br>
-                <p>Input annual or monthly load data in kW.</p>
                 <TotalLoad />
-                <br></br>
-                <p>Select your utility rate structure and input values in dollars per kWh (USD).</p>
                 <UtilityRateStructure />
                 <SubmitButton loading={loading} isValid={isValid} />
             </form>

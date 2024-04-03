@@ -59,6 +59,7 @@ const UtilityRateStructure = () => {
 
   return (
     <div>
+      <p>Select your utility rate structure and input values in dollars per kWh (USD).</p>
       <FormControl style={{ minWidth: 200, margin: 10 }}>
         <InputLabel id="rate-structure-select-label">Rate Structure</InputLabel>
         <Select

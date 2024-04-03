@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
 import { Grid } from '@mui/material';
 import DataCard from '../field_components/DataCard';
+import { useLocation } from 'react-router-dom';
 
 const dataCards = [
     { title: "Optimum Size of PV System", key: "Cpv", unit: 'kW' },
@@ -21,22 +21,10 @@ const dataCards = [
 ];
 
 const Results = () => {
-    const [results, setResults] = useState(null);
+    const location = useLocation();
+    const { results } = location.state || {}; // Default to an empty object if state is undefined
 
-    useEffect(() => {
-        const fetchResults = async () => {
-            try {
-                const response = await axios.get('http://127.0.0.1:5000/results');
-                setResults(response.data);
-            } catch (error) {
-                console.error('Failed to fetch results', error);
-            }
-        };
-
-        fetchResults();
-    }, []);
-
-    const flaskServerUrl = 'http://127.0.0.1:5000';
+    const flaskServerUrl = 'https://127.0.0.1:8000';
     const imageFilename1 = 'Cash_Flow.png';
     const imageFilename2 = 'Daily-Monthly-Yearly_average_cost_of_energy_system.png';
     const imageFilename3 = 'Daily-Monthly-Yearly_average_cost_of_only_grid-connected_system.png';

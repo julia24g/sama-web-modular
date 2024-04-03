@@ -9,7 +9,6 @@ import TotalLoad from '../TotalLoad';
 import { useForm, FormProvider } from 'react-hook-form';
 import Zipcode from '../Zipcode';
 import axios from 'axios';
-import '../style/App.css';
 import { yupResolver } from '@hookform/resolvers/yup';
 import StandardField from '../field_components/FieldComponent';
 import { advancedValidationSchema, defaultValues } from '../validation/ValidationSchema';
@@ -81,13 +80,13 @@ const AdvancedCalculator = () => {
 
     const onSubmit = async (data) => {
         setLoading(true);
-        const url = 'http://127.0.0.1:5000/submit/advanced';
+        const url = 'https://127.0.0.1:8000/submit/advanced';
 
         try {
             const response = await axios.post(url, data);
             setMessage(response.data.message);
             setLoading(false);
-            navigate('/results');
+            navigate('/results', { state: { results: response.data } });
         } catch (error) {
             setMessage('Error accessing backend. Please try again later.');
             console.error('Error', error);
@@ -103,29 +102,14 @@ const AdvancedCalculator = () => {
     return (
         <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <p>Get started by entering your zipcode.</p>
                 <Zipcode />
-                <br></br>
-                <p>Input annual or monthly load data in kW.</p>
                 <TotalLoad />
-                <br></br>
-                <p>Select your utility rate structure and input values in dollars per kWh (USD).</p>
                 <UtilityRateStructure />
-                <br></br>
-                <p>Select the components of your system.</p>
-                <SystemType />
-                <br></br>
-                {isPhotovoltaic && <PhotovoltaicPage />}
-                {isDieselGenerator && <DieselGeneratorPage />}
-                {isBatteryBank && <BatteryBankPage />}
                 <p>Is your system connected to the grid?</p>
                 <YesNo name="connectedToGrid" />
-                <br></br>
                 <p>Is your system net metered?</p>
                 <YesNo name="netMetered" />
-                <br></br>
-
-                <p>What is your project's lifetime?</p>
+                <p>What is your project's lifetime in years?</p>
                 <StandardField name='n' label="Project Lifetime" defaultValue={25} unit='' />
                 <p>What is the maximum loss of power supply probability?</p>
                 <StandardField name="LPSP_max_rate" label="Max Loss of Power Supply" defaultValue={0.01} unit='%' />
@@ -137,7 +121,12 @@ const AdvancedCalculator = () => {
                 <StandardField name="n_ir_rate" label="Nominal Discount Rate" defaultValue={5.5} unit='%' />
                 <p>What is the real discount rate?</p>
                 <StandardField name="ir" label="Real Discount Rate" defaultValue={3.4} unit='%' />
-
+                <p>Select the components of your system.</p>
+                <SystemType />
+                <br></br>
+                {isPhotovoltaic && <PhotovoltaicPage />}
+                {isDieselGenerator && <DieselGeneratorPage />}
+                {isBatteryBank && <BatteryBankPage />}
                 <SubmitButton loading={loading} isValid={isValid} />
 
             </form>

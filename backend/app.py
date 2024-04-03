@@ -1,4 +1,6 @@
 from flask import Flask, jsonify, request, send_from_directory
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import requests
 from dotenv import load_dotenv
 import os
@@ -9,9 +11,14 @@ import numpy as np
 
 load_dotenv()
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "https://localhost"}})
 
-global_answer = None
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "100 per hour"],
+    storage_uri="memory://",
+)
 
 def get_coordinates(zipcode):
     url = f'https://nominatim.openstreetmap.org/search?q={zipcode}&format=json&limit=1'
@@ -32,6 +39,7 @@ def fetch_utility_rates(latitude, longitude):
     return utility_response.json()
 
 @app.route("/getUtilityRates", methods=['POST'])
+@limiter.limit("1000/hour")
 def get_utility_rates_endpoint():
     data = request.json
     zipcode = data['zipcode']
@@ -124,29 +132,34 @@ def process_general_data(data):
 
 def process_advanced_data(Input_Data, data):
     if data['batteryBank']:
-        Input_Data.isBat()
         Input_Data.setBatteryCost(data['C_B'])
         Input_Data.setBatteryReplacementCost(data['R_B'])
         Input_Data.setBatteryOandM(data['batteryOandM'])
         Input_Data.setSOC_min(data['SOC_min'])
         Input_Data.setSOC_max(data['SOC_max'])
+    else:
+        Input_Data.setBat(0)
     if data['photovoltaic']:
-        Input_Data.isPV()
         Input_Data.setPVCost(data['PVCost'])
         Input_Data.setPVReplacementCost(data['PVReplacementCost'])
         Input_Data.setPVOandM(data['PVOandM'])
         Input_Data.setPVLifetime(data['PVLifetime'])
+    else:
+        Input_Data.setPV(0)
     if data['dieselGenerator']:
-        Input_Data.isDG()
         Input_Data.setDGCost(data['C_DG'])
         Input_Data.setDGReplacementCost(data['R_DG'])
         Input_Data.setDGOandM(data['MO_DG'])
         Input_Data.setDGLifetime(data['TL_DG'])
-    if data['connectedToGrid']:
-        Input_Data.isGrid()
+    else:
+        Input_Data.setDG(0)
+        
     if data['netMetered']:
-        Input_Data.isNEM()
-    
+        Input_Data.setNEM(1)
+    if not data['connectedToGrid']:
+        Input_Data.isGrid(0)
+        Input_Data.setNEM(0)
+
     Input_Data.projectLifetime(data['n'])
     Input_Data.setLPSP_max_rate(data['LPSP_max_rate'])
     Input_Data.setRE_min_rate(data['RE_min_rate'])
@@ -158,33 +171,31 @@ def process_advanced_data(Input_Data, data):
 
 @app.route("/submit/general", methods=['POST'])
 def submit_general():
-    global global_answer
-    data = request.json
-    Input_Data = process_general_data(data)
-    global_answer = pso.run(Input_Data)
-    return jsonify({'message': 'General calculator processing complete'})
+    try:
+        data = request.json
+        Input_Data = process_general_data(data)
+        answer = pso.run(Input_Data)
+        return jsonify(answer)
+    except Exception as e:
+        app.logger.error(f'Error in submit_general: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
 
 @app.route('/submit/advanced', methods=['POST'])
 def submit_advanced():
-    global global_answer
-    data = request.json
-    Input_Data = process_general_data(data)
-    Input_Data = process_advanced_data(Input_Data, data)
-    global_answer = pso.run(Input_Data)
-    return jsonify({'message': 'Advanced calculator processing complete'})
-
-@app.route("/results", methods=['GET'])
-def display_results():
-    global global_answer
-    if global_answer is not None:
-        return jsonify(global_answer)
-    else:
-        return jsonify({'error': 'No results available yet'})
+    try:
+        data = request.json
+        Input_Data = process_general_data(data)
+        Input_Data = process_advanced_data(Input_Data, data)
+        answer = pso.run(Input_Data)
+        return jsonify(answer)
+    except Exception as e:
+        app.logger.error(f'Error in submit_advanced: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
 
 @app.route("/images/<filename>")
 def send_image(filename):
     return send_from_directory("sama_python/output/figs", filename)
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    app.run(port=8000, ssl_context=('localhost.pem', 'localhost-key.pem'))
     print('Starting Flask!')

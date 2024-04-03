@@ -105,9 +105,6 @@ const HourSelector = ({ season, tier }) => {
                 defaultValue={onHours}
                 render={({ field }) => <input type="hidden" {...field} />}
             />
-            <div>
-                Hour Availability: {onHours.join(', ')}
-            </div>
         </div>
     );
 

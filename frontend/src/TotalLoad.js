@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { ToggleButtonGroup, ToggleButton, InputAdornment } from '@mui/material';
+import { ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
 import StandardField from './field_components/FieldComponent';
 
 const TotalLoad = () => {
-  const { register, unregister, setValue, formState: { errors }, watch } = useFormContext();
+  const { register, unregister, setValue, watch } = useFormContext();
   const [termType, setTermType] = useState('Annual');
 
   const isAnnual = watch('isAnnual');
+  const monthLabels = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
 
   useEffect(() => {
     if (!isAnnual) {
@@ -27,10 +31,7 @@ const TotalLoad = () => {
     setValue('isAnnual', true);
   }, [setValue]);
 
-  const monthLabels = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ];
+
 
   const handleTimeInputChange = (event, newTermType) => {
     if (newTermType !== null) {
@@ -41,6 +42,7 @@ const TotalLoad = () => {
 
   return (
     <div>
+      <p>Input annual or monthly load data in kWh.</p>
       <ToggleButtonGroup
         size="small"
         value={termType}
