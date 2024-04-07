@@ -4,3 +4,4 @@ __pycache__/
 *.pem
 *.crt
 *.key
+sama_python/output/

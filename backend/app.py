@@ -11,7 +11,7 @@ import numpy as np
 
 load_dotenv()
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "https://localhost"}})
+CORS(app, resources={r"/*": {"origins": "https://localhost"}}, supports_credentials=True)
 
 limiter = Limiter(
     get_remote_address,
