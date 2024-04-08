@@ -1,6 +1,7 @@
 import React from 'react';
 import { TextField, InputAdornment } from '@mui/material';
 import { Controller } from 'react-hook-form';
+import '../styling/Form.css';
 
 const StandardField = ({ name, label, defaultValue, unit }) => {
   return (
@@ -8,7 +9,7 @@ const StandardField = ({ name, label, defaultValue, unit }) => {
       name={name}
       defaultValue={defaultValue}
       render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
-        <TextField
+        <TextField className='standard-field'
           value={value ?? ''}
           onChange={onChange}
           onBlur={onBlur}

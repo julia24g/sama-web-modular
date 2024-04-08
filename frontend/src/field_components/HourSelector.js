@@ -4,6 +4,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import TimeRange from './TimeRange';
 import { Controller } from 'react-hook-form';
 import { useFormContext } from 'react-hook-form';
+import IconButton from '@mui/material/IconButton';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 const HourSelector = ({ season, tier }) => {
     const { setValue } = useFormContext();
@@ -50,7 +52,7 @@ const HourSelector = ({ season, tier }) => {
         setRanges(newRanges);
 
         if (onChange) {
-            onChange(newRanges); // This updates the form state with the new range values.
+            onChange(newRanges);
         }
     };
 
@@ -80,26 +82,19 @@ const HourSelector = ({ season, tier }) => {
                             }
                         />
                     )}
-                    <Button
-                        variant="contained"
-                        color="error"
-                        size="small"
-                        startIcon={<DeleteIcon />}
-                        onClick={() => handleRemoveRange(index)}
+                    <IconButton
                         disabled={ranges.length === 1}
-                    >
-                        Remove
-                    </Button>
+                        onClick={() => handleRemoveRange(index)}
+                        aria-label="delete">
+                        <DeleteIcon />
+                    </IconButton>
                 </div>
             ))}
-            <Button
-                variant="contained"
-                color="primary"
-                size="small"
+            <IconButton
                 onClick={handleAddRange}
-            >
-                Add Time Range
-            </Button>
+                aria-label="add">
+                <AddCircleIcon />
+            </IconButton>
             <Controller
                 name={`${season}${tier}PeakHours`}
                 defaultValue={onHours}

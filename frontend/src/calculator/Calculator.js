@@ -6,6 +6,7 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+import './../styling/Form.css';
 
 const Calculator = () => {
     const [calculatorTabValue, setCalculatorTabValue] = React.useState('1');

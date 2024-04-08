@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid } from '@mui/material';
+import { Grid, ImageList, ImageListItem } from '@mui/material'; // Import ImageList and ImageListItem
 import DataCard from '../field_components/DataCard';
 import { useLocation } from 'react-router-dom';
 
@@ -25,14 +25,29 @@ const Results = () => {
     const { results } = location.state || {}; // Default to an empty object if state is undefined
 
     const flaskServerUrl = 'https://127.0.0.1:8000';
-    const imageFilename1 = 'Cash_Flow.png';
-    const imageFilename2 = 'Daily-Monthly-Yearly_average_cost_of_energy_system.png';
-    const imageFilename3 = 'Daily-Monthly-Yearly_average_cost_of_only_grid-connected_system.png';
+    const diagrams = [
+        { img: `${flaskServerUrl}/images/Cash_Flow.png`, title: "Cash Flow" },
+        { img: `${flaskServerUrl}/images/Daily-Monthly-Yearly_average_cost_of_energy_system.png`, title: "Daily Monthly Yearly Average Cost of Energy System" },
+        { img: `${flaskServerUrl}/images/Daily-Monthly-Yearly_average_cost_of_only_grid-connected_system.png`, title: "Daily Monthly Yearly Average Cost of Only Grid-Connected System" }
+    ];
 
     return (
         <>
             <h1>Results</h1>
-            <img
+            <ImageList sx={{ width: '100%', height: 'auto' }} cols={3} rowHeight={164}>
+                {diagrams.map((item) => (
+                    <ImageListItem key={item.img}>
+                        <img
+                            srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                            src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
+                            alt={item.title}
+                            loading="lazy"
+                            style={{ width: '100%', height: 'auto' }}
+                        />
+                    </ImageListItem>
+                ))}
+            </ImageList>
+            {/* <img
                 src={`${flaskServerUrl}/images/${imageFilename1}`}
                 alt="Cash Flow"
                 style={{ width: '500px', height: 'auto' }}
@@ -46,7 +61,7 @@ const Results = () => {
                 src={`${flaskServerUrl}/images/${imageFilename3}`}
                 alt="Daily Monthly Yearly Average Cost of Only Grid-Connected System"
                 style={{ width: '500px', height: 'auto' }}
-            />
+            /> */}
 
             <Grid container rowSpacing={4.5} columnSpacing={2.75}>
                 {dataCards.map((card) => (

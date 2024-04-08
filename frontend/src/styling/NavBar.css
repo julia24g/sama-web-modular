@@ -1,0 +1,38 @@
+button.navButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    background-color: transparent;
+    outline: 0;
+    border: 0;
+    margin: 0;
+    cursor: pointer;
+    user-select: none;
+    vertical-align: middle;
+    appearance: none;
+    text-decoration: none;
+    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    letter-spacing: 0.02857em;
+    min-width: 64px;
+    color: #4F2683;
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
+        color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: none;
+    border-radius: 99px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    text-transform: none;
+    padding: 6.4px 16px;
+}
+
+.appNavBar {
+    position: fixed; /* Fixed positioning to keep the navbar at the top of the viewport */
+    background-color: rgba(106, 131, 33, 0.9); /* Partially transparent white background */
+    z-index: 1000; /* Ensure the navbar is above other content */
+}
