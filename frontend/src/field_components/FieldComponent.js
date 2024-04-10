@@ -9,7 +9,7 @@ const StandardField = ({ name, label, defaultValue, unit }) => {
       name={name}
       defaultValue={defaultValue}
       render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
-        <TextField className='standard-field'
+        <TextField
           value={value ?? ''}
           onChange={onChange}
           onBlur={onBlur}
@@ -25,7 +25,7 @@ const StandardField = ({ name, label, defaultValue, unit }) => {
           InputLabelProps={{
             shrink: true,
           }}
-          style={{ width: "210px", margin: '10px auto' }}
+          style={{ width: "210px", margin: '10px'}}
         />
       )}
     />

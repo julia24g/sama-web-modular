@@ -6,14 +6,15 @@ import { Controller } from 'react-hook-form';
 
 const YesNo = ({ name }) => {
   return (
-    <Controller
+    <Controller className='yesNo'
       name={name}
       defaultValue={null}
       render={({field}) => (
-        <RadioGroup
+        <RadioGroup 
           {...field}
           value={field.value === null ? '' : String(field.value)}
           row
+          style={{ justifyContent: 'center' }}
         >
           <FormControlLabel
             value="true"

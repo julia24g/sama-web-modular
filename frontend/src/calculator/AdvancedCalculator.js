@@ -121,7 +121,6 @@ const AdvancedCalculator = () => {
                 <StandardField name="n_ir_rate" label="Nominal Discount Rate" defaultValue={5.5} unit='%' />
                 <p>What is the real discount rate?</p>
                 <StandardField name="ir" label="Real Discount Rate" defaultValue={3.4} unit='%' />
-                <p>Select the components of your system.</p>
                 <SystemType />
                 <br></br>
                 {isPhotovoltaic && <PhotovoltaicPage />}

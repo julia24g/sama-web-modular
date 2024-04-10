@@ -13,19 +13,19 @@ const LandingPage = () => {
                 <Typography variant="h2" className="landingTitle" gutterBottom>
                     Welcome to SAMA
                 </Typography>
-                <Typography variant="body1" paragraph>
-                    SAMA (Solar Alone Multi-objective Advisor) is the first-ever publicly available tool to help you determine if you should leave the grid and reduce your electric costs by installing a solar, battery, and generator system.
+                <Typography variant="h6" paragraph>
+                    SAMA (Solar Alone Multi-objective Advisor) is the first-ever publicly available tool for determining the viability of transitioning off-grid.
                 </Typography>
-                <Typography variant="body1" paragraph>
+                <Typography variant="h6" paragraph>
                     <b>Please select which calculator you would like to use.</b>
                 </Typography>
-                {/* <Link href="#calculator" underline="none" color="inherit">
-                    <Button variant="contained" size="large" sx={{ backgroundColor: "#4F2683", color: "white", fontWeight: "600" }}>Get Started →</Button>
+                {/* <Link href="#about" underline="none" color="inherit">
+                    <Button variant="outlined">About SAMA</Button>
                 </Link> */}
             </Grid>
             <Grid item container xs={12} md={6} className='rightLandingPage'>
-                <LandingPageButton title="General" text="Ideal for quick grid defection estimates or for newcomers to energy systems."/>
-                <LandingPageButton title="Advanced" text="Tailored for researchers seeking precision with detailed input options."/>
+                <LandingPageButton title="General" text="Ideal for quick grid defection estimates or for newcomers to energy systems." />
+                <LandingPageButton title="Advanced" text="Tailored for researchers seeking precision with detailed input options." />
             </Grid>
         </Grid>
     );

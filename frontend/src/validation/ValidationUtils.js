@@ -55,3 +55,9 @@ export const timeRangeValidation = yup.object().shape({
         }),
 });
 
+export const systemTypeValidation = yup.object().shape({
+    photovoltaic: yup.boolean().oneOf([true], 'At least one energy system must be selected'),
+    dieselGenerator: yup.boolean().oneOf([true], 'At least one energy system must be selected'),
+    batteryBank: yup.boolean().oneOf([true], 'At least one energy system must be selected'),
+  });
+

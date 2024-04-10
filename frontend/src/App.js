@@ -8,6 +8,7 @@ import About from './About';
 import Contact from './Contact';
 import Footer from './Footer';
 import { CalculatorTabProvider } from './calculator/CalculatorTab';
+import FAQ from './FAQ';
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<MainPage />} />
                     <Route path="/results" element={<Results />} />
+                    <Route path="/faq" element={<FAQ />} />
                 </Routes>
                 <Footer />
             </div>

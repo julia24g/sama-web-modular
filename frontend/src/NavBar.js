@@ -20,6 +20,7 @@ const NavBar = () => {
                         </Link>
                     )}
                     <a href="#about"><Button className='navButton'>About</Button></a>
+                    <Link to="/faq"><Button className='navButton'>FAQ</Button></Link>
                     <a href="#contact"><Button className='navButton'>Contact</Button></a>
                 </Toolbar>
             </AppBar>

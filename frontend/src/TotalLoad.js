@@ -61,10 +61,10 @@ const TotalLoad = () => {
       <br />
       {termType === 'Monthly' ? (
         monthLabels.map((label, index) => (
-          <StandardField name={`monthlyLoad${index + 1}`} label={`${label} Load`} defaultValue='' unit='kW' />
+          <StandardField name={`monthlyLoad${index + 1}`} label={`${label} Load`} defaultValue='' unit='kWh' />
         ))
       ) : (
-        <StandardField name="annualTotalLoad" label="Annual Load" defaultValue={undefined} unit='kW' />
+        <StandardField name="annualTotalLoad" label="Annual Load" defaultValue={undefined} unit='kWh' />
       )}
     </div>
   );

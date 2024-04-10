@@ -18,7 +18,6 @@ const Calculator = () => {
     return (
         <Box id="calculator" sx={{ padding: "100px" }}>
             <h1>SAMA Grid Defection</h1>
-            <p>The <b>General Calculator</b> is ideal for quick grid defection estimates or for newcomers to energy systems.The <b>Advanced Calculator</b> is tailored for researchers seeking precision with detailed input options. Please select the appropriate calculator for you.</p>
             <p><i>This application currently only supports US locations.</i></p>
             <br></br>
 

@@ -1,4 +1,4 @@
-.standard-field {
+.standardfield {
     font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
     font-weight: 400;
     font-size: 1rem;
@@ -9,5 +9,8 @@
     display: inline-flex;
     align-items: center;
     position: relative;
+    padding: 2%;
 }
-
+#calculator {
+    text-align: center
+}

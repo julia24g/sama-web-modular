@@ -137,9 +137,6 @@ export const baseValidationSchema = yup.object({
 });
 
 export const advancedValidationSchema = baseValidationSchema.shape({
-    photovoltaic: yup.boolean(),
-    dieselGenerator: yup.boolean(),
-    batteryBank: yup.boolean(),
     connectedToGrid: yup.boolean().required(),
     netMetered: yup.boolean().required(),
     n: wholeNumberValidation,
