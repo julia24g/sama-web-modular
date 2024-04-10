@@ -26,7 +26,7 @@ h3 {
 }
 
 #about {
-  background: #F1EAF9;
+  background: linear-gradient(180deg, #FFF 0%, #F1EAF9 100%);
   width: 100%;
   margin: 0;
   padding: 50px 0;
@@ -56,9 +56,9 @@ h3 {
 }
 
 #footer {
-  background-color: #4F2683;
+  background-color: white;
   width: 100%;
-  color: white;
+  color: black;
   text-align: left;
   padding: 50px;
 }

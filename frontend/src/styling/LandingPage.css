@@ -1,5 +1,3 @@
-/** Landing Page **/
-
 .landingPage {
     background: linear-gradient(180deg, #FFF 0%, #F1EAF9 100%);
     overflow: hidden;
@@ -7,12 +5,35 @@
     width: 100%;
     margin-top: 1.5em;
     padding: 50px;
-    display: table;
     overflow-x: hidden;
 }
-
 .landingPage .leftLandingPage{
-    margin-top: 7%;
-    margin-left: 7%;
-    margin-right: 20%;
+    padding-top: 8%;
+    padding-left: 7%;
+    padding-right: 1%;
+}
+.landingPageButton {
+    color: #000;
+    border-radius: 18px;
+    border: 1px solid;
+    border-color: #4F2683;
+    width: 100%;
+    padding: 1em;
+    text-decoration: none;
+    cursor: pointer;
+}
+.landingPageButton:hover {
+    background-color: #F1EAF9;
+}
+.landingPageButton .title {
+    color:#4F2683;
+}
+.rightLandingPage {
+    padding-top: 6%;
+    padding-right: 7%;
+    padding-left: 3%;
+    padding-bottom: 10%;
+}
+.landingPage b {
+    color: #4F2683;
 }

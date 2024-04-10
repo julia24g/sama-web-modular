@@ -23,28 +23,6 @@ const Zipcode = () => {
         } catch (error) {
           console.error('Failed to fetch utility rates:', error);
         }
-
-        // try {
-        //   const response = await axios.post('https://127.0.0.1:8000/getUtilityRates', {
-        //     zipcode: watchedZipcode
-        //   }, {
-        //     withCredentials: true
-        //   });
-        //   if (response.status !== 200) {
-        //     throw new Error('Failed to fetch utility rates');
-        //   }
-        //   const data = response.data;
-        //   if (data.outputs) {
-        //     const residentialRate = data.outputs.residential;
-        //     if (residentialRate !== "no data") {
-        //       setValue('flatRate', residentialRate !== "no data" ? residentialRate : '', { shouldTouch: true });
-        //     }
-        //   } else {
-        //     console.log('No results found');
-        //   }
-        // } catch (error) {
-        //   console.error('Failed to fetch utility rates:', error);
-        // }
       };
 
       handleCheckZipcode();

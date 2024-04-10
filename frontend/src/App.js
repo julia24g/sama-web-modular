@@ -6,6 +6,8 @@ import Calculator from './calculator/Calculator';
 import Results from './results/Results';
 import About from './About';
 import Contact from './Contact';
+import Footer from './Footer';
+import { CalculatorTabProvider } from './calculator/CalculatorTab';
 
 function App() {
     return (
@@ -15,16 +17,8 @@ function App() {
                 <Routes>
                     <Route path="/" element={<MainPage />} />
                     <Route path="/results" element={<Results />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/contact" element={<Contact />} />
                 </Routes>
-
-                <div id="footer">
-                    <h3>Western University</h3>
-                    <p>1151 Richmond St.</p>
-                    <p>London, Ontario, Canada</p>
-                    <p>N6A 3K7</p>
-                </div>
+                <Footer />
             </div>
         </Router>
     );
@@ -34,9 +28,11 @@ export default App;
 
 function MainPage() {
     return (
-        <>
+        <CalculatorTabProvider>
             <LandingPage />
             <Calculator />
-        </>
+            <About />
+            <Contact />
+        </CalculatorTabProvider >
     );
 }

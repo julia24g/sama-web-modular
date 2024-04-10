@@ -30,9 +30,6 @@ button.navButton {
     text-transform: none;
     padding: 6.4px 16px;
 }
-
 .appNavBar {
-    position: fixed; /* Fixed positioning to keep the navbar at the top of the viewport */
-    background-color: rgba(106, 131, 33, 0.9); /* Partially transparent white background */
-    z-index: 1000; /* Ensure the navbar is above other content */
+    box-shadow: none !important
 }

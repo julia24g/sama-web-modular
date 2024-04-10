@@ -14,13 +14,13 @@ const NavBar = () => {
             <AppBar position="sticky" color='transparent' className='appNavBar'>
                 <Toolbar>
                     <img src={Image} alt="SAMA Logo" style={{ maxHeight: '50px', marginRight: 'auto' }} />
-                    {location.pathname !== '/' && ( 
-                        <Link to="/"> 
+                    {location.pathname !== '/' && (
+                        <Link to="/">
                             <Button className='navButton'>Calculator</Button>
                         </Link>
                     )}
-                    <Link to="/about" ><Button className='navButton'>About</Button></Link>
-                    <Link to="/contact"><Button className='navButton'>Contact</Button></Link>
+                    <a href="#about"><Button className='navButton'>About</Button></a>
+                    <a href="#contact"><Button className='navButton'>Contact</Button></a>
                 </Toolbar>
             </AppBar>
         </Box>

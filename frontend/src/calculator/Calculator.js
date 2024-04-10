@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import GeneralCalculator from './GeneralCalculator';
 import AdvancedCalculator from './AdvancedCalculator';
 import Box from '@mui/material/Box';
@@ -7,11 +7,12 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import './../styling/Form.css';
+import { CalculatorTabContext } from './CalculatorTab';
 
 const Calculator = () => {
-    const [calculatorTabValue, setCalculatorTabValue] = React.useState('1');
+    const { selectedTab, setSelectedTab } = useContext(CalculatorTabContext);
     const handleCalculatorTabChange = (event, newValue) => {
-        setCalculatorTabValue(newValue);
+        setSelectedTab(newValue);
     };
 
     return (
@@ -22,7 +23,7 @@ const Calculator = () => {
             <br></br>
 
             <Box sx={{ width: '100%', typography: 'body1' }}>
-                <TabContext value={calculatorTabValue}>
+                <TabContext value={selectedTab}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <TabList onChange={handleCalculatorTabChange} centered aria-label="calculator tabs" textColor="secondary" indicatorColor="secondary">
                             <Tab label="General" value="1" />
