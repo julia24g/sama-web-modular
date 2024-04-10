@@ -24,7 +24,7 @@ const Calculator = () => {
             <Box sx={{ width: '100%', typography: 'body1' }}>
                 <TabContext value={selectedTab}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <TabList onChange={handleCalculatorTabChange} centered aria-label="calculator tabs" textColor="secondary" indicatorColor="secondary">
+                        <TabList onChange={handleCalculatorTabChange} centered aria-label="calculator tabs" textColor="primary" indicatorColor="primary">
                             <Tab label="General" value="1" />
                             <Tab label="Advanced" value="2" />
                         </TabList>

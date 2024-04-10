@@ -17,11 +17,6 @@ button.navButton {
     font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
     letter-spacing: 0.02857em;
     min-width: 64px;
-    color: #4F2683;
-    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
-        box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1),
-        border-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
-        color 250ms cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: none;
     border-radius: 99px;
     font-weight: 500;
@@ -30,6 +25,12 @@ button.navButton {
     text-transform: none;
     padding: 6.4px 16px;
 }
+button.navButton:hover {
+    background-color: rgba(241, 234, 249, 0.6);
+}
 .appNavBar {
-    box-shadow: none !important
+    box-shadow: none !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(4px) !important;
+
 }

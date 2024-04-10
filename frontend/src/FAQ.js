@@ -3,6 +3,8 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 
 const FAQ = () => {
 
@@ -18,7 +20,10 @@ const FAQ = () => {
     ]
 
     return (
-        <>
+        <Box id="faq">
+            <Typography variant="h3" gutterBottom>
+                Frequently Asked Questions
+            </Typography>
             {questionsAndAnswers.map((q) => (
                 <Accordion>
                     <AccordionSummary
@@ -33,7 +38,7 @@ const FAQ = () => {
                     </AccordionDetails>
                 </Accordion>
             ))}
-        </>
+        </Box>
     );
 }
 

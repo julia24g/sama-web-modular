@@ -10,13 +10,13 @@ const LandingPage = () => {
     return (
         <Grid container className="landingPage">
             <Grid item xs={12} md={6} className="leftLandingPage">
-                <Typography variant="h2" className="landingTitle" gutterBottom>
+                <Typography color="primary" variant="h2">
                     Welcome to SAMA
                 </Typography>
                 <Typography variant="h6" paragraph>
                     SAMA (Solar Alone Multi-objective Advisor) is the first-ever publicly available tool for determining the viability of transitioning off-grid.
                 </Typography>
-                <Typography variant="h6" paragraph>
+                <Typography color="primary" variant="h6" paragraph>
                     <b>Please select which calculator you would like to use.</b>
                 </Typography>
                 {/* <Link href="#about" underline="none" color="inherit">

@@ -8,6 +8,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { baseValidationSchema } from '../validation/ValidationSchema';
 import SubmitButton from '../field_components/SubmitButton';
 import { useNavigate } from 'react-router-dom';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
 
 const GeneralCalculator = () => {
     const navigate = useNavigate();
@@ -17,9 +20,11 @@ const GeneralCalculator = () => {
     });
     const { formState: { isValid } } = methods;
     const [loading, setLoading] = useState(false);
+    const [backdropOpen, setBackdropOpen] = useState(false);
     const [message, setMessage] = useState('');
 
     const onSubmit = async (data) => {
+        setBackdropOpen(true);
         setLoading(true);
         const url = 'https://127.0.0.1:8000/submit/general';
 
@@ -28,10 +33,12 @@ const GeneralCalculator = () => {
             setMessage(response.data.message);
             setLoading(false);
             navigate('/results', { state: { results: response.data } });
+            setBackdropOpen(false);
         } catch (error) {
             setMessage('Error accessing backend. Please try again later.');
             console.error(error.response.data);
             setLoading(false);
+            setBackdropOpen(false);
         }
     };
 
@@ -49,6 +56,10 @@ const GeneralCalculator = () => {
                 <TotalLoad />
                 <UtilityRateStructure />
                 <SubmitButton loading={loading} isValid={isValid} />
+                <Backdrop sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} open={backdropOpen}>
+                    <CircularProgress />
+                    <Typography variant="body1">It can take up to 1 minute to calculate your results.</Typography>
+                </Backdrop>
             </form>
         </FormProvider>
     );

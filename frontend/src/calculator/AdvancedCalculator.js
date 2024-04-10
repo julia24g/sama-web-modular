@@ -14,6 +14,9 @@ import StandardField from '../field_components/FieldComponent';
 import { advancedValidationSchema, defaultValues } from '../validation/ValidationSchema';
 import SubmitButton from '../field_components/SubmitButton';
 import { useNavigate } from 'react-router-dom';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
 
 const AdvancedCalculator = () => {
     const navigate = useNavigate();
@@ -23,6 +26,7 @@ const AdvancedCalculator = () => {
     });
     const { watch, handleSubmit, register, unregister, trigger } = methods;
     const [loading, setLoading] = useState(false);
+    const [backdropOpen, setBackdropOpen] = useState(false);
     const [message, setMessage] = useState('');
     const { formState: { isValid } } = methods;
 
@@ -79,6 +83,7 @@ const AdvancedCalculator = () => {
     }, [n_ir_rate, e_ir_rate, methods.setValue, trigger]);
 
     const onSubmit = async (data) => {
+        setBackdropOpen(true);
         setLoading(true);
         const url = 'https://127.0.0.1:8000/submit/advanced';
 
@@ -87,10 +92,12 @@ const AdvancedCalculator = () => {
             setMessage(response.data.message);
             setLoading(false);
             navigate('/results', { state: { results: response.data } });
+            setBackdropOpen(false);
         } catch (error) {
             setMessage('Error accessing backend. Please try again later.');
             console.error('Error', error);
             setLoading(false);
+            setBackdropOpen(false);
         }
     };
 
@@ -127,6 +134,10 @@ const AdvancedCalculator = () => {
                 {isDieselGenerator && <DieselGeneratorPage />}
                 {isBatteryBank && <BatteryBankPage />}
                 <SubmitButton loading={loading} isValid={isValid} />
+                <Backdrop sx={{ color:"primary", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={backdropOpen}>
+                    <CircularProgress />
+                    <Typography variant="body1">It can take up to 1 minute to calculate your results.</Typography>
+                </Backdrop>
 
             </form>
         </FormProvider>

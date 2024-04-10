@@ -18,9 +18,9 @@ const LandingPageButton = ({ title, text }) => {
         <Grid item xs={12}>
             <ButtonBase onClick={handleButtonClick} style={{ width: '100%', textAlign: 'left'}}>
                 <Box className="landingPageButton" sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Icon fontSize="large" sx={{ mr: 2, color: '#4F2683' }} />
+                    <Icon color="primary" fontSize="large" sx={{ mr: 2 }} />
                     <Box>
-                        <Typography variant="h6" className="title">
+                        <Typography color="primary" variant="h6" className="title">
                             {title} Calculator
                         </Typography>
                         <Typography variant="body1" paragraph>

@@ -55,12 +55,12 @@ h3 {
   margin: auto;
 }
 
-#footer {
-  background-color: white;
+footer {
+  background-color: #4F2683;
   width: 100%;
-  color: black;
+  color: white;
   text-align: left;
-  padding: 50px;
+  padding: 1%;
 }
 
 .App-logo {

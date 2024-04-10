@@ -25,15 +25,9 @@
 .landingPageButton:hover {
     background-color: #F1EAF9;
 }
-.landingPageButton .title {
-    color:#4F2683;
-}
 .rightLandingPage {
     padding-top: 6%;
     padding-right: 7%;
     padding-left: 3%;
     padding-bottom: 10%;
-}
-.landingPage b {
-    color: #4F2683;
 }
