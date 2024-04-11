@@ -197,5 +197,5 @@ def send_image(filename):
     return send_from_directory("sama_python/output/figs", filename)
 
 if __name__ == "__main__":
-    app.run(port=8000, ssl_context=('localhost.pem', 'localhost-key.pem'))
+    app.run(port=8000)
     print('Starting Flask!')
