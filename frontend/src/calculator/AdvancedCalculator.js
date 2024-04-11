@@ -85,7 +85,7 @@ const AdvancedCalculator = () => {
     const onSubmit = async (data) => {
         setBackdropOpen(true);
         setLoading(true);
-        const url = 'https://127.0.0.1:8000/submit/advanced';
+        const url = 'https://sama.eng.uwo.ca/submit/advanced';
 
         try {
             const response = await axios.post(url, data);

@@ -24,7 +24,7 @@ const Results = () => {
     const location = useLocation();
     const { results } = location.state || {}; // Default to an empty object if state is undefined
 
-    const flaskServerUrl = 'https://127.0.0.1:8000';
+    const flaskServerUrl = 'https://sama.eng.uwo.ca';
     const diagrams = [
         { img: `${flaskServerUrl}/images/Cash_Flow.png`, title: "Cash Flow" },
         { img: `${flaskServerUrl}/images/Daily-Monthly-Yearly_average_cost_of_energy_system.png`, title: "Daily Monthly Yearly Average Cost of Energy System" },

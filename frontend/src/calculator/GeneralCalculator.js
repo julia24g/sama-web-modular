@@ -26,7 +26,7 @@ const GeneralCalculator = () => {
     const onSubmit = async (data) => {
         setBackdropOpen(true);
         setLoading(true);
-        const url = 'https://127.0.0.1:8000/submit/general';
+        const url = 'https://sama.eng.uwo.ca/submit/general';
 
         try {
             const response = await axios.post(url, data);
