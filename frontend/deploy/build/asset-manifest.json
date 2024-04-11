@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/static/css/main.3ab2ad54.css",
-    "main.js": "/static/js/main.63361101.js",
+    "main.css": "/static/css/main.df9b1d9d.css",
+    "main.js": "/static/js/main.107492b1.js",
     "static/js/488.535652aa.chunk.js": "/static/js/488.535652aa.chunk.js",
     "static/media/SAMA_Logo-with_Typography.png": "/static/media/SAMA_Logo-with_Typography.aee7a3ab0f21b9d71ed2.png",
     "index.html": "/index.html",
-    "main.3ab2ad54.css.map": "/static/css/main.3ab2ad54.css.map",
-    "main.63361101.js.map": "/static/js/main.63361101.js.map",
+    "main.df9b1d9d.css.map": "/static/css/main.df9b1d9d.css.map",
+    "main.107492b1.js.map": "/static/js/main.107492b1.js.map",
     "488.535652aa.chunk.js.map": "/static/js/488.535652aa.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.3ab2ad54.css",
-    "static/js/main.63361101.js"
+    "static/css/main.df9b1d9d.css",
+    "static/js/main.107492b1.js"
   ]
 }
