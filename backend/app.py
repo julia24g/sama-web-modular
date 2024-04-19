@@ -23,7 +23,6 @@ limiter = Limiter(
 def get_coordinates(zipcode):
     url = f'https://nominatim.openstreetmap.org/search?q={zipcode}&format=json&limit=1'
     response = requests.get(url)
-    print(response)
     if not response.ok:
         return None
     coordinates = response.json()
@@ -35,7 +34,6 @@ def fetch_utility_rates(latitude, longitude):
     api_key = os.getenv('NREL_API_KEY')
     utility_url = f'https://developer.nrel.gov/api/utility_rates/v3.json?api_key={api_key}&lat={latitude}&lon={longitude}'
     utility_response = requests.get(utility_url)
-    print(utility_response)
     if not utility_response.ok:
         return None
     return utility_response.json()
@@ -197,7 +195,3 @@ def submit_advanced():
 @app.route("/images/<filename>")
 def send_image(filename):
     return send_from_directory("sama_python/output/figs", filename)
-
-if __name__ == "__main__":
-    app.run(port=8000)
-    print('Starting Flask!')
