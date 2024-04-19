@@ -41,6 +41,7 @@ def fetch_utility_rates(latitude, longitude):
 @app.route("/getUtilityRates", methods=['POST'])
 @limiter.limit("1000/hour")
 def get_utility_rates_endpoint():
+    print("here 1")
     data = request.json
     zipcode = data['zipcode']
     coordinates = get_coordinates(zipcode)
