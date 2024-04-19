@@ -23,6 +23,7 @@ limiter = Limiter(
 def get_coordinates(zipcode):
     url = f'https://nominatim.openstreetmap.org/search?q={zipcode}&format=json&limit=1'
     response = requests.get(url)
+    print(response)
     if not response.ok:
         return None
     coordinates = response.json()
@@ -34,6 +35,7 @@ def fetch_utility_rates(latitude, longitude):
     api_key = os.getenv('NREL_API_KEY')
     utility_url = f'https://developer.nrel.gov/api/utility_rates/v3.json?api_key={api_key}&lat={latitude}&lon={longitude}'
     utility_response = requests.get(utility_url)
+    print(utility_response)
     if not utility_response.ok:
         return None
     return utility_response.json()
@@ -41,7 +43,6 @@ def fetch_utility_rates(latitude, longitude):
 @app.route("/getUtilityRates", methods=['POST'])
 @limiter.limit("1000/hour")
 def get_utility_rates_endpoint():
-    print("here 1")
     data = request.json
     zipcode = data['zipcode']
     coordinates = get_coordinates(zipcode)
