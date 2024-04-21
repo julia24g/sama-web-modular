@@ -137,6 +137,9 @@ def process_advanced_data(Input_Data, data):
         Input_Data.setBatteryOandM(data['batteryOandM'])
         Input_Data.setSOC_min(data['SOC_min'])
         Input_Data.setSOC_max(data['SOC_max'])
+        if not data['isLithium']:
+            Input_Data.setLeadAcidBat(1)
+            Input_Data.setLithiumBat(0)
     else:
         Input_Data.setBat(0)
     if data['photovoltaic']:

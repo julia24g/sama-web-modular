@@ -144,11 +144,13 @@ class InData:
 
         elif load_previous_year_type == 9: # Annual total load for previous year
             self.Annual_total_load = 12000  # Define the annual hourly average for load here
+            peak_month = 'July'
 
             from generic_load import generic_load
             self.Eload_Previous = generic_load(1, load_previous_year_type, peak_month, self.daysInMonth, self.Annual_total_load)
 
         else:
+            peak_month = 'July'
             from generic_load import generic_load
             self.Eload_Previous = generic_load(1, load_previous_year_type, peak_month, self.daysInMonth, 1)
 
@@ -251,10 +253,12 @@ class InData:
         self.WT = 0
         self.DG = 1
         self.Bat = 1
+        self.Lead_acid = 0
+        self.Li_ion = 1
         self.Grid = 1
         # Net metering scheme
         # If compensation is towrds credits in Net metering, not monetary comenstation, by choosing the below option (putting NEM equals to 1), the yearly credits will be reconciled after 12 months
-        self.NEM = 0
+        self.NEM = 1
 
         if self.Grid == 0:
             self.NEM = 0
@@ -333,6 +337,25 @@ class InData:
         self.ef_bat = 0.8           # Round trip efficiency
         self.L_B = 7.5              # Life time (year)
         self.RT_B = ceil(self.n/self.L_B) - 1    # Replacement time
+        
+        # Lead Acid Battery
+        self.Cnom_Leadacid = 83.4  # Li-ion nominal capacity [Ah]
+        self.alfa_battery_leadacid = 1       # is the storage's maximum charge rate [A/Ah]
+        self.c = 0.403              # the storage capacity ratio [unitless]
+        self.k = 0.827              # the storage rate constant [1/h]
+        self.Ich_max_leadacid = 16.7            # the storage's maximum charge current [A]
+        self.Vnom_leadacid = 12              # the storage's nominal voltage [V]
+        self.ef_bat_leadacid = 0.8           # Round trip efficiency
+        self.Q_lifetime_leadacid = 8000  # Throughout in kWh
+
+        # Li-ion Battery
+        self.Ich_max_Li_ion = 167 # the storage's maximum charge current [A]
+        self.Idch_max_Li_ion = 500  # the storage's maximum discharge current [A]
+        self.alfa_battery_Li_ion = 1  # is the storage's maximum charge rate [A/Ah]
+        self.Vnom_Li_ion = 6  # the storage's nominal voltage [V]
+        self.Cnom_Li = 167 # Li-ion nominal capacity [Ah]
+        self.ef_bat_Li = 0.90  # Round trip efficiency
+        self.Q_lifetime_Li = 3000  # Throughout in kWh
 
         # Charger
         self.L_CH = 25      # Life time (year)
@@ -604,6 +627,12 @@ class InData:
     
     def setBat(self, x):
         self.Bat = x
+    
+    def setLeadAcidBat(self, x):
+        self.Lead_acid = x
+    
+    def setLithiumIonBat(self, x):
+        self.Li_ion = x
     
     def setGrid(self, x):
         self.Grid = x

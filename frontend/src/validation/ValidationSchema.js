@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { zipcodeValidation, createMonthlyLoadValidation, createRateValidation, createAnnualLoadValidation, percentageValidation, wholeNumberValidation, positiveNumberValidation, timeRangeValidation } from './ValidationUtils';
+import { zipcodeValidation, createMonthlyLoadValidation, createRateValidation, createAnnualLoadValidation, percentageValidation, wholeNumberValidation, positiveNumberValidation, timeRangeValidation, systemTypeValidation } from './ValidationUtils';
 
 export const baseValidationSchema = yup.object({
     zipcode: zipcodeValidation,
@@ -145,21 +145,27 @@ export const advancedValidationSchema = baseValidationSchema.shape({
     e_ir_rate: percentageValidation,
     n_ir_rate: percentageValidation,
     ir: percentageValidation,
+    // PV Questions
     PVCost: positiveNumberValidation,
     PVReplacementCost: positiveNumberValidation,
     PVOandM: positiveNumberValidation,
     PVLifetime: wholeNumberValidation,
     C_B: positiveNumberValidation,
     R_B: positiveNumberValidation,
+    // Battery Questions
+    isLithium: yup.boolean().required(),
     batteryOandM: positiveNumberValidation,
     batteryYearlyDegradation: positiveNumberValidation,
     SOC_min: positiveNumberValidation,
     SOC_max: positiveNumberValidation,
     batteryVoltage: positiveNumberValidation,
+    // Diesel Generator Questions
     C_DG: positiveNumberValidation,
     R_DG: positiveNumberValidation,
     MO_DG: positiveNumberValidation,
     TL_DG: wholeNumberValidation
 });
+
+export const advancedWithSystemValidation = advancedValidationSchema.concat(systemTypeValidation);
 
 export const defaultValues = ['n', 'LPSP_max_rate', 'RE_min_rate', 'e_ir_rate', 'n_ir_rate', 'ir'];

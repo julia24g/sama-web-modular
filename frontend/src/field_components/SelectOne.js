@@ -4,9 +4,9 @@ import RadioGroup from '@mui/material/RadioGroup';
 import Radio from '@mui/material/Radio';
 import { Controller } from 'react-hook-form';
 
-const YesNo = ({ name }) => {
+const SelectOne = ({ name, label1, label2 }) => {
   return (
-    <Controller className='yesNo'
+    <Controller className='selectOne'
       name={name}
       defaultValue={null}
       render={({field}) => (
@@ -19,13 +19,13 @@ const YesNo = ({ name }) => {
           <FormControlLabel
             value="true"
             control={<Radio />}
-            label="Yes"
+            label={label1}
             labelPlacement="end"
           />
           <FormControlLabel
             value="false"
             control={<Radio />}
-            label="No"
+            label={label2}
             labelPlacement="end"
           />
         </RadioGroup>
@@ -34,4 +34,4 @@ const YesNo = ({ name }) => {
   );
 };
 
-export default YesNo;
+export default SelectOne;

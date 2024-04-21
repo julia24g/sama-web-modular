@@ -56,8 +56,10 @@ export const timeRangeValidation = yup.object().shape({
 });
 
 export const systemTypeValidation = yup.object().shape({
-    photovoltaic: yup.boolean().oneOf([true], 'At least one energy system must be selected'),
-    dieselGenerator: yup.boolean().oneOf([true], 'At least one energy system must be selected'),
-    batteryBank: yup.boolean().oneOf([true], 'At least one energy system must be selected'),
-  });
+    photovoltaic: yup.boolean(),
+    dieselGenerator: yup.boolean(),
+    batteryBank: yup.boolean(),
+}).test('at-least-one-true', 'At least one of the variables must be true', (values) => {
+    return values.variable1 || values.variable2 || values.variable3;
+});
 

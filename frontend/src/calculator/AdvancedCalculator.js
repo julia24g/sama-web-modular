@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import UtilityRateStructure from '../rate_structures/UtilityRateStructure';
 import SystemType from '../system_types/SystemType';
-import YesNo from '../field_components/YesNo';
+import SelectOne from '../field_components/SelectOne';
 import PhotovoltaicPage from '../system_types/Photovoltaic';
 import DieselGeneratorPage from '../system_types/DieselGenerator';
 import BatteryBankPage from '../system_types/BatteryBank';
@@ -11,7 +11,7 @@ import Zipcode from '../Zipcode';
 import axios from 'axios';
 import { yupResolver } from '@hookform/resolvers/yup';
 import StandardField from '../field_components/FieldComponent';
-import { advancedValidationSchema, defaultValues } from '../validation/ValidationSchema';
+import { advancedWithSystemValidation, defaultValues } from '../validation/ValidationSchema';
 import SubmitButton from '../field_components/SubmitButton';
 import { useNavigate } from 'react-router-dom';
 import Backdrop from '@mui/material/Backdrop';
@@ -21,7 +21,7 @@ import Typography from '@mui/material/Typography';
 const AdvancedCalculator = () => {
     const navigate = useNavigate();
     const methods = useForm({
-        resolver: yupResolver(advancedValidationSchema),
+        resolver: yupResolver(advancedWithSystemValidation),
         mode: 'onBlur'
     });
     const { watch, handleSubmit, register, unregister, trigger } = methods;
@@ -101,11 +101,6 @@ const AdvancedCalculator = () => {
         }
     };
 
-    // const formData = watch();
-    // useEffect(() => {
-    //     console.log("Form data changed:", formData);
-    // }, [formData]);
-
     return (
         <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -113,9 +108,9 @@ const AdvancedCalculator = () => {
                 <TotalLoad />
                 <UtilityRateStructure />
                 <p>Is your system connected to the grid?</p>
-                <YesNo name="connectedToGrid" />
+                <SelectOne name="connectedToGrid" label1="Yes" label2="No"/>
                 <p>Is your system net metered?</p>
-                <YesNo name="netMetered" />
+                <SelectOne name="netMetered" label1="Yes" label2="No"/>
                 <p>What is your project's lifetime in years?</p>
                 <StandardField name='n' label="Project Lifetime" defaultValue={25} unit='' />
                 <p>What is the maximum loss of power supply probability?</p>
