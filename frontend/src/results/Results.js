@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, ImageList, ImageListItem } from '@mui/material'; // Import ImageList and ImageListItem
+import { Grid, ImageList, ImageListItem } from '@mui/material';
 import DataCard from '../field_components/DataCard';
 import { useLocation } from 'react-router-dom';
 
@@ -26,9 +26,9 @@ const Results = () => {
 
     const flaskServerUrl = 'https://sama.eng.uwo.ca';
     const diagrams = [
-        { img: `${flaskServerUrl}/images/Cash_Flow.png`, title: "Cash Flow" },
-        { img: `${flaskServerUrl}/images/Daily-Monthly-Yearly_average_cost_of_energy_system.png`, title: "Daily Monthly Yearly Average Cost of Energy System" },
-        { img: `${flaskServerUrl}/images/Daily-Monthly-Yearly_average_cost_of_only_grid-connected_system.png`, title: "Daily Monthly Yearly Average Cost of Only Grid-Connected System" }
+        { img: `${flaskServerUrl}/api/images/Cash_Flow.png`, title: "Cash Flow" },
+        { img: `${flaskServerUrl}/api/images/Daily-Monthly-Yearly_average_cost_of_energy_system.png`, title: "Daily Monthly Yearly Average Cost of Energy System" },
+        { img: `${flaskServerUrl}/api/images/Daily-Monthly-Yearly_average_cost_of_only_grid-connected_system.png`, title: "Daily Monthly Yearly Average Cost of Only Grid-Connected System" }
     ];
 
     return (
@@ -47,21 +47,6 @@ const Results = () => {
                     </ImageListItem>
                 ))}
             </ImageList>
-            {/* <img
-                src={`${flaskServerUrl}/images/${imageFilename1}`}
-                alt="Cash Flow"
-                style={{ width: '500px', height: 'auto' }}
-            />
-            <img
-                src={`${flaskServerUrl}/images/${imageFilename2}`}
-                alt="Daily Monthly Yearly Average Cost of Energy System"
-                style={{ width: '500px', height: 'auto' }}
-            />
-            <img
-                src={`${flaskServerUrl}/images/${imageFilename3}`}
-                alt="Daily Monthly Yearly Average Cost of Only Grid-Connected System"
-                style={{ width: '500px', height: 'auto' }}
-            /> */}
 
             <Grid container rowSpacing={4.5} columnSpacing={2.75}>
                 {dataCards.map((card) => (

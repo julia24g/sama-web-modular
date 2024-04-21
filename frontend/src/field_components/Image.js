@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
 
-// material-ui
 import { useTheme } from '@mui/material/styles';
 import { Card, CardContent, CardHeader } from '@mui/material';
 
@@ -43,7 +42,6 @@ const Image = forwardRef(
                     ...sx
                 }}
             >
-                {/* card header */}
                 {title && (
                     <CardHeader
                         sx={{
@@ -66,7 +64,6 @@ const Image = forwardRef(
                     />
                 )}
 
-                {/* card content */}
                 {content && <CardContent sx={contentSX}>{children}</CardContent>}
                 {!content && children}
             </Card>
@@ -82,7 +79,7 @@ Image.propTypes = {
     shadow: PropTypes.string,
     sx: PropTypes.object,
     title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-    image: PropTypes.string, // Image URL
+    image: PropTypes.string,
     content: PropTypes.bool,
     children: PropTypes.node
 };

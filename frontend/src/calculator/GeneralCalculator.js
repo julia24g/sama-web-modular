@@ -26,7 +26,7 @@ const GeneralCalculator = () => {
     const onSubmit = async (data) => {
         setBackdropOpen(true);
         setLoading(true);
-        const url = 'https://sama.eng.uwo.ca/submit/general';
+        const url = 'https://sama.eng.uwo.ca/api/submit/general';
 
         try {
             const response = await axios.post(url, data);
@@ -43,11 +43,6 @@ const GeneralCalculator = () => {
     };
 
     const { handleSubmit } = methods;
-
-    // const formData = watch();
-    // useEffect(() => {
-    //     console.log("Form data changed:", formData);
-    // }, [formData]);
     
     return (
         <FormProvider {...methods}>
