@@ -10,15 +10,13 @@ const Contact = () => {
             profileImage: "",
             name: "Dr. Joshua Pearce",
             title: "John M. Thompson Chair in Information Technology and Innovation, Thompson Centre for Engineering Leadership & Innovation",
-            location: "Western University",
-            email: "joshua.pearce@uwo.ca"
+            location: "Western University"
         },
         {
             profileImage: "",
             name: "Seyyed Ali Sadat",
             title: "Researcher, FAST Lab",
-            location: "Western University",
-            email: "ssadat6@uwo.ca"
+            location: "Western University"
         }
     ]
 
