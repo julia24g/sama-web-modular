@@ -53,7 +53,8 @@ const GeneralCalculator = () => {
         <FormProvider {...methods}>
             <form className="form" onSubmit={handleSubmit(onSubmit)}>
                 <Zipcode />
-                {!watchedFoundLoad && <TotalLoad />}
+                {/* {!watchedFoundLoad && <TotalLoad />} */}
+                <TotalLoad />
                 <UtilityRateStructure />
                 <SubmitButton loading={loading} isValid={isValid} />
                 <Backdrop sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} open={backdropOpen}>

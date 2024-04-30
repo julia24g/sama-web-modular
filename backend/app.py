@@ -22,6 +22,10 @@ limiter = Limiter(
 )
 
 def get_coordinates(zipcode):
+    if zipcode == '12304':
+        return '42.7746899', '-73.8982971'
+    elif zipcode == '91977':
+        return '32.725963', '-116.9965517'
     url = f'https://nominatim.openstreetmap.org/search?q={zipcode}&format=json&limit=1'
     response = requests.get(url)
     if not response.ok:

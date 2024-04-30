@@ -110,7 +110,8 @@ const AdvancedCalculator = () => {
         <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Zipcode />
-                {!watchedFoundLoad && <TotalLoad />}
+                {/* {!watchedFoundLoad && <TotalLoad />} */}
+                <TotalLoad />
                 <UtilityRateStructure />
                 <p>Is your system connected to the grid?</p>
                 <SelectOne name="connectedToGrid" label1="Yes" label2="No"/>
