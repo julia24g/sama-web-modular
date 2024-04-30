@@ -191,9 +191,18 @@ def process_advanced_data(Input_Data, data):
 def submit_general():
     try:
         data = request.json
+        if data is None:
+            return jsonify({'error': 'No JSON data provided'}), 400
         Input_Data = process_general_data(data)
+        if Input_Data is None:
+            return jsonify({'error': 'Invalid data format or missing required fields'}), 400
         answer = pso.run(Input_Data)
+        if answer is None:
+            return jsonify({'error': 'Failed to generate answer'}), 500
         return jsonify(answer)
+    except ValueError as ve:
+        app.logger.error(f'ValueError in submit_general: {ve}')
+        return jsonify({'error': 'Invalid input data format'}), 400
     except Exception as e:
         app.logger.error(f'Error in submit_general: {e}')
         return jsonify({'error': 'An unexpected error occurred'}), 500
