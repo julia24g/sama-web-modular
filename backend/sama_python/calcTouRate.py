@@ -9,8 +9,8 @@ def calcTouRate(year, onPrice, midPrice, offPrice, onHours, midHours, season, da
   tm= None
 
   for m in range(12):
-    t_start = 24 * sum(daysInMonth[0:m])
-    t_end = 24 * sum(daysInMonth[0:m + 1])
+    t_start = 24 * sum(daysInMonth[:m])
+    t_end = 24 * sum(daysInMonth[:m + 1])
     t_index = np.arange(t_start, t_end)
 
     if season[m] == 1:  # for summer
@@ -29,11 +29,11 @@ def calcTouRate(year, onPrice, midPrice, offPrice, onHours, midHours, season, da
 
     else:  # for winter
       if len(onHours[season[m]+1]) > 0:
-        tp = onHours[1, :]
+        tp = onHours[1]
       else:
         tp = None
       if len(midHours[season[m]+1]) > 0:
-        tm = midHours[1, :]
+        tm = midHours[1]
       else:
         tm = None
 
