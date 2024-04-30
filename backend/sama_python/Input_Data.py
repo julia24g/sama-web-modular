@@ -34,15 +34,9 @@ class InData:
         # 8=Scaled generic load based on annual total load
         # 9=Exactly equal to generic load
 
-        self.load_type = 1  # Determine the way you want to input the electrical load by choosing one of the numbers above
         self.peak_month = 'July'
 
-        if self.load_type == 1:
-            self.path_Eload = 'sama_python/content/Eload.csv'
-            self.EloadData = pd.read_csv(self.path_Eload, header=None).values
-            self.Eload = np.array(self.EloadData[:, 0])
-
-        elif self.load_type == 2:
+        if self.load_type == 2:
             self.Monthly_haverage_load = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])  # Define the monthly hourly averages for load here
 
             from sama_python.dataextender import dataextender
@@ -544,7 +538,13 @@ class InData:
         # Constraints for buying/selling from/to grid
         self.Pbuy_max = 6 # ceil(1.2 * max(self.Eload))  # kWh
         self.Psell_max = 200 # self.Pbuy_max
-
+        
+    def setCSVLoad(self, region, state):
+        self.load_type == 1
+        self.path_Eload = f'api/residential_load_data/{state}_{region}.csv'
+        self.EloadData = pd.read_csv(self.path_Eload, header=None).values
+        self.Eload = np.array(self.EloadData[:, 0])
+        
     def setMonthlyLoad(self, monthly_load_array):
         self.load_type = 5
         self.user_defined_load = monthly_load_array
@@ -706,3 +706,7 @@ class InData:
     
     def setDGLifetime(self, years):
         self.TL_DG = years
+    
+    def setREIncentivesRate(self, rate):
+        self.RE_incentives_rate = rate
+        self.RE_incentives = self.RE_incentives_rate / 100

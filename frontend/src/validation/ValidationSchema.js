@@ -4,6 +4,7 @@ import { zipcodeValidation, createMonthlyLoadValidation, createRateValidation, c
 export const baseValidationSchema = yup.object({
     zipcode: zipcodeValidation,
     isAnnual: yup.boolean(),
+    foundLoad: yup.boolean(),
     annualTotalLoad: createAnnualLoadValidation,
     monthlyLoad1: createMonthlyLoadValidation,
     monthlyLoad2: createMonthlyLoadValidation,
@@ -145,6 +146,7 @@ export const advancedValidationSchema = baseValidationSchema.shape({
     e_ir_rate: percentageValidation,
     n_ir_rate: percentageValidation,
     ir: percentageValidation,
+    re_incentives_rate: percentageValidation,
     // PV Questions
     PVCost: positiveNumberValidation,
     PVReplacementCost: positiveNumberValidation,
@@ -168,4 +170,4 @@ export const advancedValidationSchema = baseValidationSchema.shape({
 
 export const advancedWithSystemValidation = advancedValidationSchema.concat(systemTypeValidation);
 
-export const defaultValues = ['n', 'LPSP_max_rate', 'RE_min_rate', 'e_ir_rate', 'n_ir_rate', 'ir'];
+export const defaultValues = ['n', 'LPSP_max_rate', 'RE_min_rate', 'e_ir_rate', 'n_ir_rate', 'ir', 're_incentives_rate'];

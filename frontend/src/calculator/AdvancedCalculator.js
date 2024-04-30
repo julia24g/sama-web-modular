@@ -22,7 +22,10 @@ const AdvancedCalculator = () => {
     const navigate = useNavigate();
     const methods = useForm({
         resolver: yupResolver(advancedWithSystemValidation),
-        mode: 'onBlur'
+        mode: 'onBlur',
+        defaultValues: {
+            foundLoad: true
+        }
     });
     const { watch, handleSubmit, register, unregister, trigger } = methods;
     const [loading, setLoading] = useState(false);
@@ -35,6 +38,7 @@ const AdvancedCalculator = () => {
     const isBatteryBank = watch('batteryBank');
     const n_ir_rate = watch('n_ir_rate');
     const e_ir_rate = watch('e_ir_rate');
+    const watchedFoundLoad = watch('foundLoad');
 
     const photovoltaicFields = ['PVCost', 'PVReplacementCost', 'PVOandM', 'PVLifetime'];
     const dieselGeneratorFields = ['C_DG', 'R_DG', 'MO_DG', 'TL_DG'];
@@ -86,6 +90,7 @@ const AdvancedCalculator = () => {
         setBackdropOpen(true);
         setLoading(true);
         const url = 'https://sama.eng.uwo.ca/api/submit/advanced';
+        // const url = 'http://127.0.0.1:5000/submit/advanced' // comment out during deployment
 
         try {
             const response = await axios.post(url, data);
@@ -105,7 +110,7 @@ const AdvancedCalculator = () => {
         <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Zipcode />
-                <TotalLoad />
+                {!watchedFoundLoad && <TotalLoad />}
                 <UtilityRateStructure />
                 <p>Is your system connected to the grid?</p>
                 <SelectOne name="connectedToGrid" label1="Yes" label2="No"/>
@@ -123,6 +128,8 @@ const AdvancedCalculator = () => {
                 <StandardField name="n_ir_rate" label="Nominal Discount Rate" defaultValue={5.5} unit='%' />
                 <p>What is the real discount rate?</p>
                 <StandardField name="ir" label="Real Discount Rate" defaultValue={3.4} unit='%' />
+                <p>What is the federal incentives rate?</p>
+                <StandardField name="re_incentives_rate" label="Federal Incentives Rate" defaultValue={30} unit='%' />
                 <SystemType />
                 <br></br>
                 {isPhotovoltaic && <PhotovoltaicPage />}

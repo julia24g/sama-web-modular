@@ -16,9 +16,12 @@ const GeneralCalculator = () => {
     const navigate = useNavigate();
     const methods = useForm({
         resolver: yupResolver(baseValidationSchema),
-        mode: 'onBlur'
+        mode: 'onBlur',
+        defaultValues: {
+            foundLoad: true
+        }
     });
-    const { formState: { isValid } } = methods;
+    const { watch, formState: { isValid } } = methods;
     const [loading, setLoading] = useState(false);
     const [backdropOpen, setBackdropOpen] = useState(false);
     const [message, setMessage] = useState('');
@@ -27,6 +30,7 @@ const GeneralCalculator = () => {
         setBackdropOpen(true);
         setLoading(true);
         const url = 'https://sama.eng.uwo.ca/api/submit/general';
+        // const url = 'http://127.0.0.1:5000/submit/general' // comment out during deployment
 
         try {
             const response = await axios.post(url, data);
@@ -43,12 +47,13 @@ const GeneralCalculator = () => {
     };
 
     const { handleSubmit } = methods;
+    const watchedFoundLoad = watch("foundLoad");
     
     return (
         <FormProvider {...methods}>
             <form className="form" onSubmit={handleSubmit(onSubmit)}>
                 <Zipcode />
-                <TotalLoad />
+                {!watchedFoundLoad && <TotalLoad />}
                 <UtilityRateStructure />
                 <SubmitButton loading={loading} isValid={isValid} />
                 <Backdrop sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} open={backdropOpen}>

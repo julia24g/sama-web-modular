@@ -13,7 +13,6 @@ const SystemSelectionForm = () => {
   return (
     <div>
       <p>Select at least one components of your system.</p>
-      <p><i>Default values are provided, but please review and adjust as necessary for more accurate results.</i></p>
       {systemOptions.map((option) => (
         <Controller
           name={option.value}

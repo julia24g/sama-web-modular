@@ -19,6 +19,7 @@ const Calculator = () => {
         <Box id="calculator" sx={{ padding: "100px" }}>
             <h1>SAMA Grid Defection</h1>
             <p><i>This application currently only supports US locations.</i></p>
+            <p><i>Default values are provided for some questions, but please review and adjust as necessary for more accurate results.</i></p>
             <br></br>
 
             <Box sx={{ width: '100%', typography: 'body1' }}>

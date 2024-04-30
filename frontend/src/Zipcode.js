@@ -9,11 +9,12 @@ const Zipcode = () => {
 
   useEffect(() => {
     if (watchedZipcode && watchedZipcode.length === 5) {
-      const handleCheckZipcode = async () => {
+      const handleZipcodeRateMatching = async () => {
 
         try {
-          const { data } = await axios.post('https://sama.eng.uwo.ca/api/getUtilityRates', { zipcode: watchedZipcode }, { withCredentials: true });
-          
+          // const { data } = await axios.post('https://sama.eng.uwo.ca/api/getUtilityRates', { zipcode: watchedZipcode }, { withCredentials: true });
+          const { data } = await axios.post('http://127.0.0.1:5000/getUtilityRates', { zipcode: watchedZipcode }, { withCredentials: true }); // comment out during deployment
+
           const residentialRate = data.outputs?.residential;
           if (residentialRate && residentialRate !== "no data") {
             setValue('flatRate', residentialRate, { shouldTouch: true });
@@ -25,7 +26,18 @@ const Zipcode = () => {
         }
       };
 
-      handleCheckZipcode();
+      // const handleZipcodeLoadMatching = async () => {
+      //   try {
+      //     // get state and city
+      //     // if not valid or not found file, set load_type to 8
+      //     setValue("foundLoad", false);
+
+      //   } catch (error) {
+      //     console.error('Failed to check zipcode state and city: ', error);
+      //   }
+      // };
+      // handleZipcodeLoadMatching();
+      handleZipcodeRateMatching();
     } else {
       setValue('flatRate', '');
     }

@@ -42,7 +42,7 @@ const TotalLoad = () => {
 
   return (
     <div>
-      <p>Input annual or monthly load data in kWh.</p>
+      <p>Could not find load data for your given zip code. Input annual or monthly load data in kWh.</p>
       <ToggleButtonGroup
         size="small"
         value={termType}

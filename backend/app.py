@@ -12,6 +12,7 @@ import numpy as np
 load_dotenv()
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "https://sama.eng.uwo.ca"}}, supports_credentials=True)
+# CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True) # comment out on local production
 
 limiter = Limiter(
     get_remote_address,
@@ -38,6 +39,10 @@ def fetch_utility_rates(latitude, longitude):
         return None
     return utility_response.json()
 
+@app.route("/status", methods=['GET'])
+def get_status():
+    return jsonify({'status': 'ok'})
+
 @app.route("/getUtilityRates", methods=['POST'])
 @limiter.limit("1000/hour")
 def get_utility_rates_endpoint():
@@ -61,16 +66,21 @@ def tou_hour_array_conversion(hour_array):
 
 def process_general_data(data):
     # zipcode = data['zipcode'] # store in database later
+    
     loadType = data['isAnnual']
     rateStructureType = data['rateStructure']
+    foundLoad = data['foundLoad']
 
     Input_Data = InData()
-
-    if loadType == True: # it is annual
-        Input_Data.setAnnualLoad(data['annualTotalLoad'])
+    
+    if foundLoad:
+        Input_Data.setCSVLoad(data['region'], data['state'])
     else:
-        monthlyLoad = np.array([data['monthlyLoad1'], data['monthlyLoad2'], data['monthlyLoad3'], data['monthlyLoad4'], data['monthlyLoad5'], data['monthlyLoad6'], data['monthlyLoad7'], data['monthlyLoad8'], data['monthlyLoad9'], data['monthlyLoad10'], data['monthlyLoad11'], data['monthlyLoad12']])
-        Input_Data.setMonthlyLoad(monthlyLoad)
+        if loadType == True: # it is annual
+            Input_Data.setAnnualLoad(data['annualTotalLoad'])
+        else:
+            monthlyLoad = np.array([data['monthlyLoad1'], data['monthlyLoad2'], data['monthlyLoad3'], data['monthlyLoad4'], data['monthlyLoad5'], data['monthlyLoad6'], data['monthlyLoad7'], data['monthlyLoad8'], data['monthlyLoad9'], data['monthlyLoad10'], data['monthlyLoad11'], data['monthlyLoad12']])
+            Input_Data.setMonthlyLoad(monthlyLoad)
     
     if rateStructureType == 'Flat Rate':
         Input_Data.setFlatRate(data['flatRate'])
@@ -169,6 +179,7 @@ def process_advanced_data(Input_Data, data):
     Input_Data.sete_ir_rate(data['e_ir_rate'])
     Input_Data.setn_ir_rate(data['n_ir_rate'])
     Input_Data.setir(data['ir'])
+    Input_Data.setREIncentivesRate(data['re_incentives_rate'])
 
     return Input_Data
 
@@ -198,3 +209,7 @@ def submit_advanced():
 @app.route("/images/<filename>")
 def send_image(filename):
     return send_from_directory("sama_python/output/figs", filename)
+
+# comment out on local development
+if __name__ == "__main__":
+    app.run(debug=True)
