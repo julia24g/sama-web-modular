@@ -12,8 +12,8 @@ const Zipcode = () => {
       const handleZipcodeRateMatching = async () => {
 
         try {
-          // const { data } = await axios.post('https://sama.eng.uwo.ca/api/getUtilityRates', { zipcode: watchedZipcode }, { withCredentials: true });
-          const { data } = await axios.post('http://127.0.0.1:5000/getUtilityRates', { zipcode: watchedZipcode }, { withCredentials: true }); // comment out during deployment
+          const { data } = await axios.post('https://sama.eng.uwo.ca/api/getUtilityRates', { zipcode: watchedZipcode }, { withCredentials: true });
+          // const { data } = await axios.post('http://127.0.0.1:5000/getUtilityRates', { zipcode: watchedZipcode }, { withCredentials: true }); // comment out during deployment
 
           const residentialRate = data.outputs?.residential;
           if (residentialRate && residentialRate !== "no data") {
