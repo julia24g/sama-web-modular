@@ -73,18 +73,18 @@ def process_general_data(data):
     
     loadType = data['isAnnual']
     rateStructureType = data['rateStructure']
-    foundLoad = data['foundLoad']
+    # foundLoad = data['foundLoad']
 
     Input_Data = InData()
     
-    if foundLoad:
-        Input_Data.setCSVLoad(data['region'], data['state'])
+    # if foundLoad:
+    #     Input_Data.setCSVLoad(data['region'], data['state'])
+    # else:
+    if loadType == True: # it is annual
+        Input_Data.setAnnualLoad(data['annualTotalLoad'])
     else:
-        if loadType == True: # it is annual
-            Input_Data.setAnnualLoad(data['annualTotalLoad'])
-        else:
-            monthlyLoad = np.array([data['monthlyLoad1'], data['monthlyLoad2'], data['monthlyLoad3'], data['monthlyLoad4'], data['monthlyLoad5'], data['monthlyLoad6'], data['monthlyLoad7'], data['monthlyLoad8'], data['monthlyLoad9'], data['monthlyLoad10'], data['monthlyLoad11'], data['monthlyLoad12']])
-            Input_Data.setMonthlyLoad(monthlyLoad)
+        monthlyLoad = np.array([data['monthlyLoad1'], data['monthlyLoad2'], data['monthlyLoad3'], data['monthlyLoad4'], data['monthlyLoad5'], data['monthlyLoad6'], data['monthlyLoad7'], data['monthlyLoad8'], data['monthlyLoad9'], data['monthlyLoad10'], data['monthlyLoad11'], data['monthlyLoad12']])
+        Input_Data.setMonthlyLoad(monthlyLoad)
     
     if rateStructureType == 'Flat Rate':
         Input_Data.setFlatRate(data['flatRate'])
