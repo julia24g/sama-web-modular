@@ -69,79 +69,57 @@ def tou_hour_array_conversion(hour_array):
     return hours
 
 def process_general_data(data):
-    # zipcode = data['zipcode'] # store in database later
-    
-    loadType = data['isAnnual']
+    loadType = data['isAnnual']  
     rateStructureType = data['rateStructure']
-    # foundLoad = data['foundLoad']
 
     Input_Data = InData()
     
     # if foundLoad:
     #     Input_Data.setCSVLoad(data['region'], data['state'])
     # else:
-    if loadType == True: # it is annual
-        Input_Data.setAnnualLoad(data['annualTotalLoad'])
+
+    if loadType:
+        annual_load = float(data['annualTotalLoad'])
+        Input_Data.setAnnualLoad(annual_load)
     else:
-        monthlyLoad = np.array([data['monthlyLoad1'], data['monthlyLoad2'], data['monthlyLoad3'], data['monthlyLoad4'], data['monthlyLoad5'], data['monthlyLoad6'], data['monthlyLoad7'], data['monthlyLoad8'], data['monthlyLoad9'], data['monthlyLoad10'], data['monthlyLoad11'], data['monthlyLoad12']])
+        monthlyLoad = np.array([float(data[f'monthlyLoad{i}']) for i in range(1, 13)])
         Input_Data.setMonthlyLoad(monthlyLoad)
-    
+
     if rateStructureType == 'Flat Rate':
-        Input_Data.setFlatRate(data['flatRate'])
+        flatRate = float(data['flatRate'])
+        Input_Data.setFlatRate(flatRate)
     elif rateStructureType == 'Seasonal Rate':
-        seasonalRates = np.array([data['seasonalRateField1'], data['seasonalRateField2']])
+        seasonalRates = np.array([float(data['seasonalRateField1']), float(data['seasonalRateField2'])])
         Input_Data.setSeasonalRate(seasonalRates)
     elif rateStructureType == 'Monthly Rate':
-        monthlyRates = np.array([data['monthlyRate1'], data['monthlyRate2'], data['monthlyRate3'], data['monthlyRate4'], data['monthlyRate5'], data['monthlyRate6'], data['monthlyRate7'], data['monthlyRate8'], data['monthlyRate9'], data['monthlyRate10'], data['monthlyRate11'], data['monthlyRate12']])
+        monthlyRates = np.array([float(data[f'monthlyRate{i}']) for i in range(1, 13)])
         Input_Data.setMonthlyRate(monthlyRates)
     elif rateStructureType == 'Tiered Rate':
-        tieredPrices = np.array([data['lowTierPrice'], data['mediumTierPrice'], data['highTierPrice']])
-        tieredLoads = np.array([data['lowTierMaxLoad'], data['mediumTierMaxLoad'], data['highTierMaxLoad']])
+        tieredPrices = np.array([float(data['lowTierPrice']), float(data['mediumTierPrice']), float(data['highTierPrice'])])
+        tieredLoads = np.array([float(data['lowTierMaxLoad']), float(data['mediumTierMaxLoad']), float(data['highTierMaxLoad'])])
         Input_Data.setTieredRate(tieredPrices, tieredLoads)
     elif rateStructureType == 'Seasonal Tiered Rate':
-        summerTieredPrices = np.array([data['summerLowTierPrice'], data['summerMediumTierPrice'], data['summerHighTierPrice']])
-        winterTieredPrices = np.array([data['winterLowTierPrice'], data['winterMediumTierPrice'], data['winterHighTierPrice']])
+        summerTieredPrices = np.array([float(data['summerLowTierPrice']), float(data['summerMediumTierPrice']), float(data['summerHighTierPrice'])])
+        winterTieredPrices = np.array([float(data['winterLowTierPrice']), float(data['winterMediumTierPrice']), float(data['winterHighTierPrice'])])
         seasonalTieredPrices = np.array([summerTieredPrices, winterTieredPrices])
-        summerTieredLoads = np.array([data['summerLowTierMaxLoad'], data['summerMediumTierMaxLoad'], data['summerHighTierMaxLoad']])
-        winterTieredLoads = np.array([data['winterLowTierMaxLoad'], data['winterMediumTierMaxLoad'], data['winterHighTierMaxLoad']])
+        summerTieredLoads = np.array([float(data['summerLowTierMaxLoad']), float(data['summerMediumTierMaxLoad']), float(data['summerHighTierMaxLoad'])])
+        winterTieredLoads = np.array([float(data['winterLowTierMaxLoad']), float(data['winterMediumTierMaxLoad']), float(data['winterHighTierMaxLoad'])])
         seasonalTieredLoads = np.array([summerTieredLoads, winterTieredLoads])
         Input_Data.setSeasonalTieredRate(seasonalTieredPrices, seasonalTieredLoads)
     elif rateStructureType == 'Monthly Tiered Rate':
-        januaryTieredPrices = np.array([data['januaryLowPrice'], data['januaryMedPrice'], data['januaryHighPrice']])
-        februaryTieredPrices = np.array([data['februaryLowPrice'], data['februaryMedPrice'], data['februaryHighPrice']])
-        marchTieredPrices = np.array([data['marchLowPrice'], data['marchMedPrice'], data['marchHighPrice']])
-        aprilTieredPrices = np.array([data['aprilLowPrice'], data['aprilMedPrice'], data['aprilHighPrice']])
-        mayTieredPrices = np.array([data['mayLowPrice'], data['mayMedPrice'], data['mayHighPrice']])
-        juneTieredPrices = np.array([data['juneLowPrice'], data['juneMedPrice'], data['juneHighPrice']])
-        julyTieredPrices = np.array([data['julyLowPrice'], data['julyMedPrice'], data['julyHighPrice']])
-        augustTieredPrices = np.array([data['augustLowPrice'], data['augustMedPrice'], data['augustHighPrice']])
-        septemberTieredPrices = np.array([data['septemberLowPrice'], data['septemberMedPrice'], data['septemberHighPrice']])
-        octoberTieredPrices = np.array([data['octoberLowPrice'], data['octoberMedPrice'], data['octoberHighPrice']])
-        novemberTieredPrices = np.array([data['novemberLowPrice'], data['novemberMedPrice'], data['novemberHighPrice']])
-        decemberTieredPrices = np.array([data['decemberLowPrice'], data['decemberMedPrice'], data['decemberHighPrice']])
-        monthlyTieredPrices = np.array([januaryTieredPrices, februaryTieredPrices, marchTieredPrices, aprilTieredPrices, mayTieredPrices, juneTieredPrices, julyTieredPrices, augustTieredPrices, septemberTieredPrices, octoberTieredPrices, novemberTieredPrices, decemberTieredPrices])
-        januaryTieredLoads = np.array([data['januaryLowMaxLoad'], data['januaryMedMaxLoad'], data['januaryHighMaxLoad']])
-        februaryTieredLoads = np.array([data['februaryLowMaxLoad'], data['februaryMedMaxLoad'], data['februaryHighMaxLoad']])
-        marchTieredLoads = np.array([data['marchLowMaxLoad'], data['marchMedMaxLoad'], data['marchHighMaxLoad']])
-        aprilTieredLoads = np.array([data['aprilLowMaxLoad'], data['aprilMedMaxLoad'], data['aprilHighMaxLoad']])
-        mayTieredLoads = np.array([data['mayLowMaxLoad'], data['mayMedMaxLoad'], data['mayHighMaxLoad']])
-        juneTieredLoads = np.array([data['juneLowMaxLoad'], data['juneMedMaxLoad'], data['juneHighMaxLoad']])
-        julyTieredLoads = np.array([data['julyLowMaxLoad'], data['julyMedMaxLoad'], data['julyHighMaxLoad']])
-        augustTieredLoads = np.array([data['augustLowMaxLoad'], data['augustMedMaxLoad'], data['augustHighMaxLoad']])
-        septemberTieredLoads = np.array([data['septemberLowMaxLoad'], data['septemberMedMaxLoad'], data['septemberHighMaxLoad']])
-        octoberTieredLoads = np.array([data['octoberLowMaxLoad'], data['octoberMedMaxLoad'], data['octoberHighMaxLoad']])
-        novemberTieredLoads = np.array([data['novemberLowMaxLoad'], data['novemberMedMaxLoad'], data['novemberHighMaxLoad']])
-        decemberTieredLoads = np.array([data['decemberLowMaxLoad'], data['decemberMedMaxLoad'], data['decemberHighMaxLoad']])
-        monthlyTieredLoads = np.array([januaryTieredLoads, februaryTieredLoads, marchTieredLoads, aprilTieredLoads, mayTieredLoads, juneTieredLoads, julyTieredLoads, augustTieredLoads, septemberTieredLoads, octoberTieredLoads, novemberTieredLoads, decemberTieredLoads])
-        Input_Data.setMonthlyTieredRate(monthlyTieredPrices, monthlyTieredLoads)
+        monthlyTieredPrices = [float(data[f'{month}LowPrice']) for month in ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']]
+        monthlyTieredLoads = [float(data[f'{month}LowMaxLoad']) for month in ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']]
+        Input_Data.setMonthlyTieredRate(np.array(monthlyTieredPrices), np.array(monthlyTieredLoads))
     elif rateStructureType == 'Time of Use':
-        onPrice = np.array([data['summerOnPeakPrice'], data['winterOnPeakPrice']])
-        midPrice = np.array([data['summerMidPeakPrice'], data['winterMidPeakPrice']])
-        offPrice = np.array([data['summerOffPeakPrice'], data['winterOffPeakPrice']])
+        onPrice = np.array([float(data['summerOnPeakPrice']), float(data['winterOnPeakPrice'])])
+        midPrice = np.array([float(data['summerMidPeakPrice']), float(data['winterMidPeakPrice'])])
+        offPrice = np.array([float(data['summerOffPeakPrice']), float(data['winterOffPeakPrice'])])
         onHours = np.array([tou_hour_array_conversion(data['summerOnPeakHours']), tou_hour_array_conversion(data['winterOnPeakHours'])])
         midHours = np.array([tou_hour_array_conversion(data['summerMidPeakHours']), tou_hour_array_conversion(data['winterMidPeakHours'])])
         Input_Data.setTimeOfUseRate(onPrice, midPrice, offPrice, onHours, midHours)
-            
+    
+    Input_Data.completeInitialization()
+
     return Input_Data
 
 def process_advanced_data(Input_Data, data):
@@ -200,6 +178,13 @@ def submit_general():
         if answer is None:
             return jsonify({'error': 'Failed to generate answer'}), 500
         return jsonify(answer)
+    
+    except KeyError as ke:
+        app.logger.error(f'KeyError in submit_general: {ke}')
+        return jsonify({'error': f'Missing key in input data: {ke}'}), 400
+    except TypeError as te:
+        app.logger.error(f'TypeError in submit_general: {te}')
+        return jsonify({'error': f'Incorrect type of input data: {te}'}), 400
     except ValueError as ve:
         app.logger.error(f'ValueError in submit_general: {ve}')
         return jsonify({'error': 'Invalid input data format'}), 400

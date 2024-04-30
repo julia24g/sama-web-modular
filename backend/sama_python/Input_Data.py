@@ -35,43 +35,45 @@ class InData:
         # 9=Exactly equal to generic load
 
         self.peak_month = 'July'
+        self.load_type = 1  # Determine the way you want to input the electrical load by choosing one of the numbers above
+        self.Eload = [] # Initializing variable
 
-        if self.load_type == 2:
-            self.Monthly_haverage_load = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])  # Define the monthly hourly averages for load here
+        # if self.load_type == 2:
+        #     self.Monthly_haverage_load = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])  # Define the monthly hourly averages for load here
 
-            from sama_python.dataextender import dataextender
-            self.Eload = dataextender(self.daysInMonth, self.Monthly_haverage_load)
+        #     from sama_python.dataextender import dataextender
+        #     self.Eload = dataextender(self.daysInMonth, self.Monthly_haverage_load)
 
-        elif self.load_type == 3:
-            self.Monthly_daverage_load = np.array([10, 20, 31, 14, 15, 16, 17, 18, 19, 10, 11, 12])  # Define the monthly daily averages for load here
+        # elif self.load_type == 3:
+        #     self.Monthly_daverage_load = np.array([10, 20, 31, 14, 15, 16, 17, 18, 19, 10, 11, 12])  # Define the monthly daily averages for load here
 
-            self.Monthly_haverage_load = self.Monthly_daverage_load / 24
-            from sama_python.dataextender import dataextender
-            self.Eload = dataextender(self.daysInMonth, self.Monthly_haverage_load)
+        #     self.Monthly_haverage_load = self.Monthly_daverage_load / 24
+        #     from sama_python.dataextender import dataextender
+        #     self.Eload = dataextender(self.daysInMonth, self.Monthly_haverage_load)
 
-        elif self.load_type == 4:
-            self.Monthly_total_load = np.array([321, 223, 343, 423, 544, 623, 237, 843, 239, 140, 121, 312])  # Define the monthly total load here
+        # elif self.load_type == 4:
+        #     self.Monthly_total_load = np.array([321, 223, 343, 423, 544, 623, 237, 843, 239, 140, 121, 312])  # Define the monthly total load here
 
-            self.Monthly_haverage_load = self.Monthly_total_load / (self.daysInMonth * 24)
-            from sama_python.dataextender import dataextender
-            self.Eload = dataextender(self.daysInMonth, self.Monthly_haverage_load)
+        #     self.Monthly_haverage_load = self.Monthly_total_load / (self.daysInMonth * 24)
+        #     from sama_python.dataextender import dataextender
+        #     self.Eload = dataextender(self.daysInMonth, self.Monthly_haverage_load)
 
-        elif self.load_type == 6:
-            self.Annual_haverage_load = 1  # Define the annual hourly average for load here
+        # elif self.load_type == 6:
+        #     self.Annual_haverage_load = 1  # Define the annual hourly average for load here
 
-            self.Eload = np.full(8760, self.Annual_haverage_load)
+        #     self.Eload = np.full(8760, self.Annual_haverage_load)
 
-        elif self.load_type == 7:
-            self.Annual_daverage_load = 10  # Define the annual hourly average for load here
+        # elif self.load_type == 7:
+        #     self.Annual_daverage_load = 10  # Define the annual hourly average for load here
 
-            self.Annual_haverage_load = self.Annual_daverage_load / 24
-            self.Eload = np.full(8760, self.Annual_haverage_load)
+        #     self.Annual_haverage_load = self.Annual_daverage_load / 24
+        #     self.Eload = np.full(8760, self.Annual_haverage_load)
 
-        else:
-            peak_month = 'July'
+        # else:
+        #     peak_month = 'July'
 
-            from sama_python.generic_load import generic_load
-            self.Eload = generic_load(self.load_type, 1, peak_month, self.daysInMonth, 1)
+        #     from sama_python.generic_load import generic_load
+        #     self.Eload = generic_load(self.load_type, 1, peak_month, self.daysInMonth, 1)
 
         # Previous year Electrical load definitions
 
@@ -85,161 +87,7 @@ class InData:
         # 8=Annual daily average load
         # 9=Scaled generic load based on annual total load
         # 10=Exactly equals to generic load
-
-        load_previous_year_type = 1 # Determine the way you want to input the electrical load for previous year by choosing one of the numbers above
-
-        if load_previous_year_type == 1:
-
-            self.Eload_Previous = self.Eload
-
-        elif load_previous_year_type == 2:
-
-            self.path_Eload_Previous = 'content/Eload_previousyear.csv'
-            self.Eload_PreviousData = pd.read_csv(self.path_Eload_Previous, header=None).values
-            self.Eload_Previous = np.array(self.EloadData[:, 0])
-
-        elif load_previous_year_type == 3:
-            self.Monthly_haverage_load_previous = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])  # Define the monthly hourly averages for load here
-
-            from dataextender import dataextender
-            self.Eload_Previous = dataextender(self.daysInMonth, self.Monthly_haverage_load_previous)
-
-        elif load_previous_year_type == 4:
-            self.Monthly_daverage_load_previous = np.array([10, 20, 31, 14, 15, 16, 17, 18, 19, 10, 11, 12])  # Define the monthly hourly averages for load here
-            self.Monthly_haverage_load_previous = self.Monthly_daverage_load_previous / 24
-
-            from dataextender import dataextender
-            self.Eload_Previous = dataextender(self.daysInMonth, self.Monthly_haverage_load_previous)
-
-        elif load_previous_year_type == 5:
-            self.Monthly_total_load_previous = np.array([321, 223, 343, 423, 544, 623, 237, 843, 239, 140, 121, 312])  # Define the monthly total load here
-
-            self.Monthly_haverage_load_previous = self.Monthly_total_load_previous / (self.daysInMonth * 24)
-            from dataextender import dataextender
-            self.Eload_Previous = dataextender(self.daysInMonth, self.Monthly_haverage_load_previous)
-
-        elif load_previous_year_type == 6:
-            peak_month = 'July'
-            user_defined_load = np.array([300, 350, 320, 320, 320, 320, 320, 320, 320, 320, 320, 320])  # Define the monthly total load here
-
-            from generic_load import generic_load
-            self.Eload_Previous = generic_load(1, load_previous_year_type, peak_month, self.daysInMonth, user_defined_load)
-
-        elif load_previous_year_type == 7:
-            self.Annual_haverage_load_previous = 1  # Define the annual hourly average for load here
-
-            self.Eload_Previous = np.full(8760, self.Annual_haverage_load_previous)
-
-        elif load_previous_year_type == 8:
-            self.Annual_daverage_load_previous = 10  # Define the annual hourly average for load here
-
-            self.Annual_haverage_load_previous = self.Annual_daverage_load_previous / 24
-            self.Eload_Previous = np.full(8760, self.Annual_haverage_load_previous)
-
-        elif load_previous_year_type == 9: # Annual total load for previous year
-            self.Annual_total_load = 12000  # Define the annual hourly average for load here
-            peak_month = 'July'
-
-            from generic_load import generic_load
-            self.Eload_Previous = generic_load(1, load_previous_year_type, peak_month, self.daysInMonth, self.Annual_total_load)
-
-        else:
-            peak_month = 'July'
-            from generic_load import generic_load
-            self.Eload_Previous = generic_load(1, load_previous_year_type, peak_month, self.daysInMonth, 1)
-
-        # Irradiance definitions
-        # 1=Hourly irradiance based on POA calculator
-        # 2=Hourly irradiance based on the user CSV file
-        weather_url = 'sama_python/content/METEO.csv'
-        azimuth = 180
-        tilt = 34  # Tilt angle of PV modules
-        soiling = 5  # Soiling losses in percentage
-
-        G_type = 1 # Determine the way you want to input the Irradiance by choosing one of the numbers above
-
-        if G_type == 1:
-
-            from sama_python.sam_monofacial_poa import runSimulation
-            temp_result = runSimulation(weather_url, tilt, azimuth, soiling)
-            G_pd_to_numpy = temp_result[0]
-            self.G = G_pd_to_numpy.values
-
-        elif G_type == 2: # It should be Plane of array irradiance
-
-            self.path_G = 'content/Irradiance.csv'
-            self.GData = pd.read_csv(self.path_G, header=None).values
-            self.G = np.array(self.GData[:, 0])
-
-        # Temperature definitions
-        # 1=Hourly Temperature based on the NSEDB file
-        # 2=Hourly Temperature based on the user CSV file
-        # 3=Monthly average Temperature
-        # 4=Annual average Temperature
-
-        T_type = 1 # Determine the way you want to input the Temperature by choosing one of the numbers above
-
-        if T_type == 1:
-
-            from sama_python.sam_monofacial_poa import runSimulation
-            temp_result = runSimulation(weather_url, tilt, azimuth, soiling)
-            T_pd_to_numpy = temp_result[1]
-            self.T = T_pd_to_numpy.values
-
-        elif T_type == 2:
-
-            self.path_T = 'content/Temperature.csv'
-            self.TData = pd.read_csv(self.path_T, header=None).values
-            self.T = np.array(self.TData[:, 0])
-
-        elif T_type == 3:
-
-            self.Monthly_average_temperature = np.array([-2, -5, -2, 1, 3, 6, 15, 22, 27, 23, 16, 7])  # Define the monthly hourly averages for temperature here
-
-            from dataextender import dataextender
-            self.T = dataextender(self.daysInMonth, self.Monthly_average_temperature)
-
-        else: # Annual average Temperature
-            self.Annual_average_temperature = 12
-
-            self.T = np.full(8760, self.Annual_average_temperature)
-
-        # Wind speed definitions
-        # 1=Hourly Wind speed based on the NSEDB file
-        # 2=Hourly Wind speed based on the user CSV file
-        # 3=Monthly average Wind speed
-        # 4=Annual average Wind speed
-
-        WS_type = 4 # Determine the way you want to input the Wind speed by choosing one of the numbers above
-
-        if WS_type == 1:
-
-            from sam_monofacial_poa import runSimulation
-            temp_result = runSimulation(weather_url, tilt, azimuth, soiling)
-            WS_pd_to_numpy = temp_result[2]
-            self.Vw = WS_pd_to_numpy.values
-
-        elif WS_type == 2:
-
-            self.path_WS = 'content/WSPEED.csv'
-            self.WSData = pd.read_csv(self.path_WS, header=None).values
-            self.Vw = np.array(self.WSData[:, 0])
-
-        elif WS_type == 3:
-            self.Monthly_average_windspeed = np.array([14.1, 21, 12.2, 31, 12.2, 11.2, 12.1, 13, 21, 9.2, 12.3, 18.1])  # Define the monthly hourly averages for load here
-
-            from dataextender import dataextender
-            self.Vw = dataextender(self.daysInMonth, self.Monthly_average_windspeed)
-
-        else: # Annual average Wind speed
-
-            self.Annual_average_windspeed = 10
-            self.Vw = np.full(8760, self.Annual_average_windspeed)
-
-        data = {'Eload': self.Eload, 'G': self.G, 'T': self.T, 'Vw': self.Vw}
-        df = pd.DataFrame(data)
-        df.to_csv('sama_python/output/data/Inputs.csv', index=False)
-
+        
         # Other inputs
         # Technical data
         # Type of system (1: included, 0=not included)
@@ -471,13 +319,11 @@ class InData:
         # 6 = monthly tiered rate
         # 7 = time of use rate
 
-
         # Hourly Rate Structure
         self.rateStructure = 6
         self.season = np.array([0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0])  # define summer season 1= Summer
         self.holidays = np.array([1, 16, 51, 149, 170, 185, 247, 282, 315, 327, 359])  # Holidays based on the day in 365 days format
         self.Cbuy = np.zeros(8760)
-
 
         # Fixed expenses
         self.Annual_expenses = 0 # Annual expenses in $ for grid if any
@@ -495,6 +341,160 @@ class InData:
         self.Grid_credit = 0 # Credits offered by grid to users in $
 
         self.NEM_fee = 0 # Net metering one time setup fee
+        
+        self.weather_url = 'sama_python/content/METEO.csv'
+        self.azimuth = 180
+        self.tilt = 34  # Tilt angle of PV modules
+        self.soiling = 5  # self.soiling losses in percentage
+
+        self.G_type = 1 # Determine the way you want to input the Irradiance by choosing one of the numbers above
+        self.T_type = 1 # Determine the way you want to input the Temperature by choosing one of the numbers above
+        self.WS_type = 4 # Determine the way you want to input the Wind speed by choosing one of the numbers above
+        
+        self.load_previous_year_type = 1 # Determine the way you want to input the electrical load for previous year by choosing one of the numbers above
+
+    def completeInitialization(self):
+
+        if self.load_previous_year_type == 1:
+            self.Eload_Previous = self.Eload
+
+        # elif load_previous_year_type == 2:
+
+        #     self.path_Eload_Previous = 'content/Eload_previousyear.csv'
+        #     self.Eload_PreviousData = pd.read_csv(self.path_Eload_Previous, header=None).values
+        #     self.Eload_Previous = np.array(self.EloadData[:, 0])
+
+        # elif load_previous_year_type == 3:
+        #     self.Monthly_haverage_load_previous = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])  # Define the monthly hourly averages for load here
+
+        #     from dataextender import dataextender
+        #     self.Eload_Previous = dataextender(self.daysInMonth, self.Monthly_haverage_load_previous)
+
+        # elif load_previous_year_type == 4:
+        #     self.Monthly_daverage_load_previous = np.array([10, 20, 31, 14, 15, 16, 17, 18, 19, 10, 11, 12])  # Define the monthly hourly averages for load here
+        #     self.Monthly_haverage_load_previous = self.Monthly_daverage_load_previous / 24
+
+        #     from dataextender import dataextender
+        #     self.Eload_Previous = dataextender(self.daysInMonth, self.Monthly_haverage_load_previous)
+
+        # elif load_previous_year_type == 5:
+        #     self.Monthly_total_load_previous = np.array([321, 223, 343, 423, 544, 623, 237, 843, 239, 140, 121, 312])  # Define the monthly total load here
+
+        #     self.Monthly_haverage_load_previous = self.Monthly_total_load_previous / (self.daysInMonth * 24)
+        #     from dataextender import dataextender
+        #     self.Eload_Previous = dataextender(self.daysInMonth, self.Monthly_haverage_load_previous)
+
+        # elif load_previous_year_type == 6:
+        #     peak_month = 'July'
+        #     user_defined_load = np.array([300, 350, 320, 320, 320, 320, 320, 320, 320, 320, 320, 320])  # Define the monthly total load here
+
+        #     from generic_load import generic_load
+        #     self.Eload_Previous = generic_load(1, load_previous_year_type, peak_month, self.daysInMonth, user_defined_load)
+
+        # elif load_previous_year_type == 7:
+        #     self.Annual_haverage_load_previous = 1  # Define the annual hourly average for load here
+
+        #     self.Eload_Previous = np.full(8760, self.Annual_haverage_load_previous)
+
+        # elif load_previous_year_type == 8:
+        #     self.Annual_daverage_load_previous = 10  # Define the annual hourly average for load here
+
+        #     self.Annual_haverage_load_previous = self.Annual_daverage_load_previous / 24
+        #     self.Eload_Previous = np.full(8760, self.Annual_haverage_load_previous)
+
+        # elif load_previous_year_type == 9: # Annual total load for previous year
+        #     self.Annual_total_load = 12000  # Define the annual hourly average for load here
+        #     peak_month = 'July'
+
+        #     from generic_load import generic_load
+        #     self.Eload_Previous = generic_load(1, load_previous_year_type, peak_month, self.daysInMonth, self.Annual_total_load)
+
+        # else:
+        #     peak_month = 'July'
+        #     from generic_load import generic_load
+        #     self.Eload_Previous = generic_load(1, load_previous_year_type, peak_month, self.daysInMonth, 1)
+
+        # Irradiance definitions
+        # 1=Hourly irradiance based on POA calculator
+        # 2=Hourly irradiance based on the user CSV file
+
+        if self.G_type == 1:
+
+            from sama_python.sam_monofacial_poa import runSimulation
+            temp_result = runSimulation(self.weather_url, self.tilt, self.azimuth, self.soiling)
+            G_pd_to_numpy = temp_result[0]
+            self.G = G_pd_to_numpy.values
+
+        elif self.G_type == 2: # It should be Plane of array irradiance
+
+            self.path_G = 'content/Irradiance.csv'
+            self.GData = pd.read_csv(self.path_G, header=None).values
+            self.G = np.array(self.GData[:, 0])
+
+        # Temperature definitions
+        # 1=Hourly Temperature based on the NSEDB file
+        # 2=Hourly Temperature based on the user CSV file
+        # 3=Monthly average Temperature
+        # 4=Annual average Temperature
+
+        if self.T_type == 1:
+
+            from sama_python.sam_monofacial_poa import runSimulation
+            temp_result = runSimulation(self.weather_url, self.tilt, self.azimuth, self.soiling)
+            T_pd_to_numpy = temp_result[1]
+            self.T = T_pd_to_numpy.values
+
+        elif self.T_type == 2:
+
+            self.path_T = 'content/Temperature.csv'
+            self.TData = pd.read_csv(self.path_T, header=None).values
+            self.T = np.array(self.TData[:, 0])
+
+        elif self.T_type == 3:
+
+            self.Monthly_average_temperature = np.array([-2, -5, -2, 1, 3, 6, 15, 22, 27, 23, 16, 7])  # Define the monthly hourly averages for temperature here
+
+            from dataextender import dataextender
+            self.T = dataextender(self.daysInMonth, self.Monthly_average_temperature)
+
+        else: # Annual average Temperature
+            self.Annual_average_temperature = 12
+
+            self.T = np.full(8760, self.Annual_average_temperature)
+
+        # Wind speed definitions
+        # 1=Hourly Wind speed based on the NSEDB file
+        # 2=Hourly Wind speed based on the user CSV file
+        # 3=Monthly average Wind speed
+        # 4=Annual average Wind speed
+
+        if self.WS_type == 1:
+
+            from sam_monofacial_poa import runSimulation
+            temp_result = runSimulation(self.weather_url, self.tilt, self.azimuth, self.soiling)
+            WS_pd_to_numpy = temp_result[2]
+            self.Vw = WS_pd_to_numpy.values
+
+        elif self.WS_type == 2:
+
+            self.path_WS = 'content/WSPEED.csv'
+            self.WSData = pd.read_csv(self.path_WS, header=None).values
+            self.Vw = np.array(self.WSData[:, 0])
+
+        elif self.WS_type == 3:
+            self.Monthly_average_windspeed = np.array([14.1, 21, 12.2, 31, 12.2, 11.2, 12.1, 13, 21, 9.2, 12.3, 18.1])  # Define the monthly hourly averages for load here
+
+            from dataextender import dataextender
+            self.Vw = dataextender(self.daysInMonth, self.Monthly_average_windspeed)
+
+        else: # Annual average Wind speed
+
+            self.Annual_average_windspeed = 10
+            self.Vw = np.full(8760, self.Annual_average_windspeed)
+
+        data = {'Eload': self.Eload, 'G': self.G, 'T': self.T, 'Vw': self.Vw}
+        df = pd.DataFrame(data)
+        df.to_csv('sama_python/output/data/Inputs.csv', index=False)
 
         # Monthly fixed charge structure
         self.Monthly_fixed_charge_system = 2
