@@ -27,6 +27,7 @@ const GeneralCalculator = () => {
     const [message, setMessage] = useState('');
 
     const onSubmit = async (data) => {
+        console.log(data);
         setBackdropOpen(true);
         setLoading(true);
         const url = 'https://sama.eng.uwo.ca/api/submit/general';
