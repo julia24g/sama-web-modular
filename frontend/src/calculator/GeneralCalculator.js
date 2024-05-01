@@ -26,12 +26,13 @@ const GeneralCalculator = () => {
     const [backdropOpen, setBackdropOpen] = useState(false);
     const [message, setMessage] = useState('');
 
+    const apiBaseUrl = process.env.REACT_APP_API_URL;
+
     const onSubmit = async (data) => {
         console.log(data);
         setBackdropOpen(true);
         setLoading(true);
-        const url = 'https://sama.eng.uwo.ca/api/submit/general';
-        // const url = 'http://127.0.0.1:5000/submit/general' // comment out during deployment
+        const url = `${apiBaseUrl}/submit/general`;
 
         try {
             const response = await axios.post(url, data);
