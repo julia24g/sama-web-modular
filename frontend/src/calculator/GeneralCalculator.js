@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UtilityRateStructure from '../rate_structures/UtilityRateStructure';
 import TotalLoad from '../TotalLoad';
 import Zipcode from '../Zipcode';
@@ -21,10 +21,15 @@ const GeneralCalculator = () => {
             foundLoad: true
         }
     });
-    const { watch, formState: { isValid } } = methods;
+    const { watch, formState: { isValid, dirtyFields } } = methods;
     const [loading, setLoading] = useState(false);
     const [backdropOpen, setBackdropOpen] = useState(false);
     const [message, setMessage] = useState('');
+
+    const formData = watch();
+    useEffect(() => {
+        console.log("Form data changed:", formData);
+    }, [formData]);
 
     const onSubmit = async (data) => {
         console.log(data);
