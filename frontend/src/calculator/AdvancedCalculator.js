@@ -18,6 +18,8 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 
+const apiBaseUrl = process.env.REACT_APP_API_URL;
+
 const AdvancedCalculator = () => {
     const navigate = useNavigate();
     const methods = useForm({
@@ -89,8 +91,7 @@ const AdvancedCalculator = () => {
     const onSubmit = async (data) => {
         setBackdropOpen(true);
         setLoading(true);
-        const url = 'https://sama.eng.uwo.ca/api/submit/advanced';
-        // const url = 'http://127.0.0.1:5000/submit/advanced' // comment out during deployment
+        const url = `${apiBaseUrl}/submit/advanced`;
 
         try {
             const response = await axios.post(url, data);

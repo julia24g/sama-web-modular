@@ -24,3 +24,4 @@ yarn-error.log*
 
 .pyc
 Locations.db
+/deploy/build

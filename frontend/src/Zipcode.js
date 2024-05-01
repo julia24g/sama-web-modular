@@ -3,6 +3,8 @@ import { useFormContext, Controller } from 'react-hook-form';
 import { TextField } from '@mui/material';
 import axios from 'axios';
 
+const apiBaseUrl = process.env.REACT_APP_API_URL;
+
 const Zipcode = () => {
   const { watch, setValue, formState: { errors } } = useFormContext();
   const watchedZipcode = watch("zipcode");
@@ -12,8 +14,7 @@ const Zipcode = () => {
       const handleZipcodeRateMatching = async () => {
 
         try {
-          const { data } = await axios.post('https://sama.eng.uwo.ca/api/getUtilityRates', { zipcode: watchedZipcode }, { withCredentials: true });
-          // const { data } = await axios.post('http://127.0.0.1:5000/getUtilityRates', { zipcode: watchedZipcode }, { withCredentials: true }); // comment out during deployment
+          const { data } = await axios.post(`${apiBaseUrl}/getUtilityRates`, { zipcode: watchedZipcode }, { withCredentials: true });
 
           const residentialRate = data.outputs?.residential;
           if (residentialRate && residentialRate !== "no data") {
