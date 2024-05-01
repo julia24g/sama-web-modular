@@ -631,7 +631,7 @@ class InData:
     def setLeadAcidBat(self, x):
         self.Lead_acid = x
     
-    def setLithiumIonBat(self, x):
+    def setLithiumBat(self, x):
         self.Li_ion = x
     
     def setGrid(self, x):

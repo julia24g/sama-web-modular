@@ -152,7 +152,7 @@ def process_advanced_data(Input_Data, data):
     if data['netMetered']:
         Input_Data.setNEM(1)
     if not data['connectedToGrid']:
-        Input_Data.isGrid(0)
+        Input_Data.setGrid(0)
         Input_Data.setNEM(0)
 
     Input_Data.projectLifetime(data['n'])

@@ -24,8 +24,14 @@ const apiBaseUrl = process.env.REACT_APP_API_URL;
 
 const Results = () => {
     const location = useLocation();
-    const { results } = location.state || {}; // Default to an empty object if state is undefined
+    const { results } = location.state || {};
 
+    var economicalInNearFuture = false;
+    const notEconomical = results && results.NPC > 1.2 * results.NPC_Grid;
+    if (!notEconomical){
+        economicalInNearFuture = results && results.NPC <= 1.2 * results.NPC_Grid && results.NPC >= results.NPC_Grid;
+    }
+        
     const diagrams = [
         { img: `${apiBaseUrl}/images/Cash_Flow.png`, title: "Cash Flow" },
         { img: `${apiBaseUrl}/images/Daily-Monthly-Yearly_average_cost_of_energy_system.png`, title: "Daily Monthly Yearly Average Cost of Energy System" },
@@ -35,7 +41,7 @@ const Results = () => {
     return (
         <>
             <h1>Results</h1>
-            <ImageList sx={{ width: '100%', height: 'auto' }} cols={3} rowHeight={164}>
+            <ImageList sx={{ width: '100%', height: 'auto' }} cols={3} rowHeight={300}>
                 {diagrams.map((item) => (
                     <ImageListItem key={item.img}>
                         <img
@@ -48,6 +54,10 @@ const Results = () => {
                     </ImageListItem>
                 ))}
             </ImageList>
+
+            {notEconomical && <p>Grid defection is not economic; no grid defection is viable.</p>}
+            {economicalInNearFuture && <p>Grid defection can be economic in the near future; marginal grid defection can be viable.</p>}
+            {!economicalInNearFuture && <p>Grid defection is economic and full grid defection is viable.</p>}
 
             <Grid container rowSpacing={4.5} columnSpacing={2.75}>
                 {dataCards.map((card) => (
