@@ -155,7 +155,7 @@ export const advancedValidationSchema = baseValidationSchema.shape({
     C_B: positiveNumberValidation,
     R_B: positiveNumberValidation,
     // Battery Questions
-    isLithium: yup.boolean().required(),
+    isLithium: yup.boolean(),
     batteryOandM: positiveNumberValidation,
     batteryYearlyDegradation: positiveNumberValidation,
     SOC_min: positiveNumberValidation,

@@ -88,6 +88,11 @@ const AdvancedCalculator = () => {
         trigger(defaultValues);
     }, [n_ir_rate, e_ir_rate, methods.setValue, trigger]);
 
+    const formData = watch();
+    useEffect(() => {
+        console.log("Form data changed:", formData);
+    }, [formData]);
+
     const onSubmit = async (data) => {
         setBackdropOpen(true);
         setLoading(true);

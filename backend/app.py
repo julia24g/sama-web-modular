@@ -8,11 +8,11 @@ from flask_cors import CORS
 from sama_python.Input_Data import InData
 import sama_python.pso as pso
 import numpy as np
+from zipcode_mapping import zipcode_mapping
 
 load_dotenv()
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "https://sama.eng.uwo.ca"}}, supports_credentials=True)
-# CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True) # comment out on local production
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 limiter = Limiter(
     get_remote_address,
@@ -22,18 +22,18 @@ limiter = Limiter(
 )
 
 def get_coordinates(zipcode):
-    if zipcode == '12304':
-        return '42.7746899', '-73.8982971'
-    elif zipcode == '91977':
-        return '32.725963', '-116.9965517'
-    url = f'https://nominatim.openstreetmap.org/search?q={zipcode}&format=json&limit=1'
-    response = requests.get(url)
-    if not response.ok:
-        return None
-    coordinates = response.json()
-    if not coordinates:
-        return None
-    return coordinates[0]['lat'], coordinates[0]['lon']
+    if zipcode in zipcode_mapping:
+        return zipcode_mapping[zipcode]
+    else:
+        url = f'https://nominatim.openstreetmap.org/search?q={zipcode}&format=json&limit=1'
+        response = requests.get(url)
+        if not response.ok:
+            return None
+        coordinates = response.json()
+        if not coordinates:
+            return None
+        zipcode_mapping[zipcode] = coordinates[0]['lat'], coordinates[0]['lon']
+        return zipcode_mapping[zipcode]
 
 def fetch_utility_rates(latitude, longitude):
     api_key = os.getenv('NREL_API_KEY')

@@ -60,6 +60,6 @@ export const systemTypeValidation = yup.object().shape({
     dieselGenerator: yup.boolean(),
     batteryBank: yup.boolean(),
 }).test('at-least-one-true', 'At least one of the variables must be true', (values) => {
-    return values.variable1 || values.variable2 || values.variable3;
+    return values.photovoltaic || values.dieselGenerator || values.batteryBank;
 });
 

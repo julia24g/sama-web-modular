@@ -39,8 +39,8 @@ const Zipcode = () => {
       // };
       // handleZipcodeLoadMatching();
       handleZipcodeRateMatching();
-    } else {
-      setValue('flatRate', '');
+    // } else {
+    //   setValue('flatRate', '');
     }
   }, [watchedZipcode, setValue]);
 
