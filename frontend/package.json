@@ -25,7 +25,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "BUILD_PATH='./deploy/build' react-scripts build",
+    "start:dev": "env-cmd -f .env.development react-scripts start",
+    "build:dev": "env-cmd -f .env.development react-scripts build && mv build deploy",
+    "start:prod": "env-cmd -f .env.production react-scripts start",
+    "build:prod": "env-cmd -f .env.production react-scripts build && mv build deploy",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -47,6 +50,7 @@
     ]
   },
   "devDependencies": {
+    "env-cmd": "^10.1.0",
     "react-scripts": "5.0.1",
     "tailwindcss": "^3.4.3"
   }

@@ -12,7 +12,7 @@ import RateStructureFieldMap from './RateStructureFieldMap';
 
 const UtilityRateStructure = () => {
   const [selectedRateStructure, setSelectedRateStructure] = useState('');
-  const previousRateStructureRef = useRef('');
+  const previousRateStructureRef = useRef('Flat Rate');
   const { setValue, unregister } = useFormContext();
   const rateStructures = ["Flat Rate", "Seasonal Rate", "Monthly Rate", "Tiered Rate", "Seasonal Tiered Rate", "Monthly Tiered Rate", "Time of Use"];
 
