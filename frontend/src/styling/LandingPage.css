@@ -1,0 +1,33 @@
+.landingPage {
+    background: linear-gradient(180deg, #FFF 0%, #F1EAF9 100%);
+    overflow: hidden;
+    height: 100vh;
+    width: 100%;
+    margin-top: 1.5em;
+    padding: 50px;
+    overflow-x: hidden;
+}
+.landingPage .leftLandingPage{
+    padding-top: 8%;
+    padding-left: 7%;
+    padding-right: 1%;
+}
+.landingPageButton {
+    color: #000;
+    border-radius: 18px;
+    border: 1px solid;
+    border-color: #4F2683;
+    width: 100%;
+    padding: 1em;
+    text-decoration: none;
+    cursor: pointer;
+}
+.landingPageButton:hover {
+    background-color: #F1EAF9;
+}
+.rightLandingPage {
+    padding-top: 6%;
+    padding-right: 7%;
+    padding-left: 3%;
+    padding-bottom: 10%;
+}
