@@ -26,6 +26,33 @@ const Zipcode = () => {
           console.error('Failed to fetch utility rates:', error);
         }
       };
+      const handleTiltCalculation= async () => {
+        try {
+          const { data } = await axios.post(`${apiBaseUrl}/retrieveTilt`, { zipcode: watchedZipcode }, { withCredentials: true });
+          const tiltAngle = data.JAN;
+          if (tiltAngle) {
+            setValue('tilt', tiltAngle, { shouldTouch: true });
+          } else {
+            console.log('No results or invalid data found');
+          }
+        } catch (error) {
+          console.error('Failed to fetch tilt angle values:', error);
+        }
+      };
+      const handleAzimuthCalculation= async () => {
+        try {
+          const { data } = await axios.post(`${apiBaseUrl}/retrieveAzimuth`, { zipcode: watchedZipcode }, { withCredentials: true });
+          const azimuthAngle = data.azimuth;
+          console.log(data);
+          if (azimuthAngle) {
+            setValue('azimuth', azimuthAngle, { shouldTouch: true });
+          } else {
+            console.log('No results or invalid data found');
+          }
+        } catch (error) {
+          console.error('Failed to fetch azimuth angle values:', error);
+        }
+      };
 
       // const handleZipcodeLoadMatching = async () => {
       //   try {
@@ -39,6 +66,8 @@ const Zipcode = () => {
       // };
       // handleZipcodeLoadMatching();
       handleZipcodeRateMatching();
+      handleTiltCalculation();
+      handleAzimuthCalculation();
     // } else {
     //   setValue('flatRate', '');
     }

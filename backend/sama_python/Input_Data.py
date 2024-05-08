@@ -347,7 +347,7 @@ class InData:
         self.tilt = 34  # Tilt angle of PV modules
         self.soiling = 5  # self.soiling losses in percentage
 
-        self.G_type = 1 # Determine the way you want to input the Irradiance by choosing one of the numbers above
+        self.G_type = 3 # Determine the way you want to input the Irradiance by choosing one of the numbers above
         self.T_type = 1 # Determine the way you want to input the Temperature by choosing one of the numbers above
         self.WS_type = 4 # Determine the way you want to input the Wind speed by choosing one of the numbers above
         
@@ -430,6 +430,7 @@ class InData:
             self.path_G = 'content/Irradiance.csv'
             self.GData = pd.read_csv(self.path_G, header=None).values
             self.G = np.array(self.GData[:, 0])
+        
 
         # Temperature definitions
         # 1=Hourly Temperature based on the NSEDB file
@@ -710,3 +711,12 @@ class InData:
     def setREIncentivesRate(self, rate):
         self.RE_incentives_rate = rate
         self.RE_incentives = self.RE_incentives_rate / 100
+    
+    def setTilt(self, angle):
+        self.tilt = angle
+    
+    def setAzimuth(self, angle):
+        self.azimuth = angle
+    
+    def setPOA(self, poa):
+        self.G = np.array(poa)

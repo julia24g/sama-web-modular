@@ -53,7 +53,7 @@ class Swarm:
             particle_velocities = np.zeros((nPop, self.nVar))
 
             # Evaluate costs per initial particle
-            particle_costs = np.apply_along_axis(func1d=cost_function, axis=1, arr=particle_positions, input_object=self.In_Data)
+            particle_costs = np.apply_along_axis(func1d=cost_function, axis=1, arr=particle_positions, InData=self.In_Data)
             particle_personal_best_cost = deepcopy(particle_costs)
 
             # Determine global best

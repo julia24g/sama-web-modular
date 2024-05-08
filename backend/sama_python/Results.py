@@ -12,6 +12,7 @@ from sama_python.EMS import EMS
 
 #@jit(nopython=True, fastmath=True)
 def Gen_Results(X, InData):
+    WT=InData.WT
     daysInMonth = InData.daysInMonth
     Eload = InData.Eload
     Ppv_r = InData.Ppv_r
@@ -38,8 +39,8 @@ def Gen_Results(X, InData):
     v_cut_out = InData.v_cut_out
     v_rated = InData.v_rated
     R_B = InData.R_B
-    Q_lifetime = InData.Q_lifetime
-    ef_bat = InData.ef_bat
+    Q_lifetime_leadacid = InData.Q_lifetime_leadacid
+    ef_bat_leadacid = InData.ef_bat_leadacid
     b = InData.b
     C_fuel = InData.C_fuel
     R_DG = InData.R_DG
@@ -49,6 +50,7 @@ def Gen_Results(X, InData):
     SOC_min = InData.SOC_min
     SOC_initial = InData.SOC_initial
     n_I = InData.n_I
+    DC_AC_ratio=InData.DC_AC_ratio
     Grid = InData.Grid
     Cbuy = InData.Cbuy
     a = InData.a
@@ -56,11 +58,11 @@ def Gen_Results(X, InData):
     Pbuy_max = InData.Pbuy_max
     Psell_max = InData.Psell_max
     self_discharge_rate = InData.self_discharge_rate
-    alfa_battery = InData.alfa_battery
+    alfa_battery_leadacid = InData.alfa_battery_leadacid
     c = InData.c
     k = InData.k
-    Imax = InData.Imax
-    Vnom = InData.Vnom
+    Ich_max_leadacid = InData.Ich_max_leadacid
+    Vnom_leadacid = InData.Vnom_leadacid
     RE_incentives = InData.RE_incentives
     C_PV = InData.C_PV
     C_WT = InData.C_WT
@@ -105,12 +107,21 @@ def Gen_Results(X, InData):
     LPSP_max=InData.LPSP_max
     RE_min=InData.RE_min
     Budget=InData.Budget
-    WT=InData.WT
     Grid_escalation = InData.Grid_escalation
     C_fuel_adj = InData.C_fuel_adj
     Grid_Tax_amount = InData.Grid_Tax_amount
     Grid_credit = InData.Grid_credit
+    NEM = InData.NEM
     NEM_fee = InData.NEM_fee
+    Lead_acid = InData.Lead_acid
+    Li_ion = InData.Li_ion
+    Ich_max_Li_ion = InData.Ich_max_Li_ion
+    Idch_max_Li_ion = InData.Idch_max_Li_ion
+    Vnom_Li_ion = InData.Vnom_Li_ion
+    Cnom_Li = InData.Cnom_Li
+    ef_bat_Li = InData.ef_bat_Li
+    Q_lifetime_Li = InData.Q_lifetime_Li
+    alfa_battery_Li_ion = InData.alfa_battery_Li_ion
     
     if (len(X)) == 1:
         X = X[0]
@@ -144,7 +155,7 @@ def Gen_Results(X, InData):
 
     ## Energy Management
 
-    Pdg, Ens, Pbuy, Psell, Edump, Pch, Pdch, Eb= EMS(Ppv, Pwt, Eload, Cn_B, Nbat, Pn_DG, NT, SOC_max, SOC_min, SOC_initial, n_I, Grid, Cbuy, a, b, R_DG, TL_DG, MO_DG, Cn_I, LR_DG, C_fuel, Pbuy_max, Psell_max, R_B, Q_lifetime, self_discharge_rate, alfa_battery, c, k, Imax, Vnom, ef_bat)
+    Pdg, Ens, Pbuy, Psell, Edump, Pch, Pdch, Eb, Pdch_max, Pch_max= EMS(Lead_acid, Li_ion, Ich_max_Li_ion, Idch_max_Li_ion, Cnom_Li, Vnom_Li_ion, ef_bat_Li, Q_lifetime_Li, Ppv, alfa_battery_Li_ion, Pwt, Eload, Cn_B, Nbat, Pn_DG, NT, SOC_max, SOC_min, SOC_initial, n_I, Grid, Cbuy, a, b, R_DG, TL_DG, MO_DG, Cn_I, LR_DG, C_fuel, Pbuy_max, Psell_max, R_B, Q_lifetime_leadacid, self_discharge_rate, alfa_battery_leadacid, c, k, Ich_max_leadacid, Vnom_leadacid, ef_bat_leadacid)
 
     q = (a * Pdg + b * Pn_DG) * (Pdg > 0)  # Fuel consumption of a diesel generator
 
@@ -297,7 +308,7 @@ def Gen_Results(X, InData):
     LEM = (DG_Emissions + Grid_Emissions) / np.sum(Eload - Ens)  # Levelized Emissions(kg/kWh)
 
     Ebmin = SOC_min * Cn_B  # Battery minimum energy
-    Pb_min= (Eb - Ebmin) + Pdch  # Battery minimum power in t=2,3,...,NT
+    Pb_min= (Eb[1:8761] - Ebmin) + Pdch  # Battery minimum power in t=2,3,...,NT
     Ptot = (Ppv + Pwt + Pb_min) * n_I + Pdg + Grid * Pbuy_max  # total available power in system for each hour
     DE = np.maximum((Eload - Ptot), 0)  # power shortage in each hour
     LPSP = np.sum(Ens) / np.sum(Eload)
@@ -318,7 +329,7 @@ def Gen_Results(X, InData):
 
 
     # Extracting data for plotting
-    data = {'Ppv': Ppv, 'Pdg': Pdg, 'Pch': Pch, 'Pdch': Pdch, 'SOC': Eb / Cn_B if (Cn_B != 0 and not np.isnan(Cn_B)) else 0, 'Pbuy':Pbuy, 'Psell':Psell, 'Eload':Eload , 'P_RE_served':P_RE_served, 'Csell':Csell, 'Cbuy':Cbuy, 'Pserved':P_served_other_than_grid, 'POA':G, 'Temperature':T, "Wind Speed":Vw}
+    data = {'Ppv': Ppv, 'Pdg': Pdg, 'Pch': Pch, 'Pdch': Pdch, 'Pdch_max': Pdch_max, 'Pch_max': Pch_max, 'Eb': Eb[1:8761], 'SOC': Eb[1:8761] / Cn_B if (Cn_B != 0 and not np.isnan(Cn_B)) else 0, 'Pbuy':Pbuy, 'Psell':Psell, 'Eload':Eload,'ENS':Ens ,'Edump':Edump, 'P_RE_served':P_RE_served, 'Csell':Csell, 'Cbuy':Cbuy, 'Pserved':P_served_other_than_grid, 'POA':G, 'Temperature':T, "Wind Speed":Vw}
     df = pd.DataFrame(data)
     df.to_csv('sama_python/output/data/Outputforplotting.csv', index=False)
 
@@ -451,7 +462,7 @@ def Gen_Results(X, InData):
     # Make x-axis visible
     plt.axhline(0, color='black', linewidth=0.8)
     plt.tight_layout()
-    plt.savefig('sama_python/output/figs/Cash_Flow.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Cash Flow.png', dpi=300)
 
     #Grid purchase and sale figure
     if Grid == 0:
@@ -472,12 +483,12 @@ def Gen_Results(X, InData):
         ax.set_xticks(hours_per_month)
         ax.set_xticklabels(month_labels)
         # Set x-axis and y-axis to start from zero
-        ax.set_xlim([0, max(hours_per_month)])
+        ax.set_xlim([0, max(hours_per_month) + 744])
         ax.set_ylim([0, max(max(Pbuy), max(Psell))])
         # Adjust the margins and space between subplots
         plt.subplots_adjust(left=0.05, right=0.85, top=0.95, bottom=0.08)
         plt.tight_layout()
-        plt.savefig('sama_python/output/figs/Grid_Interconnection.png', dpi=300)
+        plt.savefig('sama_python/output/figs/Grid Interconnection.png', dpi=300)
 
     # Energy/Power Distribution figure
     fig, ax = plt.subplots(figsize=(30, 10))  # Increased figure size and resolution
@@ -497,12 +508,12 @@ def Gen_Results(X, InData):
     ax.set_xticks(hours_per_month)
     ax.set_xticklabels(month_labels)
     # Set x-axis to start from zero and y-axis according to data
-    ax.set_xlim([0, max(hours_per_month)])
+    ax.set_xlim([0, max(hours_per_month) + 744])
     ax.set_ylim([0, max(max(Eload - Ens), max(Pdg), max(Pch - Pdch), max(Ppv + Pwt))])
     # Adjust the margins and space between subplots
     plt.subplots_adjust(left=0.08, right=0.78, top=0.95, bottom=0.08)
     plt.tight_layout()
-    plt.savefig('sama_python/output/figs/Energy_Distribution.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Energy Distribution.png', dpi=300)
 
     # State of charge figure
     if Nbat > 0:
@@ -519,12 +530,12 @@ def Gen_Results(X, InData):
         ax.set_xticks(hours_per_month)
         ax.set_xticklabels(month_labels)
         # Set x-axis and y-axis to start from zero
-        ax.set_xlim([0, max(hours_per_month)])
+        ax.set_xlim([0, max(hours_per_month) + 744])
         ax.set_ylim([0, max(Eb / Cn_B)])
         # Adjust the margins and space between subplots
         plt.subplots_adjust(left=0.08, right=0.95, top=0.95, bottom=0.08)
         plt.tight_layout()
-        plt.savefig('sama_python/output/figs/Battery_State_of_Charge.png', dpi=300)
+        plt.savefig('sama_python/output/figs/Battery State of Charge.png', dpi=300)
 
     # Plot results for one specific day
     # Function to filter out data series with sum less than 0.1 in the specified range
@@ -572,7 +583,7 @@ def Gen_Results(X, InData):
         axs[j].axis('off')
 
     plt.tight_layout(rect=[0, 0, 1, 0.96])  # Adjust the layout to make space for the title
-    plt.savefig('sama_python/output/figs/Specific_day_results.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Specific day results.png', dpi=300)
 
     # Utility figures
 
@@ -659,7 +670,7 @@ def Gen_Results(X, InData):
     cbar_total.ax.tick_params(labelsize=22)
     cbar_total.ax.set_title('Monthly average cost of energy system [$]', fontsize=32, rotation=270, x=3.5, y=0.16)
     fig.subplots_adjust(left=0.075, top=0.98, bottom=0.075)
-    plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly_average_cost_of_energy_system.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly average cost of energy system.png', dpi=300)
 
     # Calculate average hourly grid cost for each day in each month
     Gh_c = np.zeros((12, 31))
@@ -727,7 +738,7 @@ def Gen_Results(X, InData):
     cbar_total.ax.tick_params(labelsize=22)
     cbar_total.ax.set_title('Monthly average hourly cost of connecting to the grid [$/kWh]', fontsize=32, rotation=270, x=3.85, y=0.04)
     fig.subplots_adjust(left=0.075, right=0.9, top=0.98, bottom=0.075)
-    plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly_average_hourly_cost_of_connecting_to_the_grid.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly average hourly cost of connecting to the grid.png', dpi=300)
 
     # Calculate average only grid connected system cost for each day/month/year
     AG_c = np.round(LCOE_Grid * A_l, 2)
@@ -787,7 +798,7 @@ def Gen_Results(X, InData):
     cbar_total.ax.tick_params(labelsize=22)
     cbar_total.ax.set_title('Monthly average cost of only grid-connected system [$]', fontsize=32, rotation=270, x=3.5, y=0.09)
     fig.subplots_adjust(left=0.075, top=0.98, bottom=0.075)
-    plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly_average_cost_of_only_grid-connected_system.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly average cost of only grid-connected system.png', dpi=300)
 
     # Hourly Grid electricity price color bar map
     # Assuming Cbuy is a 1D numpy array
@@ -808,7 +819,7 @@ def Gen_Results(X, InData):
     month_labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     ax.set_xticks(hours_per_month)
     ax.set_xticklabels(month_labels)
-    plt.savefig('sama_python/output/figs/Grid_Hourly_Cost.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Grid Hourly Cost.png', dpi=300)
 
     # Calculate average money earned by selling electricity to grid in each day/month/year
     # Calculate average hourly grid sell for each day in each month
@@ -890,7 +901,7 @@ def Gen_Results(X, InData):
         cbar_total.ax.tick_params(labelsize=22)
         cbar_total.ax.set_title('Monthly average Sell earning to the Grid [$]', fontsize=32, rotation=270, x=3.5, y=0.225)
         fig.subplots_adjust(left=0.075, top=0.98, bottom=0.075)
-        plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly_average_earning_Sell_to_the_Grid.png', dpi=300)
-    
+        plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly average earning Sell to the Grid.png', dpi=300)
+
     matplotlib.pyplot.close('all')
     return answer

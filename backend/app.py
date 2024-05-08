@@ -9,6 +9,9 @@ from sama_python.Input_Data import InData
 import sama_python.pso as pso
 import numpy as np
 from zipcode_mapping import zipcode_mapping
+import pvlib
+import pandas as pd
+from datetime import datetime
 
 load_dotenv()
 app = Flask(__name__)
@@ -68,6 +71,47 @@ def tou_hour_array_conversion(hour_array):
             hours.append(i)
     return hours
 
+@app.route("/retrieveTilt", methods=['POST'])
+def retrieve_tilt():
+    data = request.json
+    zipcode = data['zipcode']
+    coordinates = get_coordinates(zipcode)
+    if not coordinates:
+        return jsonify({'error': 'Failed to retrieve coordinates'})
+    latitude, longitude = coordinates
+    nasa_power_url = f'https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=SI_EF_TILTED_SURFACE&community=RE&longitude={longitude}&latitude={latitude}&format=JSON'
+    response = requests.get(nasa_power_url)
+    if not response.ok:
+        return jsonify({'error': 'Failed to fetch NASA power data'})
+    return response.json()['properties']['parameter']['SI_EF_TILTED_SURFACE_LATITUDE']
+
+@app.route("/retrieveAzimuth", methods=['POST'])
+def retrieve_azimuth():
+    data = request.json
+    zipcode = data['zipcode']
+    coordinates = get_coordinates(zipcode)
+    if not coordinates:
+        return jsonify({'error': 'Failed to retrieve coordinates'})
+    
+    try:
+        latitude, longitude = map(float, coordinates)
+        current_time_utc = pd.Timestamp(datetime.utcnow(), tz='UTC')
+        location = pvlib.location.Location(latitude, longitude)
+        solar_position = location.get_solarposition(current_time_utc)
+        azimuth_angle = round(solar_position['azimuth'].iloc[0], 2)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+    return jsonify({'azimuth': azimuth_angle})
+
+def retrieve_PVWatts_data(longitude, latitude, tilt, azimuth):
+    api_key = os.getenv('NREL_API_KEY')
+    pvwatts_url = f'https://developer.nrel.gov/api/pvwatts/v8.json?api_key={api_key}&lat={latitude}&lon={longitude}&system_capacity=1&azimuth={azimuth}&tilt={tilt}&array_type=1&module_type=0&losses=0&timeframe=hourly'
+    response = requests.get(pvwatts_url)
+    if not response.ok:
+        return jsonify({'error': 'Failed to fetch PVWatts data'})
+    return response.json()["outputs"].get("poa")
+
 def process_general_data(data):
     loadType = data['isAnnual']  
     rateStructureType = data['rateStructure']
@@ -118,6 +162,16 @@ def process_general_data(data):
         midHours = np.array([tou_hour_array_conversion(data['summerMidPeakHours']), tou_hour_array_conversion(data['winterMidPeakHours'])])
         Input_Data.setTimeOfUseRate(onPrice, midPrice, offPrice, onHours, midHours)
     
+    Input_Data.setTilt(data['tilt'])
+    Input_Data.setAzimuth(data['azimuth'])
+    
+    zipcode = data['zipcode']
+    coordinates = get_coordinates(zipcode)
+    if not coordinates:
+        return jsonify({'error': 'Failed to retrieve coordinates'})
+    latitude, longitude = coordinates
+    Input_Data.setPOA(retrieve_PVWatts_data(longitude, latitude, data['tilt'], data['azimuth']))
+    
     Input_Data.completeInitialization()
 
     return Input_Data
@@ -139,6 +193,7 @@ def process_advanced_data(Input_Data, data):
         Input_Data.setPVReplacementCost(data['PVReplacementCost'])
         Input_Data.setPVOandM(data['PVOandM'])
         Input_Data.setPVLifetime(data['PVLifetime'])
+        
     else:
         Input_Data.setPV(0)
     if data['dieselGenerator']:
