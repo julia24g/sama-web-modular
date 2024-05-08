@@ -41,15 +41,20 @@ const Results = () => {
     return (
         <>
             <h1>Results</h1>
-            <ImageList sx={{ width: '100%', height: 'auto' }} cols={3} rowHeight={300}>
+            <ImageList sx={{ width: '100%', height: 'auto%' }} cols={2} gap={16}>
                 {diagrams.map((item) => (
                     <ImageListItem key={item.img}>
                         <img
-                            srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                            src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
+                            srcSet={`${item.img}?w=300&h=300&fit=contain&auto=format&dpr=2 2x`}
+                            src={`${item.img}?w=300&h=300&fit=contain&auto=format`}
                             alt={item.title}
                             loading="lazy"
-                            style={{ width: '100%', height: 'auto' }}
+                            style={{
+                                width: '100%',
+                                height: 'auto',
+                                maxHeight: '400px',
+                                objectFit: 'contain',
+                            }}
                         />
                     </ImageListItem>
                 ))}
@@ -57,7 +62,7 @@ const Results = () => {
 
             {notEconomical && <p>Grid defection is not economic; no grid defection is viable.</p>}
             {economicalInNearFuture && <p>Grid defection can be economic in the near future; marginal grid defection can be viable.</p>}
-            {!economicalInNearFuture && <p>Grid defection is economic and full grid defection is viable.</p>}
+            {!notEconomical && !economicalInNearFuture && <p>Grid defection is economic and full grid defection is viable.</p>}
 
             <Grid container rowSpacing={4.5} columnSpacing={2.75}>
                 {dataCards.map((card) => (

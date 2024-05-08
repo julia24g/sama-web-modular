@@ -134,7 +134,9 @@ export const baseValidationSchema = yup.object({
     summerOnTimeRange: yup.array().of(timeRangeValidation),
     summerMidTimeRange: yup.array().of(timeRangeValidation),
     winterOnTimeRange: yup.array().of(timeRangeValidation),
-    winterMidTimeRange: yup.array().of(timeRangeValidation)
+    winterMidTimeRange: yup.array().of(timeRangeValidation),
+    tilt: yup.number().required(),
+    azimuth: yup.number().required()
 });
 
 export const advancedValidationSchema = baseValidationSchema.shape({
@@ -154,6 +156,8 @@ export const advancedValidationSchema = baseValidationSchema.shape({
     PVLifetime: wholeNumberValidation,
     C_B: positiveNumberValidation,
     R_B: positiveNumberValidation,
+    tilt: yup.number().required(),
+    azimuth: yup.number().required(),
     // Battery Questions
     isLithium: yup.boolean(),
     batteryOandM: positiveNumberValidation,
