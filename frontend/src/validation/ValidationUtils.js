@@ -1,7 +1,25 @@
 import * as yup from 'yup';
+import axios from 'axios';
 
-export const zipcodeValidation = yup.string()
+const apiBaseUrl = process.env.REACT_APP_API_URL;
+
+export const zipcodeValidation = yup
+    .string()
     .matches(/(^\d{5}$)|(^\d{5}-\d{4}$)/, 'Must be a 5-digit zipcode')
+    .test('is-valid-zipcode', 'Invalid zipcode', async (value) => {
+        if (!value || value.length !== 5) return false;
+        try {
+            const { data } = await axios.post(`${apiBaseUrl}/validate_zipcode`, { zipcode: value });
+            if (data.valid) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.error('ZIP code validation error:', error);
+            return false;
+        }
+    })
     .required('This field is required');
 
 export const createRateValidation = (rateStructureName) => {

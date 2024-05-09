@@ -24,21 +24,32 @@ limiter = Limiter(
     storage_uri="memory://",
 )
 
-def get_coordinates(zipcode):
-    if zipcode in zipcode_mapping:
-        return zipcode_mapping[zipcode]
-    else:
-        url = f'https://nominatim.openstreetmap.org/search?q={zipcode}&format=json&limit=1'
-        response = requests.get(url)
-        if not response.ok:
-            return None
-        coordinates = response.json()
-        if not coordinates:
-            return None
-        zipcode_mapping[zipcode] = coordinates[0]['lat'], coordinates[0]['lon']
-        return zipcode_mapping[zipcode]
+# @app.route('/getCoordinates', methods=['POST'])
+# def get_coordinates():
+#     data = request.json
+#     zipcode = data.get('zipcode')
+#     url = f'https://nominatim.openstreetmap.org/search?q={zipcode}&format=json&limit=1'
+#     print(url)
+#     response = requests.get(url)
+#     if not response.ok or not response.json():
+#         return jsonify({"error": "Unable to fetch coordinates"}), 500
 
-def fetch_utility_rates(latitude, longitude):
+#     coordinates = response.json()
+#     if not coordinates:
+#         return jsonify({"error": "Coordinates not found"}), 404
+
+#     lat_lon = {
+#         "latitude": coordinates[0]['lat'],
+#         "longitude": coordinates[0]['lon']
+#     }
+#     return jsonify(lat_lon), 200
+
+@app.route("/getUtilityRates", methods=['POST'])
+@limiter.limit("1000/hour")
+def get_utility_rates_endpoint():
+    data = request.json
+    latitude = data.get('latitude')
+    longitude = data.get('longitude')
     api_key = os.getenv('NREL_API_KEY')
     utility_url = f'https://developer.nrel.gov/api/utility_rates/v3.json?api_key={api_key}&lat={latitude}&lon={longitude}'
     utility_response = requests.get(utility_url)
@@ -46,23 +57,27 @@ def fetch_utility_rates(latitude, longitude):
         return None
     return utility_response.json()
 
-@app.route("/status", methods=['GET'])
-def get_status():
-    return jsonify({'status': 'ok'})
-
-@app.route("/getUtilityRates", methods=['POST'])
-@limiter.limit("1000/hour")
-def get_utility_rates_endpoint():
+@app.route('/validate_zipcode', methods=['POST'])
+def validate_zipcode():
+    api_key = os.getenv('ZIPCODE_STACK_API_KEY')
     data = request.json
-    zipcode = data['zipcode']
-    coordinates = get_coordinates(zipcode)
-    if not coordinates:
-        return jsonify({'error': 'Failed to retrieve coordinates'})
-    latitude, longitude = coordinates
-    utility_data = fetch_utility_rates(latitude, longitude)
-    if not utility_data:
-        return jsonify({'error': 'Failed to fetch utility rates'})
-    return jsonify(utility_data)
+    zipcode = data.get('zipcode')
+    url = f"https://api.zipcodestack.com/v1/search?codes={zipcode}&country=us&apikey={api_key}"
+    response = requests.get(url)
+
+    if response.status_code != 200:
+        return jsonify({"error": "Failed to validate ZIP code"}), 500
+
+    results = response.json().get("results", {})
+    if not results:
+        return jsonify({"valid": False, "latitude": None, "longitude": None})
+
+    location = results.get(zipcode, [])[0]
+    return jsonify({
+        "valid": True,
+        "latitude": location['latitude'],
+        "longitude": location['longitude']
+    })
 
 def tou_hour_array_conversion(hour_array):
     hours = list()
@@ -74,11 +89,8 @@ def tou_hour_array_conversion(hour_array):
 @app.route("/retrieveTilt", methods=['POST'])
 def retrieve_tilt():
     data = request.json
-    zipcode = data['zipcode']
-    coordinates = get_coordinates(zipcode)
-    if not coordinates:
-        return jsonify({'error': 'Failed to retrieve coordinates'})
-    latitude, longitude = coordinates
+    latitude = data.get('latitude')
+    longitude = data.get('longitude')
     nasa_power_url = f'https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=SI_EF_TILTED_SURFACE&community=RE&longitude={longitude}&latitude={latitude}&format=JSON'
     response = requests.get(nasa_power_url)
     if not response.ok:
@@ -88,13 +100,9 @@ def retrieve_tilt():
 @app.route("/retrieveAzimuth", methods=['POST'])
 def retrieve_azimuth():
     data = request.json
-    zipcode = data['zipcode']
-    coordinates = get_coordinates(zipcode)
-    if not coordinates:
-        return jsonify({'error': 'Failed to retrieve coordinates'})
-    
+    latitude = data.get('latitude')
+    longitude = data.get('longitude')
     try:
-        latitude, longitude = map(float, coordinates)
         current_time_utc = pd.Timestamp(datetime.utcnow(), tz='UTC')
         location = pvlib.location.Location(latitude, longitude)
         solar_position = location.get_solarposition(current_time_utc)
@@ -104,7 +112,7 @@ def retrieve_azimuth():
 
     return jsonify({'azimuth': azimuth_angle})
 
-def retrieve_PVWatts_data(longitude, latitude, tilt, azimuth):
+def retrieve_PVWatts_data(latitude, longitude, tilt, azimuth):
     api_key = os.getenv('NREL_API_KEY')
     pvwatts_url = f'https://developer.nrel.gov/api/pvwatts/v8.json?api_key={api_key}&lat={latitude}&lon={longitude}&system_capacity=1&azimuth={azimuth}&tilt={tilt}&array_type=1&module_type=0&losses=0&timeframe=hourly'
     response = requests.get(pvwatts_url)
@@ -170,7 +178,10 @@ def process_general_data(data):
     if not coordinates:
         return jsonify({'error': 'Failed to retrieve coordinates'})
     latitude, longitude = coordinates
-    Input_Data.setPOA(retrieve_PVWatts_data(longitude, latitude, data['tilt'], data['azimuth']))
+    poa = retrieve_PVWatts_data(latitude, longitude, data['tilt'], data['azimuth'])
+    if poa is None:
+        return jsonify({'error': 'Failed to retrieve POA data'})
+    Input_Data.setPOA(poa)
     
     Input_Data.completeInitialization()
 

@@ -6,72 +6,80 @@ import axios from 'axios';
 const apiBaseUrl = process.env.REACT_APP_API_URL;
 
 const Zipcode = () => {
-  const { watch, setValue, formState: { errors } } = useFormContext();
+  const { watch, setValue, formState: { errors }, trigger, getValues } = useFormContext();
   const watchedZipcode = watch("zipcode");
 
   useEffect(() => {
+    const validateAndRun = async () => {
+      const isValid = await trigger("zipcode");
+      if (isValid) {
+        const { zipcode } = getValues();
+        await fetchCoordinates(zipcode);
+        const { latitude, longitude } = getValues();
+        await fetchUtilityRates(latitude, longitude);
+        await fetchTilt(latitude, longitude);
+        await fetchAzimuth(latitude, longitude);
+      }
+    };
+
     if (watchedZipcode && watchedZipcode.length === 5) {
-      const handleZipcodeRateMatching = async () => {
-
-        try {
-          const { data } = await axios.post(`${apiBaseUrl}/getUtilityRates`, { zipcode: watchedZipcode }, { withCredentials: true });
-
-          const residentialRate = data.outputs?.residential;
-          if (residentialRate && residentialRate !== "no data") {
-            setValue('flatRate', residentialRate, { shouldTouch: true });
-          } else {
-            console.log('No results or invalid data found');
-          }
-        } catch (error) {
-          console.error('Failed to fetch utility rates:', error);
-        }
-      };
-      const handleTiltCalculation= async () => {
-        try {
-          const { data } = await axios.post(`${apiBaseUrl}/retrieveTilt`, { zipcode: watchedZipcode }, { withCredentials: true });
-          const tiltAngle = data.JAN;
-          if (tiltAngle) {
-            setValue('tilt', tiltAngle, { shouldTouch: true });
-          } else {
-            console.log('No results or invalid data found');
-          }
-        } catch (error) {
-          console.error('Failed to fetch tilt angle values:', error);
-        }
-      };
-      const handleAzimuthCalculation= async () => {
-        try {
-          const { data } = await axios.post(`${apiBaseUrl}/retrieveAzimuth`, { zipcode: watchedZipcode }, { withCredentials: true });
-          const azimuthAngle = data.azimuth;
-          console.log(data);
-          if (azimuthAngle) {
-            setValue('azimuth', azimuthAngle, { shouldTouch: true });
-          } else {
-            console.log('No results or invalid data found');
-          }
-        } catch (error) {
-          console.error('Failed to fetch azimuth angle values:', error);
-        }
-      };
-
-      // const handleZipcodeLoadMatching = async () => {
-      //   try {
-      //     // get state and city
-      //     // if not valid or not found file, set load_type to 8
-      //     setValue("foundLoad", false);
-
-      //   } catch (error) {
-      //     console.error('Failed to check zipcode state and city: ', error);
-      //   }
-      // };
-      // handleZipcodeLoadMatching();
-      handleZipcodeRateMatching();
-      handleTiltCalculation();
-      handleAzimuthCalculation();
-    // } else {
-    //   setValue('flatRate', '');
+      validateAndRun();
     }
-  }, [watchedZipcode, setValue]);
+  }, [watchedZipcode, setValue, trigger, getValues]);
+
+  const fetchCoordinates = async (zipcode) => {
+    try {
+      const { data } = await axios.post(`${apiBaseUrl}/validate_zipcode`, { zipcode }, { withCredentials: true });
+      const { latitude, longitude, valid } = data;
+      setValue('latitude', latitude);
+      setValue('longitude', longitude);
+    } catch (error) {
+      console.error('Failed to fetch coordinates:', error);
+    }
+  }
+
+  const fetchUtilityRates = async (latitude, longitude) => {
+    try {
+      const { data } = await axios.post(`${apiBaseUrl}/getUtilityRates`, { latitude, longitude }, { withCredentials: true });
+      const residentialRate = data.outputs?.residential;
+      if (residentialRate && residentialRate !== "no data") {
+        setValue('flatRate', residentialRate, { shouldTouch: true });
+      } else {
+        setValue('flatRate', '', { shouldTouch: true });
+        console.log('No results or invalid data found');
+      }
+    } catch (error) {
+      console.error('Failed to fetch utility rates:', error);
+    }
+  };
+
+  const fetchTilt = async (latitude, longitude) => {
+    try {
+      const { data } = await axios.post(`${apiBaseUrl}/retrieveTilt`, { latitude, longitude }, { withCredentials: true });
+      const tiltAngle = data.JAN;
+      if (tiltAngle) {
+        setValue('tilt', tiltAngle, { shouldTouch: true });
+      } else {
+        console.log('No results or invalid data found');
+      }
+    } catch (error) {
+      console.error('Failed to fetch tilt angle values:', error);
+    }
+  };
+
+  const fetchAzimuth = async (latitude, longitude) => {
+    try {
+      const { data } = await axios.post(`${apiBaseUrl}/retrieveAzimuth`, { latitude, longitude }, { withCredentials: true });
+      const azimuthAngle = data.azimuth;
+      if (azimuthAngle) {
+        setValue('azimuth', azimuthAngle, { shouldTouch: true });
+      } else {
+        console.log('No results or invalid data found');
+      }
+    } catch (error) {
+      console.error('Failed to fetch azimuth angle values:', error);
+    }
+  };
 
   return (
     <div className="form">
