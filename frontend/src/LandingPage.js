@@ -14,7 +14,7 @@ const LandingPage = () => {
                     Welcome to SAMA
                 </Typography>
                 <Typography variant="h6" paragraph>
-                    SAMA (Solar Alone Multi-objective Advisor) is the first-ever publicly available tool for determining the viability of transitioning off-grid.
+                    SAMA (Solar Alone Multi-objective Advisor) is the first-ever publicly available tool for determining the viability of transitioning off-grid. The open source program determines if going off-grid with a combination of solar, batteries and a generator is right for you.
                 </Typography>
                 <Typography color="primary" variant="h6" paragraph>
                     <b>Please select which calculator you would like to use.</b>

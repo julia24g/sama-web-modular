@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
+import StateRegion from '../state_region/StateRegion';
 
 const GeneralCalculator = () => {
     const navigate = useNavigate();
@@ -21,11 +22,11 @@ const GeneralCalculator = () => {
             foundLoad: true
         }
     });
-    const { watch, formState: { isValid, dirtyFields } } = methods;
+    const { watch, formState: { isValid } } = methods;
     const [loading, setLoading] = useState(false);
     const [backdropOpen, setBackdropOpen] = useState(false);
     const [message, setMessage] = useState('');
-
+    
     const formData = watch();
     useEffect(() => {
         console.log("Form data changed:", formData);
@@ -59,7 +60,9 @@ const GeneralCalculator = () => {
     return (
         <FormProvider {...methods}>
             <form className="form" onSubmit={handleSubmit(onSubmit)}>
+                <p><i>Default values are provided for some questions and assumptions are listed <a href="/faq">here</a>, but please review and adjust as necessary for more accurate results.</i></p>
                 <Zipcode />
+                {/* <StateRegion /> */}
                 {/* {!watchedFoundLoad && <TotalLoad />} */}
                 <TotalLoad />
                 <UtilityRateStructure />

@@ -10,12 +10,56 @@ const FAQ = () => {
 
     const questionsAndAnswers = [
         {
-            question: "What is SAMA?",
-            answer: "SAMA (Solar Alone Multi-objective Advisor) is the first-ever publicly available tool for determining the viability of transitioning off-grid."
+            question: "What are the default values in the General Calculator?",
+            answer: "add table"
         },
         {
-            question: "What is the difference between the General and Advanced calculators?",
-            answer: "The General calculator is ideal for quick grid defection estimates or for newcomers to energy systems. The Advanced calculator is tailored for researchers seeking precision with detailed input options."
+            question: "What are the default values in the Advanced Calculator?",
+            answer: "add table"
+        },
+        {
+            question: "Where can I get the source code for SAMA?",
+            answer: (
+                <Typography>
+                    The source code for SAMA is available on GitHub at {' '}
+                    <a href="https://osf.io/geqwf/" target="_blank" rel="noopener noreferrer">
+                        https://osf.io/geqwf/
+                    </a>.
+                </Typography>
+            )
+        },
+        {
+            question: "How can the Python version be used?",
+            answer: (
+                <Typography>
+                    The methods for running the Python version can be found {' '}
+                    <a href="https://www.appropedia.org/Solar_Alone_Multi-objective_Advisor_(SAMA)" target="_blank" rel="noopener noreferrer">
+                        here
+                    </a>.
+                </Typography>
+            )
+        },
+        {
+            question: "Where is the SAMA user manual?",
+            answer: (
+                <Typography>
+                    The user manual for SAMA can be found at {' '}
+                    <a href="https://osf.io/7ztae" target="_blank" rel="noopener noreferrer">
+                        https://osf.io/7ztae
+                    </a>.
+                </Typography>
+            )
+        },
+        {
+            question: "How can I lower the cost of the PV system?",
+            answer: (
+                <Typography>
+                    Do some of the work yourself. If you do a DIY PV system, you can cut the cost in half. See{' '}
+                    <a href="https://www.appropedia.org/To_Catch_the_Sun" target="_blank" rel="noopener noreferrer">
+                        To Catch the Sun
+                    </a>, a free book on exactly how to do it.
+                </Typography>
+            )
         }
     ]
 

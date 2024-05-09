@@ -115,14 +115,15 @@ const AdvancedCalculator = () => {
     return (
         <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
+                <p><i>Default values are provided for some questions, but please review and adjust as necessary for more accurate results.</i></p>
                 <Zipcode />
                 {/* {!watchedFoundLoad && <TotalLoad />} */}
                 <TotalLoad />
                 <UtilityRateStructure />
                 <p>Is your system connected to the grid?</p>
-                <SelectOne name="connectedToGrid" label1="Yes" label2="No"/>
+                <SelectOne name="connectedToGrid" label1="Yes" label2="No" />
                 <p>Is your system net metered?</p>
-                <SelectOne name="netMetered" label1="Yes" label2="No"/>
+                <SelectOne name="netMetered" label1="Yes" label2="No" />
                 <p>What is your project's lifetime in years?</p>
                 <StandardField name='n' label="Project Lifetime" defaultValue={25} unit='' />
                 <p>What is the maximum loss of power supply probability?</p>
@@ -143,7 +144,7 @@ const AdvancedCalculator = () => {
                 {isDieselGenerator && <DieselGeneratorPage />}
                 {isBatteryBank && <BatteryBankPage />}
                 <SubmitButton loading={loading} isValid={isValid} />
-                <Backdrop sx={{ color:"primary", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={backdropOpen}>
+                <Backdrop sx={{ color: "primary", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={backdropOpen}>
                     <CircularProgress />
                     <Typography variant="body1">It can take up to 1 minute to calculate your results.</Typography>
                 </Backdrop>
