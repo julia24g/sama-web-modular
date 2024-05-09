@@ -174,10 +174,8 @@ def process_general_data(data):
     Input_Data.setAzimuth(data['azimuth'])
     
     zipcode = data['zipcode']
-    coordinates = get_coordinates(zipcode)
-    if not coordinates:
-        return jsonify({'error': 'Failed to retrieve coordinates'})
-    latitude, longitude = coordinates
+    latitude = data['latitude']
+    longitude = data['longitude']
     poa = retrieve_PVWatts_data(latitude, longitude, data['tilt'], data['azimuth'])
     if poa is None:
         return jsonify({'error': 'Failed to retrieve POA data'})
