@@ -1,6 +1,4 @@
 from flask import Flask, jsonify, request, send_from_directory
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 import requests
 from dotenv import load_dotenv
 import os
@@ -16,13 +14,6 @@ from datetime import datetime
 load_dotenv()
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
-
-limiter = Limiter(
-    get_remote_address,
-    app=app,
-    default_limits=["200 per day", "100 per hour"],
-    storage_uri="memory://",
-)
 
 # @app.route('/getCoordinates', methods=['POST'])
 # def get_coordinates():
@@ -45,7 +36,6 @@ limiter = Limiter(
 #     return jsonify(lat_lon), 200
 
 @app.route("/getUtilityRates", methods=['POST'])
-@limiter.limit("1000/hour")
 def get_utility_rates_endpoint():
     data = request.json
     latitude = data.get('latitude')
