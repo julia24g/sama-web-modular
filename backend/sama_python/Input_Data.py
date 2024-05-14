@@ -93,7 +93,7 @@ class InData:
         # Type of system (1: included, 0=not included)
         self.PV = 1
         self.WT = 0
-        self.DG = 1
+        self.DG = 0
         self.Bat = 1
         self.Lead_acid = 0
         self.Li_ion = 1
@@ -115,16 +115,10 @@ class InData:
         self.RE_min = self.RE_min_rate / 100
 
         self.EM = 0  # 0: LCOE, 1:LCOE+LEM
-
-        # Rated capacity
-        self.Ppv_r = 0.5  # PV module rated power (kW)
-        self.Pwt_r = 1  # WT rated power (kW)
-        self.Cbt_r = 1  # Battery rated Capacity (kWh)
-        self.Cdg_r = 0.5  # DG rated Capacity (kW)
-
+        
         # PV
         self.fpv = 0.9       # the PV derating factor [%]
-        self.Tcof = -0.003        # temperature coefficient [%/C]
+        self.Tcof = -0.3        # temperature coefficient [%/C]
         self.Tref = 25       # temperature at standard test condition
         self.Tc_noct = 45    # Nominal operating cell temperature
         self.Ta_noct = 20
@@ -136,7 +130,7 @@ class InData:
         self.RT_PV = ceil(self.n/self.L_PV) - 1   # Replacement time
 
         # Inverter
-        self.n_I = 0.96      # Efficiency
+        self.n_I = 1      # Efficiency
         self.L_I = 25        # Life time (year)
         self.DC_AC_ratio = 1.99     # Maximum acceptable DC to AC ratio
         self.RT_I = ceil(self.n/self.L_I) - 1    # Replacement time
@@ -166,17 +160,10 @@ class InData:
         self.SO2 = 20
 
         # Battery
-        self.SOC_min = 0.2
+        self.SOC_min = 0.05
         self.SOC_max = 1
-        self.SOC_initial = 0.5
-        self.Q_lifetime = 8000       # Throughout in kWh
+        self.SOC_initial = 1
         self.self_discharge_rate = 0     # Hourly self-discharge rate
-        self.alfa_battery = 1       # is the storage's maximum charge rate [A/Ah]
-        self.c = 0.403              # the storage capacity ratio [unitless]
-        self.k = 0.827              # the storage rate constant [h-1]
-        self.Imax = 16.7            # the storage's maximum charge current [A]
-        self.Vnom = 12              # the storage's nominal voltage [V]
-        self.ef_bat = 0.8           # Round trip efficiency
         self.L_B = 7.5              # Life time (year)
         self.RT_B = ceil(self.n/self.L_B) - 1    # Replacement time
         
@@ -216,11 +203,20 @@ class InData:
         self.Tax_rate = 0                 # Equipment sale tax Percentage
         self.System_Tax = self.Tax_rate / 100
 
-        self.RE_incentives_rate = 30  # Federal tax credit percentage
+        self.RE_incentives_rate = 0  # Federal tax credit percentage
         self.RE_incentives = self.RE_incentives_rate / 100
 
+        # Rated capacity
+        self.Ppv_r = 0.5  # PV module rated power (kW)
+        self.Pwt_r = 1  # WT rated power (kW)
+        if self.Lead_acid == 1:
+            self.Cbt_r = (self.Vnom_leadacid * self.Cnom_Leadacid) / 1000  # Battery rated Capacity (kWh)
+        if self.Li_ion == 1:
+            self.Cbt_r = (self.Vnom_Li_ion * self.Cnom_Li) / 1000 
+        self.Cdg_r = 0.5  # DG rated Capacity (kW)
+
         # Pricing method
-        self.Pricing_method = 1  # 1=Top down 2=bottom up
+        self.Pricing_method = 2  # 1=Top down 2=bottom up
 
         # Top-down price definition
         if self.Pricing_method == 1:
@@ -247,7 +243,7 @@ class InData:
             self.R_DG = 240.45 * (1 + self.r_Sales_tax)       # Replacement Cost ($/kW)
             self.MO_DG = 0.064 * (1 + self.r_Sales_tax)     # O&M+ running cost ($/op.h)
             self.C_fuel = 1.39 * (1 + self.r_Sales_tax)             # Fuel Cost ($/L)
-            self.C_fuel_adj_rate = 2                                # DG fuel cost yearly esclation rate (if positive) and reduction rate (if negative)
+            self.C_fuel_adj_rate = 0                                # DG fuel cost yearly esclation rate (if positive) and reduction rate (if negative) ########### this was changed to 0
             self.C_fuel_adj = self.C_fuel_adj_rate / 100
 
             # Battery
@@ -272,19 +268,19 @@ class InData:
             self.Supply_Chain_costs = 0
             self.Profit_costs = 340
             self.Sales_tax = 80
-            self.Engineering_Costs = (self.Sales_tax + self.Profit_costs + self.Installation_cost + self.Overhead + self.Sales_and_marketing + self.Permiting_and_Inspection + self.Electrical_BoS + self.Structrual_BoS + self.Supply_Chain_costs)
+            # self.Engineering_Costs = (self.Sales_tax + self.Profit_costs + self.Installation_cost + self.Overhead + self.Sales_and_marketing + self.Permiting_and_Inspection + self.Electrical_BoS + self.Structrual_BoS + self.Supply_Chain_costs)
 
-            #self.Engineering_Costs=0
+            self.Engineering_Costs=0
 
             # PV
-            self.C_PV = 540             # Capital cost ($) per KW
-            self.R_PV = 540             # Replacement Cost of PV modules Per KW
-            self.MO_PV = 29.49          # O&M cost ($/year/kw)
+            self.C_PV = 2510             # Capital cost ($) per KW
+            self.R_PV = 2510             # Replacement Cost of PV modules Per KW
+            self.MO_PV = 28.88          # O&M cost ($/year/kw)
 
             # Inverter
             self.C_I = 440                 # Capital cost ($/kW)
             self.R_I = 440                  # Replacement cost ($/kW)
-            self.MO_I = 3                    # O&M cost ($/kw.year)
+            self.MO_I = 3.08                    # O&M cost ($/kw.year)
 
             # WT
             self.C_WT = 1200      # Capital cost ($) per KW
@@ -294,20 +290,20 @@ class InData:
             # Diesel generator
             self.C_DG = 240.45       # Capital cost ($/KW)
             self.R_DG = 240.45       # Replacement Cost ($/kW)
-            self.MO_DG = 0.064    # O&M+ running cost ($/op.h)
-            self.C_fuel = 5.26      # Fuel Cost ($/L)
-            self.C_fuel_adj_rate = 2  # DG fuel cost yearly esclation rate (if positive) and reduction rate (if negative)
+            self.MO_DG = 0.066    # O&M+ running cost ($/op.h)
+            self.C_fuel = 1.428      # Fuel Cost ($/L)
+            self.C_fuel_adj_rate = 0  # DG fuel cost yearly esclation rate (if positive) and reduction rate (if negative)
             self.C_fuel_adj = self.C_fuel_adj_rate / 100
 
             # Battery
-            self.C_B = 460              # Capital cost ($/KWh)
-            self.R_B = 460              # Replacement Cost ($/kW)
-            self.MO_B = 10                # Maintenance cost ($/kw.year)
+            self.C_B = 458.06              # Capital cost ($/KWh)
+            self.R_B = 458.06              # Replacement Cost ($/kW)
+            self.MO_B = 10.27                # Maintenance cost ($/kw.year)
 
             # Charger
-            self.C_CH = 149.99 * (1 + self.r_Sales_tax)  # Capital Cost ($)
-            self.R_CH = 149.99 * (1 + self.r_Sales_tax)  # Replacement Cost ($)
-            self.MO_CH = 0 * (1 + self.r_Sales_tax)  # O&M cost ($/year)
+            self.C_CH = 0  # Capital Cost ($)
+            self.R_CH = 0  # Replacement Cost ($)
+            self.MO_CH = 0  # O&M cost ($/year)
 
         # Prices for Utility
         # Definition for the Utility Structures
@@ -328,13 +324,13 @@ class InData:
         # Fixed expenses
         self.Annual_expenses = 0 # Annual expenses in $ for grid if any
 
-        self.Grid_sale_tax_rate = 10 # Sale tax percentage of grid electricity
+        self.Grid_sale_tax_rate = 0 # Sale tax percentage of grid electricity
 
         self.Grid_Tax = self.Grid_sale_tax_rate / 100
 
-        self.Grid_Tax_amount = 0.0003 # Grid tax in kWh if any
+        self.Grid_Tax_amount = 0 # Grid tax in kWh if any
 
-        self.Grid_escalation_rate = 2 # Yearly escalation rate in grid electricity prices
+        self.Grid_escalation_rate = 0 # Yearly escalation rate in grid electricity prices
 
         self.Grid_escalation = self.Grid_escalation_rate / 100
 
@@ -348,7 +344,7 @@ class InData:
         self.soiling = 5  # self.soiling losses in percentage
 
         self.G_type = 3 # Determine the way you want to input the Irradiance by choosing one of the numbers above
-        self.T_type = 1 # Determine the way you want to input the Temperature by choosing one of the numbers above
+        self.T_type = 5 # Determine the way you want to input the Temperature by choosing one of the numbers above
         self.WS_type = 4 # Determine the way you want to input the Wind speed by choosing one of the numbers above
         
         self.load_previous_year_type = 1 # Determine the way you want to input the electrical load for previous year by choosing one of the numbers above
@@ -417,19 +413,20 @@ class InData:
         # Irradiance definitions
         # 1=Hourly irradiance based on POA calculator
         # 2=Hourly irradiance based on the user CSV file
+        # 3=Hourly irradiance based on the PV Watts API
 
-        if self.G_type == 1:
+        # if self.G_type == 1:
 
-            from sama_python.sam_monofacial_poa import runSimulation
-            temp_result = runSimulation(self.weather_url, self.tilt, self.azimuth, self.soiling)
-            G_pd_to_numpy = temp_result[0]
-            self.G = G_pd_to_numpy.values
+        #     from sama_python.sam_monofacial_poa import runSimulation
+        #     temp_result = runSimulation(self.weather_url, self.tilt, self.azimuth, self.soiling)
+        #     G_pd_to_numpy = temp_result[0]
+        #     self.G = G_pd_to_numpy.values
 
-        elif self.G_type == 2: # It should be Plane of array irradiance
+        # elif self.G_type == 2: # It should be Plane of array irradiance
 
-            self.path_G = 'content/Irradiance.csv'
-            self.GData = pd.read_csv(self.path_G, header=None).values
-            self.G = np.array(self.GData[:, 0])
+        #     self.path_G = 'content/Irradiance.csv'
+        #     self.GData = pd.read_csv(self.path_G, header=None).values
+        #     self.G = np.array(self.GData[:, 0])
         
 
         # Temperature definitions
@@ -437,31 +434,32 @@ class InData:
         # 2=Hourly Temperature based on the user CSV file
         # 3=Monthly average Temperature
         # 4=Annual average Temperature
+        # 5=Hourly Temperature based on PV Watts API
 
-        if self.T_type == 1:
+        # if self.T_type == 1:
 
-            from sama_python.sam_monofacial_poa import runSimulation
-            temp_result = runSimulation(self.weather_url, self.tilt, self.azimuth, self.soiling)
-            T_pd_to_numpy = temp_result[1]
-            self.T = T_pd_to_numpy.values
+        #     from sama_python.sam_monofacial_poa import runSimulation
+        #     temp_result = runSimulation(self.weather_url, self.tilt, self.azimuth, self.soiling)
+        #     T_pd_to_numpy = temp_result[1]
+        #     self.T = T_pd_to_numpy.values
 
-        elif self.T_type == 2:
+        # elif self.T_type == 2:
 
-            self.path_T = 'content/Temperature.csv'
-            self.TData = pd.read_csv(self.path_T, header=None).values
-            self.T = np.array(self.TData[:, 0])
+        #     self.path_T = 'content/Temperature.csv'
+        #     self.TData = pd.read_csv(self.path_T, header=None).values
+        #     self.T = np.array(self.TData[:, 0])
 
-        elif self.T_type == 3:
+        # elif self.T_type == 3:
 
-            self.Monthly_average_temperature = np.array([-2, -5, -2, 1, 3, 6, 15, 22, 27, 23, 16, 7])  # Define the monthly hourly averages for temperature here
+        #     self.Monthly_average_temperature = np.array([-2, -5, -2, 1, 3, 6, 15, 22, 27, 23, 16, 7])  # Define the monthly hourly averages for temperature here
 
-            from dataextender import dataextender
-            self.T = dataextender(self.daysInMonth, self.Monthly_average_temperature)
+        #     from dataextender import dataextender
+        #     self.T = dataextender(self.daysInMonth, self.Monthly_average_temperature)
 
-        else: # Annual average Temperature
-            self.Annual_average_temperature = 12
+        # elif self.T_type == 4: # Annual average Temperature
+        #     self.Annual_average_temperature = 12
 
-            self.T = np.full(8760, self.Annual_average_temperature)
+        #     self.T = np.full(8760, self.Annual_average_temperature)
 
         # Wind speed definitions
         # 1=Hourly Wind speed based on the NSEDB file
@@ -498,10 +496,10 @@ class InData:
         df.to_csv('sama_python/output/data/Inputs.csv', index=False)
 
         # Monthly fixed charge structure
-        self.Monthly_fixed_charge_system = 2
+        self.Monthly_fixed_charge_system = 1
 
         if self.Monthly_fixed_charge_system == 1:  # Flat
-            self.SC_flat = 0
+            self.SC_flat = 9.95
             self.Service_charge = np.ones(12) * self.SC_flat
         else:  # Tiered
             self.SC_1 = 2.30  # tier 1 service charge
@@ -516,7 +514,7 @@ class InData:
             self.Service_charge = service_charge(self.daysInMonth, self.Eload_Previous, self.Limit_SC_1, self.SC_1, self.Limit_SC_2, self.SC_2, self.Limit_SC_3, self.SC_3, self.SC_4)
 
         # Sell to the Grid
-        self.sellStructure = 2
+        self.sellStructure = 3
 
         if self.sellStructure == 1:
             self.Csell = np.full(8760, 0.05238)
@@ -540,11 +538,11 @@ class InData:
         self.Pbuy_max = 6 # ceil(1.2 * max(self.Eload))  # kWh
         self.Psell_max = 200 # self.Pbuy_max
         
-    def setCSVLoad(self, region, state):
-        self.load_type == 1
-        self.path_Eload = f'api/residential_load_data/{state}_{region}.csv'
-        self.EloadData = pd.read_csv(self.path_Eload, header=None).values
-        self.Eload = np.array(self.EloadData[:, 0])
+    # def setCSVLoad(self, region, state):
+    #     self.load_type == 1
+    #     self.path_Eload = f'api/residential_load_data/{state}_{region}.csv'
+    #     self.EloadData = pd.read_csv(self.path_Eload, header=None).values
+    #     self.Eload = np.array(self.EloadData[:, 0])
         
     def setMonthlyLoad(self, monthly_load_array):
         self.load_type = 5
@@ -720,3 +718,6 @@ class InData:
     
     def setPOA(self, poa):
         self.G = np.array(poa)
+    
+    def setTemperature(self, tamb):
+        self.T = np.array(tamb)

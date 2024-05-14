@@ -5,17 +5,34 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import VariableTable from './VariableTable';
+
+function createData(name, value, unit) {
+    return { name, value, unit };
+}
+
+const generalRows = [
+    createData('Soiling losses', 5, '%')
+];
+
+const advancedRows = [
+
+];
 
 const FAQ = () => {
 
     const questionsAndAnswers = [
         {
             question: "What are the default values in the General Calculator?",
-            answer: "add table"
+            answer: (
+                <VariableTable rows={generalRows} />
+            )
         },
         {
             question: "What are the default values in the Advanced Calculator?",
-            answer: "add table"
+            answer: (
+                <VariableTable rows={advancedRows} />
+            )
         },
         {
             question: "Where can I get the source code for SAMA?",

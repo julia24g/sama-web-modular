@@ -8,7 +8,7 @@ import About from './About';
 import Contact from './contact/Contact';
 import Footer from './Footer';
 import { CalculatorTabProvider } from './calculator/CalculatorTab';
-import FAQ from './FAQ';
+import FAQ from './faq/FAQ';
 import CustomThemeProvider from './styling/CustomThemeProvider';
 
 function App() {

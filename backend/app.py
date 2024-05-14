@@ -117,8 +117,11 @@ def retrieve_PVWatts_data(latitude, longitude, tilt, azimuth):
     pvwatts_url = f'https://developer.nrel.gov/api/pvwatts/v8.json?api_key={api_key}&lat={latitude}&lon={longitude}&system_capacity=1&azimuth={azimuth}&tilt={tilt}&array_type=1&module_type=0&losses=0&timeframe=hourly'
     response = requests.get(pvwatts_url)
     if not response.ok:
-        return jsonify({'error': 'Failed to fetch PVWatts data'})
-    return response.json()["outputs"].get("poa")
+        return {'error': 'Failed to fetch PVWatts data'}
+    data = response.json()["outputs"]
+    poa = data.get("poa")
+    tamb = data.get("tamb")
+    return {'poa': poa, 'tamb': tamb}
 
 def process_general_data(data):
     loadType = data['isAnnual']  
@@ -176,11 +179,14 @@ def process_general_data(data):
     zipcode = data['zipcode']
     latitude = data['latitude']
     longitude = data['longitude']
-    poa = retrieve_PVWatts_data(latitude, longitude, data['tilt'], data['azimuth'])
-    if poa is None:
+    result = retrieve_PVWatts_data(latitude, longitude, data['tilt'], data['azimuth'])
+    if 'error' not in result:
+        poa = result['poa']
+        tamb = result['tamb']
+    else:
         return jsonify({'error': 'Failed to retrieve POA data'})
     Input_Data.setPOA(poa)
-    
+    Input_Data.setTemperature(tamb)
     Input_Data.completeInitialization()
 
     return Input_Data
