@@ -11,6 +11,6 @@ You will need to create your own API keys for the NREL and Zipcode Stack APIs an
 
 ## Request Limits
 Request limits are limited by the external APIs we use.
-NREL limits: 1000 requests / hour
-Zipcode Stack limits: 10,000 requests / month
-NASA Power limits: 1000 requests / hour
+- NREL limits: 1000 requests / hour
+- Zipcode Stack limits: 10,000 requests / month
+- NASA Power limits: 1000 requests / hour

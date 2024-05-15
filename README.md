@@ -1,7 +1,7 @@
 # Directions for Use
 Please see the respective README files in `backend` and `frontend` for initial requirements that need to be downloaded, API keys that need to be created and added to a .env file, and more.
 
-To make transitioning between local and production development easier, different environment variables for the local backend URL (`http://127.0.0.1:5000`) and the production backend URL (`https://sama.eng.uwo.ca/api`) have been set in the variable `process.env.REACT_APP_API_URL`. In order to switch between these two variables in the different environments, see the instructions below.
+To make transitioning between local and production development easier, different environment variables for the local backend URL (http://127.0.0.1:5000) and the production backend URL (https://sama.eng.uwo.ca/api) have been set in the variable `process.env.REACT_APP_API_URL`. In order to switch between these two variables in the different environments, see the instructions below.
 
 ## Local Development
 
@@ -19,7 +19,7 @@ When I've wanted to debug the application, I open the `backend` folder in a sepe
 
 ## Production Development
 
-The web tool is currently already running indefinitely at `https://sama.eng.uwo.ca`.
+The web tool is currently already running indefinitely at https://sama.eng.uwo.ca.
 
 ### To reflect new changes in the production application 
 Everytime you push changes to your Github repo, there are a few steps you need to do in order to see those changes online.
