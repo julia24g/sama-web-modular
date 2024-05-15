@@ -6,7 +6,6 @@ from flask_cors import CORS
 from sama_python.Input_Data import InData
 import sama_python.pso as pso
 import numpy as np
-from zipcode_mapping import zipcode_mapping
 import pvlib
 import pandas as pd
 from datetime import datetime
