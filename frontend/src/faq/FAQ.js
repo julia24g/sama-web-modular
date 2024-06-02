@@ -81,24 +81,26 @@ const FAQ = () => {
     ]
 
     return (
-        <Box id="faq">
-            <Typography variant="h3" gutterBottom>
+        <Box id="faq" sx={{ textAlign: 'center', py: 10 }}>
+            <Typography variant="h5" gutterBottom>
                 Frequently Asked Questions
             </Typography>
-            {questionsAndAnswers.map((q) => (
-                <Accordion>
-                    <AccordionSummary
-                        expandIcon={<ArrowDropDownIcon />}
-                        aria-controls="panel1-content"
-                        id="panel1-header"
-                    >
-                        {q.question}
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {q.answer}
-                    </AccordionDetails>
-                </Accordion>
-            ))}
+            <Box sx={{ width: '60%', margin: '0 auto' }}>
+                {questionsAndAnswers.map((q) => (
+                    <Accordion>
+                        <AccordionSummary
+                            expandIcon={<ArrowDropDownIcon />}
+                            aria-controls="panel1-content"
+                            id="panel1-header"
+                        >
+                            {q.question}
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            {q.answer}
+                        </AccordionDetails>
+                    </Accordion>
+                ))}
+            </Box>
         </Box>
     );
 }

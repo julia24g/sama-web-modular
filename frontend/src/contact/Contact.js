@@ -15,25 +15,25 @@ const Contact = () => {
         {
             profileImage: "",
             name: "Seyyed Ali Sadat",
-            title: "Researcher, FAST Lab",
-            location: "Western University"
+            title: "Graduate Researcher, FAST Lab",
+            location: "Western University",
+            email: "ssadat6@uwo.ca"
         }
     ]
 
     return (
-        <>
-            <h1>CONTACT</h1>
-            <Box sx={{ flexGrow: 1 }} id="contact">
-                <Grid container spacing={2}>
-                    <Grid item sm={6}>
-                        <ContactPerson name={people[0].name} title={people[0].title} location={people[0].location} email={people[0].email} />
-                    </Grid>
-                    <Grid item sm={6}>
-                        <ContactPerson name={people[1].name} title={people[1].title} location={people[1].location} email={people[1].email} />
+        <Box sx={{ textAlign: 'center', py: 5 }}>
+            <Box id="contact">
+                <Grid container spacing={3}>
+                    <Grid item xs={12} md={6}>
+                        <ContactPerson classname="contact_person" name={people[1].name} title={people[1].title} location={people[1].location} email={people[1].email} />
                     </Grid >
+                    <Grid item xs={12} md={6}>
+                        <ContactPerson classname="contact_person" name={people[0].name} title={people[0].title} location={people[0].location}/>
+                    </Grid>
                 </Grid >
             </Box>
-        </>
+        </Box>
     );
 };
 export default Contact;

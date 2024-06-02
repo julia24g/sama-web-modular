@@ -93,7 +93,7 @@ class InData:
         # Type of system (1: included, 0=not included)
         self.PV = 1
         self.WT = 0
-        self.DG = 0
+        self.DG = 1
         self.Bat = 1
         self.Lead_acid = 0
         self.Li_ion = 1
@@ -203,7 +203,7 @@ class InData:
         self.Tax_rate = 0                 # Equipment sale tax Percentage
         self.System_Tax = self.Tax_rate / 100
 
-        self.RE_incentives_rate = 0  # Federal tax credit percentage
+        self.RE_incentives_rate = 30  # Federal tax credit percentage
         self.RE_incentives = self.RE_incentives_rate / 100
 
         # Rated capacity
@@ -659,9 +659,6 @@ class InData:
         self.n_ir_rate = rate
         self.n_ir = self.n_ir_rate / 100
         self.ir = (self.n_ir - self.e_ir) / (1 + self.e_ir)
-    
-    def setir(self, rate):
-        self.ir = rate
 
     def setPVCost(self, cost):
         self.C_PV = cost

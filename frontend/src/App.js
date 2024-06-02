@@ -37,7 +37,6 @@ function MainPage() {
             <LandingPage />
             <Calculator />
             <About />
-            <Contact />
         </CalculatorTabProvider >
     );
 }

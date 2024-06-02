@@ -35,12 +35,13 @@ const AdvancedCalculator = () => {
     const [message, setMessage] = useState('');
     const { formState: { isValid } } = methods;
 
-    const isPhotovoltaic = watch('photovoltaic');
-    const isDieselGenerator = watch('dieselGenerator');
-    const isBatteryBank = watch('batteryBank');
-    const n_ir_rate = watch('n_ir_rate');
-    const e_ir_rate = watch('e_ir_rate');
-    const watchedFoundLoad = watch('foundLoad');
+    var isPhotovoltaic = watch('photovoltaic');
+    var isDieselGenerator = watch('dieselGenerator');
+    var isBatteryBank = watch('batteryBank');
+    var isGridConnected = watch('connectedToGrid')
+    var n_ir_rate = watch('n_ir_rate');
+    var e_ir_rate = watch('e_ir_rate');
+    // var watchedFoundLoad = watch('foundLoad');
 
     const photovoltaicFields = ['PVCost', 'PVReplacementCost', 'PVOandM', 'PVLifetime'];
     const dieselGeneratorFields = ['C_DG', 'R_DG', 'MO_DG', 'TL_DG'];
@@ -91,6 +92,7 @@ const AdvancedCalculator = () => {
     const formData = watch();
     useEffect(() => {
         console.log("Form data changed:", formData);
+        console.log("isGridConnected", isGridConnected);
     }, [formData]);
 
     const onSubmit = async (data) => {
@@ -122,8 +124,12 @@ const AdvancedCalculator = () => {
                 <UtilityRateStructure />
                 <p>Is your system connected to the grid?</p>
                 <SelectOne name="connectedToGrid" label1="Yes" label2="No" />
-                <p>Is your system net metered?</p>
-                <SelectOne name="netMetered" label1="Yes" label2="No" />
+                {isGridConnected === "true" && (
+                    <>
+                        <p>Is your system net metered?</p>
+                        <SelectOne name="netMetered" label1="Yes" label2="No" />
+                    </>
+                )}
                 <p>What is your project's lifetime in years?</p>
                 <StandardField name='n' label="Project Lifetime" defaultValue={25} unit='' />
                 <p>What is the maximum loss of power supply probability?</p>
@@ -134,8 +140,6 @@ const AdvancedCalculator = () => {
                 <StandardField name="e_ir_rate" label="Inflation Rate" defaultValue={2} unit='%' />
                 <p>What is the nominal discount rate?</p>
                 <StandardField name="n_ir_rate" label="Nominal Discount Rate" defaultValue={5.5} unit='%' />
-                <p>What is the real discount rate?</p>
-                <StandardField name="ir" label="Real Discount Rate" defaultValue={3.4} unit='%' />
                 <p>What is the federal incentives rate?</p>
                 <StandardField name="re_incentives_rate" label="Federal Incentives Rate" defaultValue={30} unit='%' />
                 <SystemType />

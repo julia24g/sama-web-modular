@@ -9,8 +9,8 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 const HourSelector = ({ season, tier }) => {
     const { setValue } = useFormContext();
-    const [ranges, setRanges] = useState([{ startTime: null, endTime: null }]);
-    const [onHours, setOnHours] = useState(Array(24).fill(0));
+    var [ranges, setRanges] = useState([{ startTime: null, endTime: null }]);
+    var [onHours, setOnHours] = useState(Array(24).fill(0));
 
     useEffect(() => {
         updateOnHours();
@@ -21,11 +21,11 @@ const HourSelector = ({ season, tier }) => {
     }, [onHours, setValue, season, tier]);
 
     const updateOnHours = () => {
-        const hours = Array(24).fill(0);
+        var hours = Array(24).fill(0);
         ranges.forEach((range) => {
             if (range.startTime !== null && range.endTime !== null) {
-                const startHour = range.startTime;
-                const endHour = range.endTime;
+                var startHour = range.startTime;
+                var endHour = range.endTime;
                 for (let i = startHour; i < endHour; i++) {
                     hours[i] = 1;
                 }
@@ -35,20 +35,20 @@ const HourSelector = ({ season, tier }) => {
     };
 
     const handleAddRange = () => {
-        const updatedRanges = [...ranges, { startTime: null, endTime: null }];
+        var updatedRanges = [...ranges, { startTime: null, endTime: null }];
         setRanges(updatedRanges);
     };
 
     const handleRemoveRange = (index) => {
         if (ranges.length > 1) {
-            const newRanges = [...ranges];
+            var newRanges = [...ranges];
             newRanges.splice(index, 1);
             setRanges(newRanges);
         }
     };
 
     const handleChangeRange = (index, startTime, endTime, onChange) => {
-        const newRanges = ranges.map((range, idx) => idx === index ? { startTime, endTime } : range);
+        var newRanges = ranges.map((range, idx) => idx === index ? { startTime, endTime } : range);
         setRanges(newRanges);
 
         if (onChange) {

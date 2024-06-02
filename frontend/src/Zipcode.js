@@ -7,15 +7,15 @@ const apiBaseUrl = process.env.REACT_APP_API_URL;
 
 const Zipcode = () => {
   const { watch, setValue, formState: { errors }, trigger, getValues } = useFormContext();
-  const watchedZipcode = watch("zipcode");
+  var watchedZipcode = watch("zipcode");
 
   useEffect(() => {
     const validateAndRun = async () => {
-      const isValid = await trigger("zipcode");
+      var isValid = await trigger("zipcode");
       if (isValid) {
-        const { zipcode } = getValues();
+        var { zipcode } = getValues();
         await fetchCoordinates(zipcode);
-        const { latitude, longitude } = getValues();
+        var { latitude, longitude } = getValues();
         await fetchUtilityRates(latitude, longitude);
         await fetchTilt(latitude, longitude);
         await fetchAzimuth(latitude, longitude);
@@ -30,7 +30,7 @@ const Zipcode = () => {
   const fetchCoordinates = async (zipcode) => {
     try {
       const { data } = await axios.post(`${apiBaseUrl}/validate_zipcode`, { zipcode }, { withCredentials: true });
-      const { latitude, longitude, valid } = data;
+      var { latitude, longitude, valid } = data;
       setValue('latitude', latitude);
       setValue('longitude', longitude);
     } catch (error) {
@@ -40,8 +40,8 @@ const Zipcode = () => {
 
   const fetchUtilityRates = async (latitude, longitude) => {
     try {
-      const { data } = await axios.post(`${apiBaseUrl}/getUtilityRates`, { latitude, longitude }, { withCredentials: true });
-      const residentialRate = data.outputs?.residential;
+      var { data } = await axios.post(`${apiBaseUrl}/getUtilityRates`, { latitude, longitude }, { withCredentials: true });
+      var residentialRate = data.outputs?.residential;
       if (residentialRate && residentialRate !== "no data") {
         setValue('flatRate', residentialRate, { shouldTouch: true });
       } else {
@@ -55,8 +55,8 @@ const Zipcode = () => {
 
   const fetchTilt = async (latitude, longitude) => {
     try {
-      const { data } = await axios.post(`${apiBaseUrl}/retrieveTilt`, { latitude, longitude }, { withCredentials: true });
-      const tiltAngle = data.JAN;
+      var { data } = await axios.post(`${apiBaseUrl}/retrieveTilt`, { latitude, longitude }, { withCredentials: true });
+      var tiltAngle = data.JAN;
       if (tiltAngle) {
         setValue('tilt', tiltAngle, { shouldTouch: true });
       } else {
@@ -69,8 +69,8 @@ const Zipcode = () => {
 
   const fetchAzimuth = async (latitude, longitude) => {
     try {
-      const { data } = await axios.post(`${apiBaseUrl}/retrieveAzimuth`, { latitude, longitude }, { withCredentials: true });
-      const azimuthAngle = data.azimuth;
+      var { data } = await axios.post(`${apiBaseUrl}/retrieveAzimuth`, { latitude, longitude }, { withCredentials: true });
+      var azimuthAngle = data.azimuth;
       if (azimuthAngle) {
         setValue('azimuth', azimuthAngle, { shouldTouch: true });
       } else {

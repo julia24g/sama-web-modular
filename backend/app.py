@@ -219,7 +219,6 @@ def process_advanced_data(Input_Data, data):
     Input_Data.setRE_min_rate(data['RE_min_rate'])
     Input_Data.sete_ir_rate(data['e_ir_rate'])
     Input_Data.setn_ir_rate(data['n_ir_rate'])
-    Input_Data.setir(data['ir'])
     Input_Data.setREIncentivesRate(data['re_incentives_rate'])
 
     return Input_Data

@@ -7,7 +7,7 @@ const TotalLoad = () => {
   const { register, unregister, setValue, watch } = useFormContext();
   const [termType, setTermType] = useState('Annual');
 
-  const isAnnual = watch('isAnnual');
+  var isAnnual = watch('isAnnual');
   const monthLabels = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'

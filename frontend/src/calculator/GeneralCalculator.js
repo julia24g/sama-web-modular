@@ -55,7 +55,7 @@ const GeneralCalculator = () => {
     };
 
     const { handleSubmit } = methods;
-    const watchedFoundLoad = watch("foundLoad");
+    // const watchedFoundLoad = watch("foundLoad");
     
     return (
         <FormProvider {...methods}>

@@ -27,7 +27,7 @@ const Results = () => {
     const { results } = location.state || {};
 
     var economicalInNearFuture = false;
-    const notEconomical = results && results.NPC > 1.2 * results.NPC_Grid;
+    var notEconomical = results && results.NPC > 1.2 * results.NPC_Grid;
     if (!notEconomical){
         economicalInNearFuture = results && results.NPC <= 1.2 * results.NPC_Grid && results.NPC >= results.NPC_Grid;
     }

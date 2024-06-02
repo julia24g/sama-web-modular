@@ -1,6 +1,7 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import Contact from './contact/Contact';
 
 const About = () => {
     return (
@@ -19,7 +20,11 @@ const About = () => {
                     SAMA was developed by Seyyed Ali Sadat and Julia Groza, members of the Free Appropriate Sustainability Technology (FAST) research group at Western University in London, ON, Canada led by Dr. Joshua Pearce.</p>
                 <br></br>
                 <p>To learn more about SAMA see: Seyyed Ali Sadat, Jonathan Takahashi, Joshua M. Pearce, A Free and open-source microgrid optimization tool: SAMA the solar alone Multi-Objective Advisor, <i>Energy Conversion and Management</i>, 298, 2023, 117686, <a href='https://www.sciencedirect.com/science/article/abs/pii/S0196890423010324?via%3Dihub' target='blank'>https://doi.org/10.1016/j.enconman.2023.117686.Academia OA</a></p>
+
+                <Contact />
             </div>
+
+            
         </Box>
     );
 }

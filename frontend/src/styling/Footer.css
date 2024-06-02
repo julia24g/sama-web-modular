@@ -1,0 +1,11 @@
+footer {
+    background-color: #4F2683;
+    width: 100%;
+    color: white;
+    text-align: left;
+    padding: 5% 10% 5%;
+  }
+
+.footer_text {
+    padding: 1% 0% 1%;
+}
