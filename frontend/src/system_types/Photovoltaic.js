@@ -9,7 +9,7 @@ const PVQuestions = () => {
     { question: 'What are the operations and maintenance cost of PV modules per kW per year?', label: 'O&M Cost of PV', name: 'PVOandM', defaultValue: '29.49', unit: '$' },
     { question: 'What is the lifetime of the PV modules?', label: 'PV Lifetime', name: 'PVLifetime', defaultValue: '25', unit: '' },
     { question: 'What is the tilt angle of the PV modules?', label: 'Tilt', name: 'tilt', defaultValue: '0', unit: '°' },
-    { question: 'What is the azimuth angle of the PV modules?', label: 'Azimuth', name: 'azimuth', defaultValue: '0', unit: '°' }
+    { question: 'What is the azimuth angle of the PV modules?', label: 'Azimuth', name: 'azimuth', defaultValue: '180', unit: '°' }
   ];
 
   return (

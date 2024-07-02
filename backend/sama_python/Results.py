@@ -462,7 +462,7 @@ def Gen_Results(X, InData):
     # Make x-axis visible
     plt.axhline(0, color='black', linewidth=0.8)
     plt.tight_layout()
-    plt.savefig('sama_python/output/figs/Cash Flow.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Cash_Flow.png', dpi=300)
 
     #Grid purchase and sale figure
     if Grid == 0:
@@ -488,7 +488,7 @@ def Gen_Results(X, InData):
         # Adjust the margins and space between subplots
         plt.subplots_adjust(left=0.05, right=0.85, top=0.95, bottom=0.08)
         plt.tight_layout()
-        plt.savefig('sama_python/output/figs/Grid Interconnection.png', dpi=300)
+        plt.savefig('sama_python/output/figs/Grid_Interconnection.png', dpi=300)
 
     # Energy/Power Distribution figure
     fig, ax = plt.subplots(figsize=(30, 10))  # Increased figure size and resolution
@@ -513,7 +513,7 @@ def Gen_Results(X, InData):
     # Adjust the margins and space between subplots
     plt.subplots_adjust(left=0.08, right=0.78, top=0.95, bottom=0.08)
     plt.tight_layout()
-    plt.savefig('sama_python/output/figs/Energy Distribution.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Energy_Distribution.png', dpi=300)
 
     # State of charge figure
     if Nbat > 0:
@@ -535,7 +535,7 @@ def Gen_Results(X, InData):
         # Adjust the margins and space between subplots
         plt.subplots_adjust(left=0.08, right=0.95, top=0.95, bottom=0.08)
         plt.tight_layout()
-        plt.savefig('sama_python/output/figs/Battery State of Charge.png', dpi=300)
+        plt.savefig('sama_python/output/figs/Battery_State_of_Charge.png', dpi=300)
 
     # Plot results for one specific day
     # Function to filter out data series with sum less than 0.1 in the specified range
@@ -583,7 +583,7 @@ def Gen_Results(X, InData):
         axs[j].axis('off')
 
     plt.tight_layout(rect=[0, 0, 1, 0.96])  # Adjust the layout to make space for the title
-    plt.savefig('sama_python/output/figs/Specific day results.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Specific_day_results.png', dpi=300)
 
     # Utility figures
 
@@ -670,7 +670,7 @@ def Gen_Results(X, InData):
     cbar_total.ax.tick_params(labelsize=22)
     cbar_total.ax.set_title('Monthly average cost of energy system [$]', fontsize=32, rotation=270, x=3.5, y=0.16)
     fig.subplots_adjust(left=0.075, top=0.98, bottom=0.075)
-    plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly average cost of energy system.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly_average_cost_of_energy_system.png', dpi=300)
 
     # Calculate average hourly grid cost for each day in each month
     Gh_c = np.zeros((12, 31))
@@ -738,7 +738,7 @@ def Gen_Results(X, InData):
     cbar_total.ax.tick_params(labelsize=22)
     cbar_total.ax.set_title('Monthly average hourly cost of connecting to the grid [$/kWh]', fontsize=32, rotation=270, x=3.85, y=0.04)
     fig.subplots_adjust(left=0.075, right=0.9, top=0.98, bottom=0.075)
-    plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly average hourly cost of connecting to the grid.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly_average_hourly_cost_of_connecting_to_the_grid.png', dpi=300)
 
     # Calculate average only grid connected system cost for each day/month/year
     AG_c = np.round(LCOE_Grid * A_l, 2)
@@ -798,7 +798,7 @@ def Gen_Results(X, InData):
     cbar_total.ax.tick_params(labelsize=22)
     cbar_total.ax.set_title('Monthly average cost of only grid-connected system [$]', fontsize=32, rotation=270, x=3.5, y=0.09)
     fig.subplots_adjust(left=0.075, top=0.98, bottom=0.075)
-    plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly average cost of only grid-connected system.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly_average_cost_of_only_grid-connected_system.png', dpi=300)
 
     # Hourly Grid electricity price color bar map
     # Assuming Cbuy is a 1D numpy array
@@ -819,7 +819,7 @@ def Gen_Results(X, InData):
     month_labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     ax.set_xticks(hours_per_month)
     ax.set_xticklabels(month_labels)
-    plt.savefig('sama_python/output/figs/Grid Hourly Cost.png', dpi=300)
+    plt.savefig('sama_python/output/figs/Grid_Hourly_Cost.png', dpi=300)
 
     # Calculate average money earned by selling electricity to grid in each day/month/year
     # Calculate average hourly grid sell for each day in each month
@@ -901,7 +901,7 @@ def Gen_Results(X, InData):
         cbar_total.ax.tick_params(labelsize=22)
         cbar_total.ax.set_title('Monthly average Sell earning to the Grid [$]', fontsize=32, rotation=270, x=3.5, y=0.225)
         fig.subplots_adjust(left=0.075, top=0.98, bottom=0.075)
-        plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly average earning Sell to the Grid.png', dpi=300)
+        plt.savefig('sama_python/output/figs/Daily-Monthly-Yearly_average_earning_Sell_to_the_Grid.png', dpi=300)
 
     matplotlib.pyplot.close('all')
     return answer

@@ -134,14 +134,15 @@ export const baseValidationSchema = yup.object({
     summerOnTimeRange: yup.array().of(timeRangeValidation),
     summerMidTimeRange: yup.array().of(timeRangeValidation),
     winterOnTimeRange: yup.array().of(timeRangeValidation),
-    winterMidTimeRange: yup.array().of(timeRangeValidation),
-    tilt: yup.number().required(),
-    azimuth: yup.number().required()
+    winterMidTimeRange: yup.array().of(timeRangeValidation)
 });
 
 export const advancedValidationSchema = baseValidationSchema.shape({
     connectedToGrid: yup.boolean().required(),
-    netMetered: yup.boolean().required(),
+    netMetered: yup.boolean().when('connectedToGrid', {
+        is: true,
+        then: schema => schema.required('This field is required').oneOf([true, false], 'Must be a boolean value')
+      }),
     n: wholeNumberValidation,
     LPSP_max_rate: percentageValidation,
     RE_min_rate: percentageValidation,
@@ -156,8 +157,8 @@ export const advancedValidationSchema = baseValidationSchema.shape({
     PVLifetime: wholeNumberValidation,
     C_B: positiveNumberValidation,
     R_B: positiveNumberValidation,
-    tilt: yup.number().required(),
-    azimuth: yup.number().required(),
+    tilt: yup.number(),
+    azimuth: yup.number(),
     // Battery Questions
     isLithium: yup.boolean(),
     batteryOandM: positiveNumberValidation,
@@ -174,4 +175,4 @@ export const advancedValidationSchema = baseValidationSchema.shape({
 
 export const advancedWithSystemValidation = advancedValidationSchema.concat(systemTypeValidation);
 
-export const defaultValues = ['n', 'LPSP_max_rate', 'RE_min_rate', 'e_ir_rate', 'n_ir_rate', 'ir', 're_incentives_rate'];
+export const defaultValues = ['n', 'LPSP_max_rate', 'RE_min_rate', 'e_ir_rate', 'n_ir_rate', 'ir', 're_incentives_rate', 'azimuth'];

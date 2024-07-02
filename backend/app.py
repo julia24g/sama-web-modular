@@ -75,31 +75,31 @@ def tou_hour_array_conversion(hour_array):
             hours.append(i)
     return hours
 
-@app.route("/retrieveTilt", methods=['POST'])
-def retrieve_tilt():
-    data = request.json
-    latitude = data.get('latitude')
-    longitude = data.get('longitude')
-    nasa_power_url = f'https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=SI_EF_TILTED_SURFACE&community=RE&longitude={longitude}&latitude={latitude}&format=JSON'
-    response = requests.get(nasa_power_url)
-    if not response.ok:
-        return jsonify({'error': 'Failed to fetch NASA power data'})
-    return response.json()['properties']['parameter']['SI_EF_TILTED_SURFACE_LATITUDE']
+# @app.route("/retrieveTilt", methods=['POST'])
+# def retrieve_tilt():
+#     data = request.json
+#     latitude = data.get('latitude')
+#     longitude = data.get('longitude')
+#     nasa_power_url = f'https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=SI_EF_TILTED_SURFACE&community=RE&longitude={longitude}&latitude={latitude}&format=JSON'
+#     response = requests.get(nasa_power_url)
+#     if not response.ok:
+#         return jsonify({'error': 'Failed to fetch NASA power data'})
+#     return response.json()['properties']['parameter']['SI_EF_TILTED_SURFACE_LATITUDE']
 
-@app.route("/retrieveAzimuth", methods=['POST'])
-def retrieve_azimuth():
-    data = request.json
-    latitude = data.get('latitude')
-    longitude = data.get('longitude')
-    try:
-        current_time_utc = pd.Timestamp(datetime.utcnow(), tz='UTC')
-        location = pvlib.location.Location(latitude, longitude)
-        solar_position = location.get_solarposition(current_time_utc)
-        azimuth_angle = round(solar_position['azimuth'].iloc[0], 2)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+# @app.route("/retrieveAzimuth", methods=['POST'])
+# def retrieve_azimuth():
+#     data = request.json
+#     latitude = data.get('latitude')
+#     longitude = data.get('longitude')
+#     try:
+#         current_time_utc = pd.Timestamp(datetime.utcnow(), tz='UTC')
+#         location = pvlib.location.Location(latitude, longitude)
+#         solar_position = location.get_solarposition(current_time_utc)
+#         azimuth_angle = round(solar_position['azimuth'].iloc[0], 2)
+#     except Exception as e:
+#         return jsonify({'error': str(e)}), 500
 
-    return jsonify({'azimuth': azimuth_angle})
+#     return jsonify({'azimuth': azimuth_angle})
 
 def retrieve_PVWatts_data(latitude, longitude, tilt, azimuth):
     api_key = os.getenv('NREL_API_KEY')
@@ -163,12 +163,11 @@ def process_general_data(data):
         Input_Data.setTimeOfUseRate(onPrice, midPrice, offPrice, onHours, midHours)
     
     Input_Data.setTilt(data['tilt'])
-    Input_Data.setAzimuth(data['azimuth'])
     
     zipcode = data['zipcode']
     latitude = data['latitude']
     longitude = data['longitude']
-    result = retrieve_PVWatts_data(latitude, longitude, data['tilt'], data['azimuth'])
+    result = retrieve_PVWatts_data(latitude, longitude, data['tilt'], 180)
     if 'error' not in result:
         poa = result['poa']
         tamb = result['tamb']
@@ -176,7 +175,6 @@ def process_general_data(data):
         return jsonify({'error': 'Failed to retrieve POA data'})
     Input_Data.setPOA(poa)
     Input_Data.setTemperature(tamb)
-    Input_Data.completeInitialization()
 
     return Input_Data
 
@@ -197,6 +195,7 @@ def process_advanced_data(Input_Data, data):
         Input_Data.setPVReplacementCost(data['PVReplacementCost'])
         Input_Data.setPVOandM(data['PVOandM'])
         Input_Data.setPVLifetime(data['PVLifetime'])
+        Input_Data.setAzimuth(data['azimuth'])
         
     else:
         Input_Data.setPV(0)
@@ -208,9 +207,13 @@ def process_advanced_data(Input_Data, data):
     else:
         Input_Data.setDG(0)
         
-    if data['netMetered']:
-        Input_Data.setNEM(1)
-    if not data['connectedToGrid']:
+    if data['connectedToGrid']:
+        Input_Data.setGrid(1)
+        if data['netMetered']:
+            Input_Data.setNEM(1)
+        else:
+            Input_Data.setNEM(0)
+    else:
         Input_Data.setGrid(0)
         Input_Data.setNEM(0)
 
@@ -230,6 +233,7 @@ def submit_general():
         if data is None:
             return jsonify({'error': 'No JSON data provided'}), 400
         Input_Data = process_general_data(data)
+        Input_Data.completeInitialization()
         if Input_Data is None:
             return jsonify({'error': 'Invalid data format or missing required fields'}), 400
         answer = pso.run(Input_Data)
@@ -256,6 +260,7 @@ def submit_advanced():
         data = request.json
         Input_Data = process_general_data(data)
         Input_Data = process_advanced_data(Input_Data, data)
+        Input_Data.completeInitialization()
         answer = pso.run(Input_Data)
         return jsonify(answer)
     except Exception as e:

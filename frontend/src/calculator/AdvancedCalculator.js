@@ -43,7 +43,7 @@ const AdvancedCalculator = () => {
     var e_ir_rate = watch('e_ir_rate');
     // var watchedFoundLoad = watch('foundLoad');
 
-    const photovoltaicFields = ['PVCost', 'PVReplacementCost', 'PVOandM', 'PVLifetime'];
+    const photovoltaicFields = ['PVCost', 'PVReplacementCost', 'PVOandM', 'PVLifetime', 'tilt', 'azimuth'];
     const dieselGeneratorFields = ['C_DG', 'R_DG', 'MO_DG', 'TL_DG'];
     const batteryBankFields = ['C_B', 'R_B', 'batteryOandM', 'batteryYearlyDegradation', 'SOC_min', 'SOC_max', 'batteryVoltage'];
 
@@ -92,7 +92,6 @@ const AdvancedCalculator = () => {
     const formData = watch();
     useEffect(() => {
         console.log("Form data changed:", formData);
-        console.log("isGridConnected", isGridConnected);
     }, [formData]);
 
     const onSubmit = async (data) => {

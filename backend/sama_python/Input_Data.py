@@ -130,7 +130,7 @@ class InData:
         self.RT_PV = ceil(self.n/self.L_PV) - 1   # Replacement time
 
         # Inverter
-        self.n_I = 1      # Efficiency
+        self.n_I = 0.96      # Efficiency
         self.L_I = 25        # Life time (year)
         self.DC_AC_ratio = 1.99     # Maximum acceptable DC to AC ratio
         self.RT_I = ceil(self.n/self.L_I) - 1    # Replacement time
@@ -160,9 +160,9 @@ class InData:
         self.SO2 = 20
 
         # Battery
-        self.SOC_min = 0.05
+        self.SOC_min = 0.2
         self.SOC_max = 1
-        self.SOC_initial = 1
+        self.SOC_initial = 0.5
         self.self_discharge_rate = 0     # Hourly self-discharge rate
         self.L_B = 7.5              # Life time (year)
         self.RT_B = ceil(self.n/self.L_B) - 1    # Replacement time
@@ -242,8 +242,8 @@ class InData:
             self.C_DG = 240.45 * (1 + self.r_Sales_tax)       # Capital cost ($/kW)
             self.R_DG = 240.45 * (1 + self.r_Sales_tax)       # Replacement Cost ($/kW)
             self.MO_DG = 0.064 * (1 + self.r_Sales_tax)     # O&M+ running cost ($/op.h)
-            self.C_fuel = 1.39 * (1 + self.r_Sales_tax)             # Fuel Cost ($/L)
-            self.C_fuel_adj_rate = 0                                # DG fuel cost yearly esclation rate (if positive) and reduction rate (if negative) ########### this was changed to 0
+            self.C_fuel = 5.26 * (1 + self.r_Sales_tax)             # Fuel Cost ($/L)
+            self.C_fuel_adj_rate = 2                                # DG fuel cost yearly esclation rate (if positive) and reduction rate (if negative) ########### this was changed to 0
             self.C_fuel_adj = self.C_fuel_adj_rate / 100
 
             # Battery
@@ -268,14 +268,13 @@ class InData:
             self.Supply_Chain_costs = 0
             self.Profit_costs = 340
             self.Sales_tax = 80
-            # self.Engineering_Costs = (self.Sales_tax + self.Profit_costs + self.Installation_cost + self.Overhead + self.Sales_and_marketing + self.Permiting_and_Inspection + self.Electrical_BoS + self.Structrual_BoS + self.Supply_Chain_costs)
+            self.Engineering_Costs = (self.Sales_tax + self.Profit_costs + self.Installation_cost + self.Overhead + self.Sales_and_marketing + self.Permiting_and_Inspection + self.Electrical_BoS + self.Structrual_BoS + self.Supply_Chain_costs)
 
-            self.Engineering_Costs=0
 
             # PV
-            self.C_PV = 2510             # Capital cost ($) per KW
-            self.R_PV = 2510             # Replacement Cost of PV modules Per KW
-            self.MO_PV = 28.88          # O&M cost ($/year/kw)
+            self.C_PV = 540             # Capital cost ($) per KW
+            self.R_PV = 540             # Replacement Cost of PV modules Per KW
+            self.MO_PV = 29.49          # O&M cost ($/year/kw)
 
             # Inverter
             self.C_I = 440                 # Capital cost ($/kW)
@@ -290,19 +289,19 @@ class InData:
             # Diesel generator
             self.C_DG = 240.45       # Capital cost ($/KW)
             self.R_DG = 240.45       # Replacement Cost ($/kW)
-            self.MO_DG = 0.066    # O&M+ running cost ($/op.h)
-            self.C_fuel = 1.428      # Fuel Cost ($/L)
-            self.C_fuel_adj_rate = 0  # DG fuel cost yearly esclation rate (if positive) and reduction rate (if negative)
+            self.MO_DG = 0.064    # O&M+ running cost ($/op.h)
+            self.C_fuel = 5.26      # Fuel Cost ($/L)
+            self.C_fuel_adj_rate = 2  # DG fuel cost yearly esclation rate (if positive) and reduction rate (if negative)
             self.C_fuel_adj = self.C_fuel_adj_rate / 100
 
             # Battery
-            self.C_B = 458.06              # Capital cost ($/KWh)
-            self.R_B = 458.06              # Replacement Cost ($/kW)
+            self.C_B = 460              # Capital cost ($/KWh)
+            self.R_B = 460              # Replacement Cost ($/kW)
             self.MO_B = 10.27                # Maintenance cost ($/kw.year)
 
             # Charger
-            self.C_CH = 0  # Capital Cost ($)
-            self.R_CH = 0  # Replacement Cost ($)
+            self.C_CH = 149.99  # Capital Cost ($)
+            self.R_CH = 149.99  # Replacement Cost ($)
             self.MO_CH = 0  # O&M cost ($/year)
 
         # Prices for Utility
@@ -330,7 +329,7 @@ class InData:
 
         self.Grid_Tax_amount = 0 # Grid tax in kWh if any
 
-        self.Grid_escalation_rate = 0 # Yearly escalation rate in grid electricity prices
+        self.Grid_escalation_rate = 2 # Yearly escalation rate in grid electricity prices
 
         self.Grid_escalation = self.Grid_escalation_rate / 100
 

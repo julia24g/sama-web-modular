@@ -17,8 +17,9 @@ const Zipcode = () => {
         await fetchCoordinates(zipcode);
         var { latitude, longitude } = getValues();
         await fetchUtilityRates(latitude, longitude);
-        await fetchTilt(latitude, longitude);
-        await fetchAzimuth(latitude, longitude);
+        setValue('tilt', latitude, { shouldTouch: true });
+        // await fetchTilt(latitude, longitude);
+        // await fetchAzimuth(latitude, longitude);
       }
     };
 
@@ -53,33 +54,33 @@ const Zipcode = () => {
     }
   };
 
-  const fetchTilt = async (latitude, longitude) => {
-    try {
-      var { data } = await axios.post(`${apiBaseUrl}/retrieveTilt`, { latitude, longitude }, { withCredentials: true });
-      var tiltAngle = data.JAN;
-      if (tiltAngle) {
-        setValue('tilt', tiltAngle, { shouldTouch: true });
-      } else {
-        console.log('No results or invalid data found');
-      }
-    } catch (error) {
-      console.error('Failed to fetch tilt angle values:', error);
-    }
-  };
+  // const fetchTilt = async (latitude, longitude) => {
+  //   try {
+  //     var { data } = await axios.post(`${apiBaseUrl}/retrieveTilt`, { latitude, longitude }, { withCredentials: true });
+  //     var tiltAngle = data.JAN;
+  //     if (tiltAngle) {
+  //       setValue('tilt', tiltAngle, { shouldTouch: true });
+  //     } else {
+  //       console.log('No results or invalid data found');
+  //     }
+  //   } catch (error) {
+  //     console.error('Failed to fetch tilt angle values:', error);
+  //   }
+  // };
 
-  const fetchAzimuth = async (latitude, longitude) => {
-    try {
-      var { data } = await axios.post(`${apiBaseUrl}/retrieveAzimuth`, { latitude, longitude }, { withCredentials: true });
-      var azimuthAngle = data.azimuth;
-      if (azimuthAngle) {
-        setValue('azimuth', azimuthAngle, { shouldTouch: true });
-      } else {
-        console.log('No results or invalid data found');
-      }
-    } catch (error) {
-      console.error('Failed to fetch azimuth angle values:', error);
-    }
-  };
+  // const fetchAzimuth = async (latitude, longitude) => {
+  //   try {
+  //     var { data } = await axios.post(`${apiBaseUrl}/retrieveAzimuth`, { latitude, longitude }, { withCredentials: true });
+  //     var azimuthAngle = data.azimuth;
+  //     if (azimuthAngle) {
+  //       setValue('azimuth', azimuthAngle, { shouldTouch: true });
+  //     } else {
+  //       console.log('No results or invalid data found');
+  //     }
+  //   } catch (error) {
+  //     console.error('Failed to fetch azimuth angle values:', error);
+  //   }
+  // };
 
   return (
     <div className="form">
