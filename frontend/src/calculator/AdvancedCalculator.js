@@ -45,7 +45,7 @@ const AdvancedCalculator = () => {
 
     const photovoltaicFields = ['PVCost', 'PVReplacementCost', 'PVOandM', 'PVLifetime', 'tilt', 'azimuth'];
     const dieselGeneratorFields = ['C_DG', 'R_DG', 'MO_DG', 'TL_DG'];
-    const batteryBankFields = ['C_B', 'R_B', 'batteryOandM', 'batteryYearlyDegradation', 'SOC_min', 'SOC_max', 'batteryVoltage'];
+    const batteryBankFields = ['C_B', 'R_B', 'batteryOandM', 'batteryYearlyDegradation', 'SOC_min', 'SOC_max'];
 
     useEffect(() => {
         if (isPhotovoltaic) {

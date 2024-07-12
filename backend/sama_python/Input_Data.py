@@ -686,9 +686,6 @@ class InData:
     
     def setSOC_max(self, rate):
         self.SOC_max = rate
-
-    def setBatteryVoltage(self, voltage):
-        self.Vnom = voltage
     
     def setDGCost(self, cost):
         self.C_DG = cost

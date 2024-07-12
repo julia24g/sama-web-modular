@@ -165,7 +165,6 @@ export const advancedValidationSchema = baseValidationSchema.shape({
     batteryYearlyDegradation: positiveNumberValidation,
     SOC_min: positiveNumberValidation,
     SOC_max: positiveNumberValidation,
-    batteryVoltage: positiveNumberValidation,
     // Diesel Generator Questions
     C_DG: positiveNumberValidation,
     R_DG: positiveNumberValidation,

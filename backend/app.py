@@ -164,7 +164,6 @@ def process_general_data(data):
     
     Input_Data.setTilt(data['tilt'])
     
-    zipcode = data['zipcode']
     latitude = data['latitude']
     longitude = data['longitude']
     result = retrieve_PVWatts_data(latitude, longitude, data['tilt'], 180)
@@ -175,11 +174,18 @@ def process_general_data(data):
         return jsonify({'error': 'Failed to retrieve POA data'})
     Input_Data.setPOA(poa)
     Input_Data.setTemperature(tamb)
+    
+    Input_Data.setBat(1)
+    Input_Data.setDG(1)
+    Input_Data.setPV(1)
+    Input_Data.setGrid(1)
+    Input_Data.setNEM(1)
 
     return Input_Data
 
 def process_advanced_data(Input_Data, data):
     if data['batteryBank']:
+        Input_Data.setBat(1)
         Input_Data.setBatteryCost(data['C_B'])
         Input_Data.setBatteryReplacementCost(data['R_B'])
         Input_Data.setBatteryOandM(data['batteryOandM'])
@@ -191,6 +197,7 @@ def process_advanced_data(Input_Data, data):
     else:
         Input_Data.setBat(0)
     if data['photovoltaic']:
+        Input_Data.setPV(1)
         Input_Data.setPVCost(data['PVCost'])
         Input_Data.setPVReplacementCost(data['PVReplacementCost'])
         Input_Data.setPVOandM(data['PVOandM'])
@@ -200,6 +207,7 @@ def process_advanced_data(Input_Data, data):
     else:
         Input_Data.setPV(0)
     if data['dieselGenerator']:
+        Input_Data.setDG(1)
         Input_Data.setDGCost(data['C_DG'])
         Input_Data.setDGReplacementCost(data['R_DG'])
         Input_Data.setDGOandM(data['MO_DG'])
