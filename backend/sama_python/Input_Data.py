@@ -97,10 +97,10 @@ class InData:
         self.Bat = 1
         self.Lead_acid = 0
         self.Li_ion = 1
-        self.Grid = 1
+        self.Grid = 0
         # Net metering scheme
         # If compensation is towrds credits in Net metering, not monetary comenstation, by choosing the below option (putting NEM equals to 1), the yearly credits will be reconciled after 12 months
-        self.NEM = 1
+        self.NEM = 0
 
         if self.Grid == 0:
             self.NEM = 0

@@ -178,8 +178,8 @@ def process_general_data(data):
     Input_Data.setBat(1)
     Input_Data.setDG(1)
     Input_Data.setPV(1)
-    Input_Data.setGrid(1)
-    Input_Data.setNEM(1)
+    Input_Data.setGrid(0)
+    Input_Data.setNEM(0)
 
     return Input_Data
 
