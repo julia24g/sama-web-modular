@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 
 const dataCards = [
     { title: "Optimum Size of PV System", key: "Cpv", unit: 'kW' },
-    { title: "Optimum Size of Battery Energy Storage", key: "Cbat", unit: 'kW' },
+    { title: "Optimum Size of Battery Energy Storage", key: "Cbat", unit: 'kWh' },
     { title: "Optimum Size of Diesel Generator", key: "Cdg", unit: 'kW' },
     { title: "Optimum Size of Inverter", key: "Cinverter", unit: 'kW' },
     { title: "Net Present Cost of Project in 25 years", key: "NPC", unit: '$' },
@@ -31,6 +31,8 @@ const Results = () => {
     if (!notEconomical){
         economicalInNearFuture = results && results.NPC <= 1.2 * results.NPC_Grid && results.NPC >= results.NPC_Grid;
     }
+
+    var isGeneralCalculator = results.isGeneralCalculator;
         
     const diagrams = [
         { img: `${apiBaseUrl}/images/Cash_Flow.png`, title: "Cash Flow" },
@@ -60,9 +62,9 @@ const Results = () => {
                 ))}
             </ImageList>
 
-            {notEconomical && <p>Grid defection is not economic; no grid defection is viable.</p>}
-            {economicalInNearFuture && <p>Grid defection can be economic in the near future; marginal grid defection can be viable.</p>}
-            {!notEconomical && !economicalInNearFuture && <p>Grid defection is economic and full grid defection is viable.</p>}
+            {isGeneralCalculator && notEconomical && <p>Grid defection is not economic; no grid defection is viable.</p>}
+            {isGeneralCalculator && economicalInNearFuture && <p>Grid defection can be economic in the near future; marginal grid defection can be viable.</p>}
+            {isGeneralCalculator && !notEconomical && !economicalInNearFuture && <p>Grid defection is economic and full grid defection is viable.</p>}
 
             <Grid container rowSpacing={4.5} columnSpacing={2.75}>
                 {dataCards.map((card) => (

@@ -247,6 +247,7 @@ def submit_general():
         answer = pso.run(Input_Data)
         if answer is None:
             return jsonify({'error': 'Failed to generate answer'}), 500
+        answer["isGeneralCalculator"] = True
         return jsonify(answer)
     
     except KeyError as ke:
@@ -270,6 +271,7 @@ def submit_advanced():
         Input_Data = process_advanced_data(Input_Data, data)
         Input_Data.completeInitialization()
         answer = pso.run(Input_Data)
+        answer["isGeneralCalculator"] = False
         return jsonify(answer)
     except Exception as e:
         app.logger.error(f'Error in submit_advanced: {e}')

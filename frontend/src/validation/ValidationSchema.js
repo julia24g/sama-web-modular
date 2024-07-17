@@ -157,8 +157,8 @@ export const advancedValidationSchema = baseValidationSchema.shape({
     PVLifetime: wholeNumberValidation,
     C_B: positiveNumberValidation,
     R_B: positiveNumberValidation,
-    tilt: yup.number(),
-    azimuth: yup.number(),
+    tilt: yup.number().noWhitespace(),
+    azimuth: yup.number().noWhitespace(),
     // Battery Questions
     isLithium: yup.boolean(),
     batteryOandM: positiveNumberValidation,

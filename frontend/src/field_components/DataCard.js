@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 export default function DataCard({ title, count, unit }) {
     let displayCount = count;
     if (count) {
-        if (unit === 'kW') {
+        if (unit === 'kW' || unit === 'kWh') {
             displayCount = `${count} ${unit}`;
         } else if (unit === '$') {
             displayCount = `$ ${count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;

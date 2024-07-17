@@ -3,6 +3,12 @@ import axios from 'axios';
 
 const apiBaseUrl = process.env.REACT_APP_API_URL;
 
+yup.addMethod(yup.number, 'noWhitespace', function () {
+    return this.transform((value, originalValue) => 
+        typeof originalValue === 'string' && /\s/.test(originalValue) ? NaN : value
+    ).typeError('No whitespace allowed');
+});
+
 export const zipcodeValidation = yup
     .string()
     .matches(/(^\d{5}$)|(^\d{5}-\d{4}$)/, 'Must be a 5-digit zipcode')
@@ -30,7 +36,8 @@ export const createRateValidation = (rateStructureName) => {
             return rateStructure === rateStructureName
                 ? schema.required(`This field is required`)
                 : schema;
-        });
+        })
+        .noWhitespace();;
 };
 
 export const createMonthlyLoadValidation = yup.number()
@@ -40,6 +47,7 @@ export const createMonthlyLoadValidation = yup.number()
         is: false,
         then: schema => schema.required('This field is required'),
     })
+    .noWhitespace();
 
 export const createAnnualLoadValidation = yup.number()
     .typeError('Must be a number')
@@ -48,25 +56,29 @@ export const createAnnualLoadValidation = yup.number()
         is: true,
         then: schema => schema.required('This field is required'),
     })
+    .noWhitespace();
 
 export const percentageValidation = yup.number()
     .typeError('Must be a number')
     .min(0, 'Must be between 0 and 100')
     .max(100, 'Must be between 0 and 100')
-    .required('This field is required');
+    .required('This field is required')
+    .noWhitespace();;
 
 export const wholeNumberValidation = yup.number()
     .typeError('Must be a number')
     .integer('Must be a whole number')
     .min(0, 'Must be a positive number')
+    .noWhitespace();
 
 export const positiveNumberValidation = yup.number()
     .typeError('Must be a number')
     .min(0, 'Must be a positive number')
+    .noWhitespace();
 
 export const timeRangeValidation = yup.object().shape({
-    startTime: yup.number().required('Start time is required'),
-    endTime: yup.number().required('End time is required')
+    startTime: yup.number().required('Start time is required').noWhitespace(),
+    endTime: yup.number().required('End time is required').noWhitespace()
         .test('is-after-start', 'End time must be after start time', function (value) {
             const { startTime } = this.parent;
             return startTime < value;
