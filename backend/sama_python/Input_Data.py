@@ -242,7 +242,7 @@ class InData:
             self.C_DG = 240.45 * (1 + self.r_Sales_tax)       # Capital cost ($/kW)
             self.R_DG = 240.45 * (1 + self.r_Sales_tax)       # Replacement Cost ($/kW)
             self.MO_DG = 0.064 * (1 + self.r_Sales_tax)     # O&M+ running cost ($/op.h)
-            self.C_fuel = 5.26 * (1 + self.r_Sales_tax)             # Fuel Cost ($/L)
+            self.C_fuel = 1.39 * (1 + self.r_Sales_tax)             # Fuel Cost ($/L)
             self.C_fuel_adj_rate = 2                                # DG fuel cost yearly esclation rate (if positive) and reduction rate (if negative) ########### this was changed to 0
             self.C_fuel_adj = self.C_fuel_adj_rate / 100
 
@@ -290,7 +290,7 @@ class InData:
             self.C_DG = 240.45       # Capital cost ($/KW)
             self.R_DG = 240.45       # Replacement Cost ($/kW)
             self.MO_DG = 0.064    # O&M+ running cost ($/op.h)
-            self.C_fuel = 5.26      # Fuel Cost ($/L)
+            self.C_fuel = 1.39      # Fuel Cost ($/L)
             self.C_fuel_adj_rate = 2  # DG fuel cost yearly esclation rate (if positive) and reduction rate (if negative)
             self.C_fuel_adj = self.C_fuel_adj_rate / 100
 
