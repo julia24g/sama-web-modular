@@ -120,11 +120,11 @@ def fitness(X, InData):
         X = X[0]
 
     NT = Eload.size  # time step numbers
-    Npv = X[0]  # PV number
-    Nwt = X[1]  # WT number
-    Nbat = X[2]  # Battery pack number
-    N_DG = X[3]  # number of Diesel Generator
-    Cn_I = X[4]  # Inverter Capacity
+    Npv = round(X[0], 1)  # PV number
+    Nwt = round(X[1], 2)  # WT number
+    Nbat = round(X[2])  # Battery pack number
+    N_DG = round(X[3], 1)  # number of Diesel Generator
+    Cn_I = round(X[4], 2)  # Inverter Capacity
 
     Pn_PV = Npv * Ppv_r  # PV Total Capacity
     Pn_WT = Nwt * Pwt_r  # WT Total Capacity
@@ -221,12 +221,12 @@ def fitness(X, InData):
     DG_Emissions = np.sum(q * (CO2 + NOx + SO2)) / 1000  # total emissions (kg/year)
     Grid_Emissions = np.sum(Pbuy * (E_CO2 + E_SO2 + E_NOx)) / 1000  # total emissions (kg/year)
 
-    Grid_Cost = ((((Annual_expenses + np.sum(Service_charge) + np.sum(Pbuy * Cbuy) + Grid_Tax_amount * np.sum(Pbuy)) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1)))) * (1 + Grid_Tax)) - ((np.sum(Psell * Csell) + Grid_credit) / ((1 + ir) ** np.arange(1, n + 1)))) * (Grid > 0)
+    Grid_Cost = ((((Annual_expenses + np.sum(Service_charge) + np.sum(Pbuy * Cbuy) + Grid_Tax_amount * np.sum(Pbuy)) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1)))) * (1 + Grid_Tax)) - ((np.sum(Psell * Csell) + Grid_credit) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1))))) * (Grid > 0)
 
     Grid_Cost_ADJ = (Annual_expenses + np.sum(Service_charge) + np.sum(Pbuy * Cbuy) + Grid_Tax_amount * np.sum(Pbuy)) - (np.sum(Psell * Csell) + Grid_credit)
 
     # Capital recovery factor
-    CRF = ir * (1 + ir) ** n / ((1 + ir) ** n - 1)
+    CRF = (ir * (1 + ir) ** n / ((1 + ir) ** n - 1)) if (ir != 0 and not np.isnan(ir)) else (1 / n)
 
     # Total Cost
     NPC = (((I_Cost + np.sum(R_Cost) + np.sum(MO_Cost) + np.sum(C_Fu) - Salvage) * (1 + System_Tax)) + np.sum(Grid_Cost))
@@ -244,9 +244,6 @@ def fitness(X, InData):
     if (np.isnan(RE)):
         RE = 0
 
-    Z = 1e2 * NPC + 1e6 * EM * LEM + 1e8 * (np.sum(Grid_Cost) < 0) * (NEM == 1) + 1e4 * (np.sum(Edump)) * (NEM == 1) + 1e6 * (Pn_PV >= DC_AC_ratio * (Cn_I + Pn_DG + Pbuy_max * (np.sum(Pbuy) > 0.1))) + 1e6 * (LPSP > LPSP_max) + 1e6 * (RE < RE_min) + 100 * (I_Cost > Budget) +\
+    Z = 1e2 * NPC + 1e6 * EM * LEM + 1e8 * (np.sum(Grid_Cost) < 0) * (NEM == 1) + 1e4 * (np.sum(Edump)) * (NEM == 1) + 1e6 * (Pn_PV >= DC_AC_ratio * (Cn_I + Pn_WT + Pn_DG + Pbuy_max * (np.sum(Pbuy) > 0.1))) + 1e6 * (LPSP > LPSP_max) + 1e6 * (RE < RE_min) + 100 * (I_Cost > Budget) +\
         1e8 * np.maximum(0, LPSP - LPSP_max) + 1e8 * np.maximum(0, RE_min - RE) + 1e4 * np.maximum(0, I_Cost - Budget)
     return Z
-
-
-

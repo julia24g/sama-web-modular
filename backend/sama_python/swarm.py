@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from sama_python.Results import Gen_Results
 # Loading Inputs
 import numpy as np
-from copy import deepcopy
+from copy import copy, deepcopy
 from time import process_time
 
 start = process_time()
@@ -53,7 +53,7 @@ class Swarm:
             particle_velocities = np.zeros((nPop, self.nVar))
 
             # Evaluate costs per initial particle
-            particle_costs = np.apply_along_axis(func1d=cost_function, axis=1, arr=particle_positions, InData=self.In_Data)
+            particle_costs = np.apply_along_axis(cost_function, 1, particle_positions, self.In_Data)
             particle_personal_best_cost = deepcopy(particle_costs)
 
             # Determine global best

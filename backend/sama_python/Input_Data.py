@@ -5,6 +5,7 @@ from sama_python.daysInMonth import daysInMonth
 
 class InData:
     def __init__(self):
+        self.Cash_Flow_adv = 0
         self.MaxIt = 200  # Maximum Number of Iterations
         self.nPop = 50  # Population Size (Swarm Size)
         self.w = 1  # Inertia Weight
@@ -519,8 +520,8 @@ class InData:
             self.Csell = np.full(8760, 0.05238)
 
         elif self.sellStructure == 2:
-            self.monthlysellprices = np.array([0.07054, 0.08169, 0.08452, 0.08748, 0.08788, 0.08510, 0.08158, 0.07903, 0.07683, 0.07203, 0.05783, 0.05878])
-
+            self.monthlysellprices = np.array([0.0638, 0.14538, 0.09079, 0.07914, 0.06469, 0.05336, 0.04612, 0.04411, 0.04737, 0.04591, 0.04512, 0.04415])
+            
             from sama_python.calcMonthlyRate import calcMonthlyRate
             self.Csell = calcMonthlyRate(self.monthlysellprices, self.daysInMonth)
 

@@ -4,13 +4,13 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import numpy as np
-from numba import jit
 import pandas as pd
 from math import ceil
 from sama_python.EMS import EMS
+import numpy_financial as npf
+import csv
 
 
-#@jit(nopython=True, fastmath=True)
 def Gen_Results(X, InData):
     WT=InData.WT
     daysInMonth = InData.daysInMonth
@@ -122,16 +122,17 @@ def Gen_Results(X, InData):
     ef_bat_Li = InData.ef_bat_Li
     Q_lifetime_Li = InData.Q_lifetime_Li
     alfa_battery_Li_ion = InData.alfa_battery_Li_ion
+    Cash_Flow_adv = InData.Cash_Flow_adv
     
     if (len(X)) == 1:
         X = X[0]
 
     NT = Eload.size  # time step numbers
-    Npv = X[0]  # PV number
-    Nwt = X[1]  # WT number
-    Nbat = X[2]  # Battery pack number
-    N_DG = X[3]  # number of Diesel Generator
-    Cn_I = X[4]  # Inverter Capacity
+    Npv = round(X[0], 1)  # PV number
+    Nwt = round(X[1], 2)  # WT number
+    Nbat = round(X[2])  # Battery pack number
+    N_DG = round(X[3], 1)  # number of Diesel Generator
+    Cn_I = round(X[4], 2)  # Inverter Capacity
 
     Pn_PV = Npv * Ppv_r  # PV Total Capacity
     Pn_WT = Nwt * Pwt_r  # WT Total Capacity
@@ -161,15 +162,63 @@ def Gen_Results(X, InData):
 
     if np.sum(Ppv) < 0.1:
         Pn_PV = 0
+        Pdg, Ens, Pbuy, Psell, Edump, Pch, Pdch, Eb, Pdch_max, Pch_max = EMS(Lead_acid, Li_ion, Ich_max_Li_ion,
+                                                                             Idch_max_Li_ion, Cnom_Li, Vnom_Li_ion,
+                                                                             ef_bat_Li, Q_lifetime_Li, Ppv,
+                                                                             alfa_battery_Li_ion, Pwt, Eload, Cn_B,
+                                                                             Nbat, Pn_DG, NT, SOC_max, SOC_min,
+                                                                             SOC_initial, n_I, Grid, Cbuy, a, b, R_DG,
+                                                                             TL_DG, MO_DG, Cn_I, LR_DG, C_fuel,
+                                                                             Pbuy_max, Psell_max, R_B,
+                                                                             Q_lifetime_leadacid, self_discharge_rate,
+                                                                             alfa_battery_leadacid, c, k,
+                                                                             Ich_max_leadacid, Vnom_leadacid,
+                                                                             ef_bat_leadacid)
 
     if np.sum(Pwt) < 0.1:
         Pn_WT = 0
+        Pdg, Ens, Pbuy, Psell, Edump, Pch, Pdch, Eb, Pdch_max, Pch_max = EMS(Lead_acid, Li_ion, Ich_max_Li_ion,
+                                                                             Idch_max_Li_ion, Cnom_Li, Vnom_Li_ion,
+                                                                             ef_bat_Li, Q_lifetime_Li, Ppv,
+                                                                             alfa_battery_Li_ion, Pwt, Eload, Cn_B,
+                                                                             Nbat, Pn_DG, NT, SOC_max, SOC_min,
+                                                                             SOC_initial, n_I, Grid, Cbuy, a, b, R_DG,
+                                                                             TL_DG, MO_DG, Cn_I, LR_DG, C_fuel,
+                                                                             Pbuy_max, Psell_max, R_B,
+                                                                             Q_lifetime_leadacid, self_discharge_rate,
+                                                                             alfa_battery_leadacid, c, k,
+                                                                             Ich_max_leadacid, Vnom_leadacid,
+                                                                             ef_bat_leadacid)
 
     if np.sum(Pdg) < 0.1:
         Pn_DG = 0
+        Pdg, Ens, Pbuy, Psell, Edump, Pch, Pdch, Eb, Pdch_max, Pch_max = EMS(Lead_acid, Li_ion, Ich_max_Li_ion,
+                                                                             Idch_max_Li_ion, Cnom_Li, Vnom_Li_ion,
+                                                                             ef_bat_Li, Q_lifetime_Li, Ppv,
+                                                                             alfa_battery_Li_ion, Pwt, Eload, Cn_B,
+                                                                             Nbat, Pn_DG, NT, SOC_max, SOC_min,
+                                                                             SOC_initial, n_I, Grid, Cbuy, a, b, R_DG,
+                                                                             TL_DG, MO_DG, Cn_I, LR_DG, C_fuel,
+                                                                             Pbuy_max, Psell_max, R_B,
+                                                                             Q_lifetime_leadacid, self_discharge_rate,
+                                                                             alfa_battery_leadacid, c, k,
+                                                                             Ich_max_leadacid, Vnom_leadacid,
+                                                                             ef_bat_leadacid)
 
     if np.sum(Pch) < 0.1 or np.sum(Pdch) < 0.1:
         Cn_B = 0
+        Pdg, Ens, Pbuy, Psell, Edump, Pch, Pdch, Eb, Pdch_max, Pch_max = EMS(Lead_acid, Li_ion, Ich_max_Li_ion,
+                                                                             Idch_max_Li_ion, Cnom_Li, Vnom_Li_ion,
+                                                                             ef_bat_Li, Q_lifetime_Li, Ppv,
+                                                                             alfa_battery_Li_ion, Pwt, Eload, Cn_B,
+                                                                             Nbat, Pn_DG, NT, SOC_max, SOC_min,
+                                                                             SOC_initial, n_I, Grid, Cbuy, a, b, R_DG,
+                                                                             TL_DG, MO_DG, Cn_I, LR_DG, C_fuel,
+                                                                             Pbuy_max, Psell_max, R_B,
+                                                                             Q_lifetime_leadacid, self_discharge_rate,
+                                                                             alfa_battery_leadacid, c, k,
+                                                                             Ich_max_leadacid, Vnom_leadacid,
+                                                                             ef_bat_leadacid)
 
     if Pn_PV == 0 and Pn_WT == 0 and Cn_B == 0:
         Cn_I = 0
@@ -186,7 +235,7 @@ def Gen_Results(X, InData):
     ## Installation and operation cost
 
     # Total Investment cost ($)
-    I_Cost = C_PV * (1 - RE_incentives) * Pn_PV + C_WT * (1 - RE_incentives) * Pn_WT + C_DG * Pn_DG + C_B * (1 - RE_incentives) * Cn_B + C_I * (1 - RE_incentives) * Cn_I + C_CH * (1 - RE_incentives) * (Nbat > 0) + Engineering_Costs * (1 - RE_incentives) * Pn_PV + NEM_fee
+    I_Cost = C_PV * (1 - RE_incentives) * Pn_PV + C_WT * (1 - RE_incentives) * Pn_WT + C_DG * Pn_DG + C_B * (1 - RE_incentives) * Cn_B + C_I * (1 - RE_incentives) * Cn_I + C_CH * (1 - RE_incentives) * (Cn_B > 0) + Engineering_Costs * (1 - RE_incentives) * Pn_PV + NEM_fee
     I_Cost_without_incentives = C_PV * Pn_PV + C_WT * Pn_WT + C_DG * Pn_DG + C_B * Cn_B + C_I * Cn_I + C_CH*(Nbat > 0) + Engineering_Costs * Pn_PV + NEM_fee
     Total_incentives_received = I_Cost_without_incentives - I_Cost
     Solar_Cost_Initial = C_PV * (1 - RE_incentives) * Pn_PV + C_I * (1 - RE_incentives) * Cn_I + Engineering_Costs * (1 - RE_incentives) * Pn_PV + NEM_fee
@@ -264,21 +313,18 @@ def Gen_Results(X, InData):
 
     Grid_Emissions = np.sum(Pbuy * (E_CO2 + E_SO2 + E_NOx)) / 1000  # total emissions (kg/year)
 
-    Grid_Cost = ((((Annual_expenses + np.sum(Service_charge) + np.sum(Pbuy * Cbuy) + Grid_Tax_amount * np.sum(Pbuy)) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1)))) * (1 + Grid_Tax)) - ((np.sum(Psell * Csell) + Grid_credit) / ((1 + ir) ** np.arange(1, n + 1)))) * (Grid > 0)
-
-    Grid_Cost_onlyG = (((Annual_expenses + np.sum(Service_charge) + np.sum(Eload * Cbuy) + Grid_Tax_amount * np.sum(Eload)) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1)))) * (1 + Grid_Tax)) - (Grid_credit / ((1 + ir) ** np.arange(1, n + 1)))
+    Grid_Cost = ((((Annual_expenses + np.sum(Service_charge) + np.sum(Pbuy * Cbuy) + Grid_Tax_amount * np.sum(Pbuy)) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1)))) * (1 + Grid_Tax)) - ((np.sum(Psell * Csell) + Grid_credit) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1))))) * (Grid > 0)
+    Grid_Cost_onlyG = (((Annual_expenses + np.sum(Service_charge) + np.sum(Eload * Cbuy) + Grid_Tax_amount * np.sum(Eload)) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1)))) * (1 + Grid_Tax)) - ((Grid_credit) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1))))
 
     Solar_Cost = (Solar_Cost_Initial + np.sum(Solar_Cost_replacement) + np.sum(Solar_Cost_MO) - np.sum(Salvage_Solar)) * (1 + System_Tax)
 
-    if np.sum(Pbuy) < 0.1:
-        Grid_avoidable_cost = ((np.sum(Eload * Cbuy) + Grid_Tax_amount * np.sum(Eload)) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1)))) * (1 + Grid_Tax)
-        Grid_unavoidable_cost = (((Annual_expenses + np.sum(Service_charge)) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1)))) * (1 + Grid_Tax)) - (Grid_credit / ((1 + ir) ** np.arange(1, n + 1)))
-    else:
-        Grid_avoidable_cost = ((np.sum(Pbuy * Cbuy) + Grid_Tax_amount * np.sum(Pbuy)) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1)))) * (1 + Grid_Tax)
-        Grid_unavoidable_cost = (((Annual_expenses + np.sum(Service_charge)) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1)))) * (1 + Grid_Tax)) - (Grid_credit / ((1 + ir) ** np.arange(1, n + 1)))
+
+    Grid_avoidable_cost = ((np.sum(Eload * Cbuy) + Grid_Tax_amount * np.sum(Eload)) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1)))) * (1 + Grid_Tax)
+    Grid_unavoidable_cost = (((Annual_expenses + np.sum(Service_charge)) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1)))) * (1 + Grid_Tax)) - ((Grid_credit) * ((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1)))
+
 
     # Capital recovery factor
-    CRF = ir * (1 + ir) ** n / ((1 + ir) ** n - 1)
+    CRF = (ir * (1 + ir) ** n / ((1 + ir) ** n - 1)) if (ir != 0 and not np.isnan(ir)) else (1 / n)
 
     # Total Cost
     NPC = (((I_Cost + np.sum(R_Cost) + np.sum(MO_Cost) + np.sum(C_Fu) - np.sum(Salvage)) * (1 + System_Tax)) + np.sum(Grid_Cost))
@@ -297,13 +343,8 @@ def Gen_Results(X, InData):
     LCOE_without_incentives = CRF * NPC_without_incentives / np.sum(Eload - Ens + Psell)
     LCOE_Grid = CRF * NPC_Grid / np.sum(Eload)
 
-
-    if np.sum(Pbuy) < 0.1:
-        Grid_avoidable_cost_perkWh = CRF * np.sum(Grid_avoidable_cost) / np.sum(Eload)
-        Grid_unavoidable_cost_perkWh = CRF * np.sum(Grid_unavoidable_cost) / np.sum(Eload)
-    else:
-        Grid_avoidable_cost_perkWh = CRF * np.sum(Grid_avoidable_cost) / np.sum(Pbuy)
-        Grid_unavoidable_cost_perkWh = CRF * np.sum(Grid_unavoidable_cost) / np.sum(Pbuy)
+    Grid_avoidable_cost_perkWh = CRF * np.sum(Grid_avoidable_cost) / np.sum(Eload)
+    Grid_unavoidable_cost_perkWh = CRF * np.sum(Grid_unavoidable_cost) / np.sum(Eload)
 
     LEM = (DG_Emissions + Grid_Emissions) / np.sum(Eload - Ens)  # Levelized Emissions(kg/kWh)
 
@@ -316,17 +357,15 @@ def Gen_Results(X, InData):
     if (np.isnan(RE)):
         RE = 0
 
-    # Total grid earning in $
-    Sold_electricity = ((np.sum(Psell * Csell)) / ((1 + ir) ** np.arange(1, n + 1))) * (Grid > 0)
+    # Total grid costs and earning in $
+    Sold_electricity = ((np.sum(Psell * Csell)) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1)))) * (Grid > 0)
+    Bought_electricity =((Annual_expenses + np.sum(Service_charge) + np.sum(Pbuy * Cbuy) + Grid_Tax_amount * np.sum(Pbuy)) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1)))) * (Grid > 0)
+    Total_grid_credits = ((Grid_credit) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1)))) * (Grid > 0)
 
     # Avoided costs calc
     P_served_other_than_grid = Eload - Pbuy
 
-    if np.sum(Pbuy) > 0.1:
-        avoided_costs = ((np.sum(P_served_other_than_grid * Cbuy) + Grid_Tax_amount * np.sum(P_served_other_than_grid)) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1)))) * (1 + Grid_Tax)
-    else:
-        avoided_costs = (((np.sum(Eload_served * Cbuy) + Annual_expenses + np.sum(Service_charge) + Grid_Tax_amount * np.sum(Eload_served)) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1)))) * (1 + Grid_Tax)) - ((Grid_credit) / ((1 + ir) ** np.arange(1, n + 1)))
-
+    avoided_costs = (((np.sum(Eload_served * Cbuy) + Annual_expenses + np.sum(Service_charge) + Grid_Tax_amount * np.sum(Eload_served)) * (((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1)))) * (1 + Grid_Tax)) - (((Grid_credit) * ((1 + Grid_escalation) ** np.arange(1, n + 1)) / ((1 + ir) ** np.arange(1, n + 1))))
 
     # Extracting data for plotting
     data = {'Ppv': Ppv, 'Pdg': Pdg, 'Pch': Pch, 'Pdch': Pdch, 'Pdch_max': Pdch_max, 'Pch_max': Pch_max, 'Eb': Eb[1:8761], 'SOC': Eb[1:8761] / Cn_B if (Cn_B != 0 and not np.isnan(Cn_B)) else 0, 'Pbuy':Pbuy, 'Psell':Psell, 'Eload':Eload,'ENS':Ens ,'Edump':Edump, 'P_RE_served':P_RE_served, 'Csell':Csell, 'Cbuy':Cbuy, 'Pserved':P_served_other_than_grid, 'POA':G, 'Temperature':T, "Wind Speed":Vw}
@@ -360,7 +399,10 @@ def Gen_Results(X, InData):
     print('Total Grid avoidable cost = $', round(np.sum(Grid_avoidable_cost), 2))
     print('Total Grid unavoidable cost = $', round(np.sum(Grid_unavoidable_cost), 2))
     print('Total avoided costs by hybrid energy system = $', round(np.sum(avoided_costs), 2))
+    print('Total net avoided costs by hybrid energy system = $', round(np.sum(avoided_costs) - np.sum(Grid_Cost), 2))
     print('Total grid earning = $', round(np.sum(Sold_electricity), 2))
+    print('Total grid costs = $', round(np.sum(Bought_electricity), 2))
+    print('Total grid credits = $', round(np.sum(Total_grid_credits), 2))
     print('LCOE  =', round(LCOE, 2), '$/kWh')
     answer['LCOE'] = round(LCOE, 2)
     print('LCOE without incentives =', round(LCOE_without_incentives, 2), '$/kWh')
@@ -431,22 +473,60 @@ def Gen_Results(X, InData):
     yearly_total_cost = [-I_Cost] + yearly_total_cost  # Add initial investment (flipped) at year 0
     # Calculate the cumulative total cost
     cumulative_total_cost = [sum(yearly_total_cost[:i + 1]) for i in range(n + 1)]
+    
+    # Calculate IRR and Payback Period
+    IRR_cost = yearly_total_cost
+    cumulative_total_cost_PP = [sum(yearly_total_cost[:i + 1]) for i in range(n + 1)]
+
+    irr = npf.irr(IRR_cost)
+    if irr < 0:
+        print("The projected investment is a loss")
+        print(f"The IRR of the project is: {irr:.2%}")
+    else:
+        print(f"The IRR of the project is: {irr:.2%}")
+
+    payback_period = next((i for i, cost in enumerate(cumulative_total_cost_PP) if cost >= 0), None)
+    if payback_period is None:
+        print("No payback period within the project's lifetime")
+    else:
+        print(f"The Payback Period is: {payback_period} years")
+
+    # Calculate Total Revenues and Total Costs
+    total_revenues = sum(avoided_costs) + (sum(Salvage) * (1 + System_Tax)) + sum(Grid_Cost_neg)
+    print(f"Total revenues is: {total_revenues:.2f}")
+    total_costs = -(((-I_Cost + sum(MO_Cost) + sum(R_Cost) + sum(C_Fu)) * (1 + System_Tax)) + sum(Grid_Cost_pos))
+
+    # Calculate Net Profit
+    net_profit = total_revenues - total_costs
+    print(f"Total net profit is: {net_profit:.2f}")
+    print(f"Total costs is: {total_costs:.2f}")
+    # Calculate ROI
+    roi = (net_profit / total_costs) * 100
+
+    print(f"The ROI of the project is: {roi:.2f}%")
 
     # Create the bar chart
     plt.figure(figsize=(10, 6))
 
-    # Plot costs
-    plt.bar(years[1:], R_Cost, label='Replacement Cost', color='blue')
-    plt.bar(years[1:], MO_Cost, bottom=R_Cost, label='Maintenance & Operating Cost', color='brown')
-    plt.bar(years[1:], C_Fu, bottom=[i + j for i, j in zip(R_Cost, MO_Cost)], label='Fuel Cost', color='orange')
-    plt.bar(years[1:], Grid_Cost_pos, bottom=[i + j + k for i, j, k in zip(R_Cost, MO_Cost, C_Fu)], label='Grid Cost', color='purple')
+    # Plot costs conditionally
+    if any(R_Cost):
+        plt.bar(years[1:], R_Cost, label='Replacement Cost', color='blue')
+    if any(MO_Cost):
+        plt.bar(years[1:], MO_Cost, bottom=R_Cost, label='Maintenance & Operating Cost', color='brown')
+    if any(C_Fu):
+        plt.bar(years[1:], C_Fu, bottom=[i + j for i, j in zip(R_Cost, MO_Cost)], label='Fuel Cost', color='orange')
+    if any(Grid_Cost_pos):
+        plt.bar(years[1:], Grid_Cost_pos, bottom=[i + j + k for i, j, k in zip(R_Cost, MO_Cost, C_Fu)], label='Grid Cost', color='purple')
 
     # Plot grid revenues
-    plt.bar(years[1:], Grid_Cost_neg, label='Grid Revenue', color='pink', bottom=0)
+    if any(Grid_Cost_neg):
+        plt.bar(years[1:], Grid_Cost_neg, label='Grid Revenue', color='pink', bottom=0)
     # Plot avoided costs as revenue above x-axis
-    plt.bar(years[1:], avoided_costs, bottom=Grid_Cost_neg, label='Avoided Costs', color='cyan', alpha=1)
+    if any(avoided_costs):
+        plt.bar(years[1:], avoided_costs, bottom=Grid_Cost_neg, label='Avoided Costs', color='cyan', alpha=1)
     # Plot salvage revenues (Start from x-axis)
-    plt.bar(years[-1:], Salvage, bottom=[i + j for i, j in zip(Grid_Cost_neg, avoided_costs)], label='Salvage', color='green')
+    if any(Salvage):
+        plt.bar(years[-1:], Salvage, bottom=[i + j for i, j in zip(Grid_Cost_neg, avoided_costs)], label='Salvage', color='green')
 
     # Initial capital cost
     plt.bar(0, -I_Cost, label='Initial Investment', color='red')  # Flip the sign
@@ -461,8 +541,171 @@ def Gen_Results(X, InData):
     plt.legend(loc='best', fontsize=12)
     # Make x-axis visible
     plt.axhline(0, color='black', linewidth=0.8)
+    y_min, y_max = plt.ylim()
+    y_margin = (y_max - y_min) * 0.025
+    plt.ylim(y_min - y_margin, y_max + y_margin)
     plt.tight_layout()
     plt.savefig('sama_python/output/figs/Cash_Flow.png', dpi=300)
+    
+    # Cash flow chart ADVANCED
+
+    # Define years from 0 to n
+    years = list(range(n + 1))
+
+    # Calculate the yearly total cost for year 1 to n (without including Salvage)
+    yearly_total_only_grid_cost = -Grid_Cost_onlyG
+    yearly_total_only_grid_cost = yearly_total_only_grid_cost.tolist()
+    yearly_total_only_grid_cost = [0] + yearly_total_only_grid_cost  # Add initial investment (flipped) at year 0
+    # Calculate the cumulative total cost
+    cumulative_total_only_grid_cost = [sum(yearly_total_only_grid_cost[:i + 1]) for i in range(n + 1)]
+
+    # Calculate the yearly total cost for year 1 to n (without including Salvage)
+    yearly_total_grid_cost = [sum(x) + g for x, g in zip(zip(R_Cost, MO_Cost, C_Fu, Salvage, Grid_Cost_pos), Grid_Cost_neg)]
+    # Calculate the cumulative total cost
+    yearly_total_grid_cost = [-I_Cost] + yearly_total_grid_cost
+    # Calculate the cumulative total cost
+    cumulative_total_grid_cost = [sum(yearly_total_grid_cost[:i + 1]) for i in range(n + 1)]
+
+    # Create the bar chart
+    plt.figure(figsize=(10, 6))
+
+    # Plot costs conditionally
+    if any(R_Cost):
+        plt.bar(years[1:], R_Cost, label='Replacement Cost', color='blue')
+    if any(MO_Cost):
+        plt.bar(years[1:], MO_Cost, bottom=R_Cost, label='Maintenance & Operating Cost', color='brown')
+    if any(C_Fu):
+        plt.bar(years[1:], C_Fu, bottom=[i + j for i, j in zip(R_Cost, MO_Cost)], label='Fuel Cost', color='orange')
+    if any(Grid_Cost_pos):
+        plt.bar(years[1:], Grid_Cost_pos, bottom=[i + j + k for i, j, k in zip(R_Cost, MO_Cost, C_Fu)], label='Grid Cost', color='purple')
+
+    # Plot grid revenues
+    if any(Grid_Cost_neg):
+        plt.bar(years[1:], Grid_Cost_neg, label='Grid Revenue', color='pink', bottom=0)
+    # Plot avoided costs as revenue above x-axis
+    if any(avoided_costs):
+        plt.bar(years[1:], avoided_costs, bottom=Grid_Cost_neg, label='Avoided Costs', color='cyan', alpha=1)
+    # Plot salvage revenues (Start from x-axis)
+    if any(Salvage):
+        plt.bar(years[-1:], Salvage, bottom=[i + j for i, j in zip(Grid_Cost_neg, avoided_costs)], label='Salvage', color='green')
+
+    # Initial capital cost
+    plt.bar(0, -I_Cost, label='Initial Investment', color='gray')  # Flip the sign
+
+    # Plot total cost curve (without grid)
+    plt.plot(years, cumulative_total_only_grid_cost, color='black', marker='o', label='Total Only Grid Cost')
+    # Plot total cost curve (with grid)
+    plt.plot(years, cumulative_total_grid_cost, color='red', marker='s', label='Total Customer Cost')
+
+    # Add details and labels
+    # plt.title('Cash Flow Chart', fontsize=20)
+    plt.xlabel('Year', fontsize=16)
+    plt.ylabel('Cash Flow [$]', fontsize=16)
+    plt.legend(loc='best', fontsize=12)
+    # Make x-axis visible
+    plt.axhline(0, color='black', linewidth=0.8)
+    y_min, y_max = plt.ylim()
+    y_margin = (y_max - y_min) * 0.025
+    plt.ylim(y_min - y_margin, y_max + y_margin)
+    plt.tight_layout()
+    plt.savefig('sama_python/output/figs/Cash_Flow_ADV.png', dpi=300)
+
+    # Advanced multi-Cash Flow Chart
+    ########################
+    if Cash_Flow_adv == 1:
+        from matplotlib import pyplot
+        # Function to save data to CSV file
+        def save_data_to_csv(filename, data):
+            with open(filename, 'a', newline='') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow(data)
+
+        # Function to load data from CSV file
+        def load_data_from_csv(filename):
+            data = []
+            with open(filename, 'r') as csvfile:
+                reader = csv.reader(csvfile)
+                for row in reader:
+                    data.append(list(map(eval, row)))
+            return data
+
+        csv_filename = 'cash_flow_data.csv'
+
+        # Save data to CSV
+        data = [R_Cost, MO_Cost, C_Fu, Salvage, avoided_costs, Grid_Cost_pos, Grid_Cost_neg, I_Cost]
+        save_data_to_csv(csv_filename, data)
+
+        # Load all data from CSV
+        all_data = load_data_from_csv(csv_filename)
+
+        # Define colors and hatch patterns
+        colors_curve = ['black', 'blue', 'purple', 'red', 'yellow', 'green']
+
+        plt.figure(figsize=(10, 6))
+        bar_legend_handles = []  # List to store handles for bar legends
+        curve_labels = []  # List to store labels for curve legends
+        curve_handles = []  # List to store handles for curve legends
+
+        for idx, data in enumerate(all_data):
+            R_Cost, MO_Cost, C_Fu, Salvage, avoided_costs, Grid_Cost_pos, Grid_Cost_neg, I_Cost = data
+            years = list(range(n + 1))
+            yearly_total_cost = [sum(x) + g + a for x, g, a in zip(zip(R_Cost, MO_Cost, C_Fu, Salvage, Grid_Cost_pos), Grid_Cost_neg, avoided_costs)]
+            yearly_total_cost = [-I_Cost] + yearly_total_cost
+            cumulative_total_cost = [sum(yearly_total_cost[:i + 1]) for i in range(n + 1)]
+
+            # Adjust x-axis positions for bars
+            bar_width = 0.075  # to adjust the width of bars
+            offset = bar_width * idx  # to shift bars horizontally
+            bar_positions = [x + offset for x in years[1:]]
+
+            # Plot costs
+            if any(R_Cost):
+                plt.bar(bar_positions, R_Cost, label='Replacement Cost', color='blue', edgecolor='black', width=0.5)
+            if any(MO_Cost):
+                plt.bar(bar_positions, MO_Cost, bottom=R_Cost, label='Maintenance & Operating Cost', color='brown', edgecolor='black', width=0.5)
+            if any(C_Fu):
+                plt.bar(bar_positions, C_Fu, bottom=[i + j for i, j in zip(R_Cost, MO_Cost)], label='Fuel Cost', color='orange', edgecolor='black', width=0.5)
+            if any(Grid_Cost_pos):
+                plt.bar(bar_positions, Grid_Cost_pos, bottom=[i + j + k for i, j, k in zip(R_Cost, MO_Cost, C_Fu)], label='Grid Cost', color='purple', edgecolor='black', width=0.5)
+
+            # Plot grid revenues
+            if any(Grid_Cost_neg):
+                plt.bar(bar_positions, Grid_Cost_neg, label='Grid Revenue', color='pink', alpha=1, edgecolor='black', width=0.5)
+            if any(avoided_costs):
+                plt.bar(bar_positions, avoided_costs, bottom=Grid_Cost_neg, label='Avoided Costs', color='cyan', alpha=1, edgecolor='black', width=0.5)
+            # Plot salvage revenues (Start from x-axis)
+            if any(Salvage):
+                plt.bar(bar_positions, Salvage, bottom=[i + j for i, j in zip(Grid_Cost_neg, avoided_costs)], label='Salvage', color='green', edgecolor='black', width=0.5)
+
+            # Plot initial investment as a red bar
+            plt.bar(0, -I_Cost, label='Initial Investment' if idx == 0 else None, color='red', edgecolor='black', width = 0.5)
+
+            # Store handles for legends of the bars in the first loop iteration
+            if idx == 0:
+                bar_legend_handles, _ = plt.gca().get_legend_handles_labels()
+            LG_lines = [7.5, 10, 12.5, 15, 17.5, 20]
+            # Plot curves with different colors and names
+            color_idx = idx % len(colors_curve)  # Ensure idx stays within the bounds of colors_curve
+            curve_labels.append(f'Total System Cost (GER =  {idx*2}%)')
+            curve_handles.extend(plt.plot(years, cumulative_total_cost, linestyle='-', marker='o', linewidth=0.8, color=colors_curve[color_idx]))
+
+        # Plot legends for bars outside of the loop
+        legend1 = plt.legend(handles=bar_legend_handles, loc='best')
+        # Plot legends for curves
+        plt.legend(curve_handles, curve_labels, loc='center left')
+        pyplot.gca().add_artist(legend1)
+        # Add details and labels
+        plt.xlabel('Year', fontsize=16)
+        plt.ylabel('Cash Flow [$]', fontsize=16)
+        plt.xticks([i for i in years], years)
+        plt.axhline(0, color='black', linewidth=0.8)
+
+        # Set y-axis limit
+        y_min, y_max = plt.ylim()
+        y_margin = (y_max - y_min) * 0.025
+        plt.ylim(y_min - y_margin, y_max + y_margin)
+        plt.tight_layout()
+        plt.savefig('sama_python/output/figs/Multiple_Cash_Flow_ADV.png', dpi=300)
 
     #Grid purchase and sale figure
     if Grid == 0:
